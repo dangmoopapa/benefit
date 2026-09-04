@@ -6,7 +6,6 @@ import im.dangmoo.benefit.admin.web.coupon.model.issue.CouponIssueForm;
 import im.dangmoo.benefit.admin.web.coupon.model.lifecycle.CouponLifecycleForm;
 import im.dangmoo.benefit.admin.web.coupon.model.usage.CouponUsageForm;
 import im.dangmoo.benefit.domain.coupon.policy.CouponPolicy;
-import im.dangmoo.benefit.domain.coupon.policy.CouponPolicyStatus;
 import im.dangmoo.benefit.domain.coupon.policy.CouponPolicyType;
 
 public record CouponPolicyRequest(
@@ -15,7 +14,6 @@ public record CouponPolicyRequest(
     String description,
     String platformId,
     CouponPolicyType type,
-    CouponPolicyStatus status,
     CouponIssueForm issueCondition,
     CouponBenefitForm benefitCondition,
     CouponApplyForm applyCondition,

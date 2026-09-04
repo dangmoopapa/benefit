@@ -113,7 +113,6 @@ public class CouponPolicy {
         final String description,
         final String platformId,
         final CouponPolicyType type,
-        final CouponPolicyStatus status,
         final CouponIssueCondition issueCondition,
         final CouponBenefitCondition benefitCondition,
         final CouponApplyCondition applyCondition,
@@ -125,7 +124,6 @@ public class CouponPolicy {
         this.description = description;
         this.platformId = platformId;
         this.type = type;
-        this.status = status;
         this.issueCondition = issueCondition;
         this.benefitCondition = benefitCondition;
         this.applyCondition = applyCondition;

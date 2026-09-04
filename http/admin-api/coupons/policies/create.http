@@ -8,7 +8,6 @@ Content-Type: application/json
   "description": "가입 환영 할인",
   "platformId": "order",
   "type": "GENERAL",
-  "status": "DRAFT",
   "issueCondition": {
     "period": {
       "start": "2026-03-01T00:00:00Z",

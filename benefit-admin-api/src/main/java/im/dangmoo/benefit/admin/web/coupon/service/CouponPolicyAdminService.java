@@ -53,13 +53,16 @@ public class CouponPolicyAdminService {
             return CouponPolicyResponse.of(couponPolicyRepository.save(policy));
         }
 
+        if (!policy.getCode().equals(request.code()) && couponPolicyRepository.existsByCode(request.code())) {
+            throw new ApiException(ApiMessage.DUPLICATE_CODE);
+        }
+
         policy.update(
             request.code(),
             request.name(),
             request.description(),
             request.platformId(),
             request.type(),
-            request.status(),
             request.issueCondition().toDocument(),
             request.benefitCondition().toDocument(),
             request.applyCondition().toDocument(),

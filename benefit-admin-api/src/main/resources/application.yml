@@ -2,7 +2,7 @@ spring:
   application:
     name: benefit-admin-api
   config:
-    import: optional:classpath:application-mongodb.yml
+    import: optional:classpath:application.yml
   jackson:
     visibility:
       field: any
