@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: benefit-admin-api
+  config:
+    import: optional:classpath:application-mongodb.yml
+  jackson:
+    visibility:
+      field: any
+server:
+  port: 8081
