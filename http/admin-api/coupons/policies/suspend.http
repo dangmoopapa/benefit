@@ -1,0 +1,4 @@
+@policyId = replace-policy-id
+
+### 쿠폰 정책 중지
+POST {{host}}/coupons/policies/{{policyId}}/suspend

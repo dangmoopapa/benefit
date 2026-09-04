@@ -8,7 +8,7 @@ public class CouponLifecycleCondition {
     private boolean reissuable;
     private CouponAccountingCondition accountingCondition;
 
-    protected CouponLifecycleCondition() {
+    private CouponLifecycleCondition() {
     }
 
     public static CouponLifecycleCondition create(

@@ -11,7 +11,7 @@ public class CouponApplyInclude {
     private List<String> sellerIds;
     private List<String> optionIds;
 
-    protected CouponApplyInclude() {
+    private CouponApplyInclude() {
     }
 
     public static CouponApplyInclude create(

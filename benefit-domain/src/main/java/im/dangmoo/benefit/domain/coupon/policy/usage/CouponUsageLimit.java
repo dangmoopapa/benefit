@@ -9,7 +9,7 @@ public class CouponUsageLimit {
     private Integer perDay;
     private Integer perHour;
 
-    protected CouponUsageLimit() {
+    private CouponUsageLimit() {
     }
 
     public static CouponUsageLimit create(

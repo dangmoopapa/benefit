@@ -1,0 +1,94 @@
+### 쿠폰 정책 생성
+POST {{host}}/coupons/policies
+Content-Type: application/json
+
+{
+  "code": "WELCOME_2026",
+  "name": "신규 환영 쿠폰",
+  "description": "가입 환영 할인",
+  "platformId": "order",
+  "type": "GENERAL",
+  "status": "DRAFT",
+  "issueCondition": {
+    "period": {
+      "start": "2026-03-01T00:00:00Z",
+      "end": "2026-12-31T23:59:59Z"
+    },
+    "weekdays": [],
+    "timeRanges": [],
+    "segmentId": null,
+    "totalQuantity": 100000
+  },
+  "benefitCondition": {
+    "type": "AMOUNT",
+    "value": 3000,
+    "maxDiscountAmount": null,
+    "minPaymentAmount": 10000
+  },
+  "applyCondition": {
+    "unit": "ORDER",
+    "include": {
+      "allProducts": true,
+      "productIds": [],
+      "categoryIds": [],
+      "brandIds": [],
+      "sellerIds": [],
+      "optionIds": []
+    },
+    "exclude": {
+      "productIds": [],
+      "categoryIds": [],
+      "alreadyDiscounted": false,
+      "otherCouponApplied": false
+    }
+  },
+  "usageCondition": {
+    "validity": {
+      "type": "DURATION",
+      "start": null,
+      "end": null,
+      "days": 30,
+      "hours": null
+    },
+    "usableImmediately": true,
+    "weekdays": [],
+    "timeRanges": [],
+    "orderCondition": {
+      "minAmount": 10000,
+      "maxAmount": null,
+      "paymentMethods": [],
+      "shippingMethods": [],
+      "regions": [],
+      "firstPurchaseOnly": false,
+      "minPurchaseCount": null
+    },
+    "stackingCondition": {
+      "combinableWithOtherCoupons": false,
+      "combinableWithProductAndOrder": false,
+      "combinableWithPoint": true,
+      "combinableWithPromotion": false,
+      "combinableWithFreeShipping": true,
+      "priority": 100,
+      "autoSelectMaxDiscount": true
+    },
+    "limit": {
+      "perUser": 1,
+      "perUserPerMonth": null,
+      "perOrder": 1,
+      "total": null,
+      "perDay": null,
+      "perHour": null
+    }
+  },
+  "lifecycleCondition": {
+    "onOrderCancel": "RECOVER",
+    "onPartialCancel": "KEEP",
+    "onRefund": "RECALCULATE",
+    "reissuable": false,
+    "accountingCondition": {
+      "bearer": "PLATFORM",
+      "costCenter": null,
+      "accountCode": null
+    }
+  }
+}

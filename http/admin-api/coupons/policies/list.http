@@ -1,0 +1,7 @@
+### 쿠폰 정책 목록
+GET {{host}}/coupons/policies
+  ?code=
+  &name=
+  &platformId=
+  &type=GENERAL
+  &status=DRAFT

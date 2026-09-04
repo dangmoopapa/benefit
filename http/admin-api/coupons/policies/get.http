@@ -1,0 +1,4 @@
+@policyId = replace-policy-id
+
+### 쿠폰 정책 단건 조회
+GET {{host}}/coupons/policies/{{policyId}}

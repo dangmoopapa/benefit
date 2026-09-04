@@ -9,7 +9,7 @@ public class CouponBenefitCondition {
     private BigDecimal maxDiscountAmount;
     private BigDecimal minPaymentAmount;
 
-    protected CouponBenefitCondition() {
+    private CouponBenefitCondition() {
     }
 
     public static CouponBenefitCondition create(

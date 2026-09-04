@@ -1,0 +1,4 @@
+@policyId = replace-policy-id
+
+### 쿠폰 정책 활성화
+POST {{host}}/coupons/policies/{{policyId}}/activate

@@ -12,7 +12,7 @@ public class CouponUsageValidity {
     private Integer days;
     private Integer hours;
 
-    protected CouponUsageValidity() {
+    private CouponUsageValidity() {
     }
 
     public static CouponUsageValidity create(

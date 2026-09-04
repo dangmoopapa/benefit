@@ -7,7 +7,7 @@ public class CouponIssuablePeriod {
     private Instant start;
     private Instant end;
 
-    protected CouponIssuablePeriod() {
+    private CouponIssuablePeriod() {
     }
 
     public static CouponIssuablePeriod create(final Instant start, final Instant end) {

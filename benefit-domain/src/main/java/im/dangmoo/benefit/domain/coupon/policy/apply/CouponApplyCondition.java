@@ -6,7 +6,7 @@ public class CouponApplyCondition {
     private CouponApplyInclude include;
     private CouponApplyExclude exclude;
 
-    protected CouponApplyCondition() {
+    private CouponApplyCondition() {
     }
 
     public static CouponApplyCondition create(

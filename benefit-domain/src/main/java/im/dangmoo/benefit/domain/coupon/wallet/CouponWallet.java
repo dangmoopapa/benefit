@@ -29,7 +29,7 @@ public class CouponWallet {
     private static final String USER_ID = "userId";
     private static final String POLICY_ID = "policyId";
 
-    protected CouponWallet() {
+    private CouponWallet() {
     }
 
     public static Query queryByUserId(final String userId) {

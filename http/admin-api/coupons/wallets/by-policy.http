@@ -1,0 +1,4 @@
+@policyId = replace-policy-id
+
+### 정책별 쿠폰 월렛 목록
+GET {{host}}/coupons/wallets/by-policy?policyId={{policyId}}

@@ -10,7 +10,7 @@ public class CouponStackingCondition {
     private int priority;
     private boolean autoSelectMaxDiscount;
 
-    protected CouponStackingCondition() {
+    private CouponStackingCondition() {
     }
 
     public static CouponStackingCondition create(

@@ -9,7 +9,7 @@ public class CouponApplyExclude {
     private boolean alreadyDiscounted;
     private boolean otherCouponApplied;
 
-    protected CouponApplyExclude() {
+    private CouponApplyExclude() {
     }
 
     public static CouponApplyExclude create(

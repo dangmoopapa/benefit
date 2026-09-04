@@ -7,7 +7,7 @@ public class CouponUsableTime {
     private LocalTime start;
     private LocalTime end;
 
-    protected CouponUsableTime() {
+    private CouponUsableTime() {
     }
 
     public static CouponUsableTime create(final LocalTime start, final LocalTime end) {

@@ -1,0 +1,12 @@
+@userId = user-1
+@policyId = replace-policy-id
+
+### 관리자 쿠폰 발급
+POST {{host}}/coupons/wallets/issue
+Content-Type: application/json
+
+{
+  "userId": "{{userId}}",
+  "policyId": "{{policyId}}",
+  "enforceIssueCondition": true
+}

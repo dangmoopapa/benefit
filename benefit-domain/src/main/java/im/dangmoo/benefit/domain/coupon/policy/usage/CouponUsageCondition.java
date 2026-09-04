@@ -13,7 +13,7 @@ public class CouponUsageCondition {
     private CouponStackingCondition stackingCondition;
     private CouponUsageLimit limit;
 
-    protected CouponUsageCondition() {
+    private CouponUsageCondition() {
     }
 
     public static CouponUsageCondition create(

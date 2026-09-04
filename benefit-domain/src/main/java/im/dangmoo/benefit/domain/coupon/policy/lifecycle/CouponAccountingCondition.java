@@ -6,7 +6,7 @@ public class CouponAccountingCondition {
     private String costCenter;
     private String accountCode;
 
-    protected CouponAccountingCondition() {
+    private CouponAccountingCondition() {
     }
 
     public static CouponAccountingCondition create(

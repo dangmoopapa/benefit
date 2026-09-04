@@ -14,7 +14,7 @@ public class CouponIssueCondition {
     private String segmentId;
     private Long totalQuantity;
 
-    protected CouponIssueCondition() {
+    private CouponIssueCondition() {
     }
 
     public static CouponIssueCondition create(

@@ -1,0 +1,4 @@
+@userId = user-1
+
+### 유저별 쿠폰 월렛 목록
+GET {{host}}/coupons/wallets/by-user?userId={{userId}}

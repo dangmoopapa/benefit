@@ -13,7 +13,7 @@ public class CouponOrderCondition {
     private boolean firstPurchaseOnly;
     private Integer minPurchaseCount;
 
-    protected CouponOrderCondition() {
+    private CouponOrderCondition() {
     }
 
     public static CouponOrderCondition create(
