@@ -49,7 +49,7 @@ public class CouponWalletAdminService {
 
         final Instant now = Instant.now();
         if (request.enforceIssueCondition()) {
-            if (!policy.isIssuableAt(now)) {
+            if (!policy.isIssuableAt(now, request.segmentMatched())) {
                 throw new ApiException(ApiMessage.ISSUE_NOT_ALLOWED);
             }
             final long issuedCount = couponWalletRepository.countByPolicyId(policy.getId());

@@ -1,7 +1,10 @@
 package im.dangmoo.benefit.domain.coupon.policy.usage;
 
-import java.util.List;
 import java.time.Instant;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.List;
 
 public class CouponUsageCondition {
 
@@ -66,5 +69,25 @@ public class CouponUsageCondition {
 
     public Instant resolveExpiresAt(final Instant issuedAt) {
         return validity.resolveExpiresAt(issuedAt);
+    }
+
+    public boolean isSatisfiedAt(final Instant issuedAt, final Instant now) {
+        if (!usableImmediately && !now.isAfter(issuedAt)) {
+            return false;
+        }
+        if (!validity.isActiveAt(issuedAt, now)) {
+            return false;
+        }
+        final ZonedDateTime at = now.atZone(ZoneOffset.UTC);
+        if (!weekdays.isEmpty() && weekdays.stream().noneMatch(weekday -> weekday.dayOfWeek == at.getDayOfWeek())) {
+            return false;
+        }
+        if (!timeRanges.isEmpty()) {
+            final LocalTime time = at.toLocalTime();
+            return timeRanges.stream().anyMatch(range ->
+                !time.isBefore(range.getStart()) && !time.isAfter(range.getEnd())
+            );
+        }
+        return true;
     }
 }

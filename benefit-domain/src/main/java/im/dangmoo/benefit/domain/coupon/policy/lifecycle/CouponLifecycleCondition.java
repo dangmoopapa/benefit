@@ -43,6 +43,22 @@ public class CouponLifecycleCondition {
         return reissuable;
     }
 
+    public boolean recoversOnOrderCancel() {
+        return onOrderCancel == CouponOnOrderCancel.RECOVER;
+    }
+
+    public boolean recoversOnPartialCancel(final boolean unused) {
+        return switch (onPartialCancel) {
+            case RECOVER -> true;
+            case RECOVER_IF_UNUSED -> unused;
+            case KEEP, VOID -> false;
+        };
+    }
+
+    public boolean recalculatesOnRefund() {
+        return onRefund == CouponOnRefund.RECALCULATE;
+    }
+
     public CouponAccountingCondition getAccountingCondition() {
         return accountingCondition;
     }

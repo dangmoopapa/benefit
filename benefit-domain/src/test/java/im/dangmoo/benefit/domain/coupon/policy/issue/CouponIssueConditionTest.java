@@ -153,4 +153,46 @@ class CouponIssueConditionTest {
 
         assertThat(condition.hasRemainingQuantity(100L)).isFalse();
     }
+
+    @Test
+    @DisplayName("세그먼트가 없으면 매칭 여부와 무관하게 통과한다")
+    void passesWithoutSegmentRegardlessOfMatch() {
+        final CouponIssueCondition condition = CouponIssueCondition.create(
+            CouponIssuablePeriod.create(PERIOD_START, PERIOD_END),
+            List.of(),
+            List.of(),
+            null,
+            null
+        );
+
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), false)).isTrue();
+    }
+
+    @Test
+    @DisplayName("세그먼트가 있는데 미매칭이면 실패한다")
+    void failsWhenSegmentNotMatched() {
+        final CouponIssueCondition condition = CouponIssueCondition.create(
+            CouponIssuablePeriod.create(PERIOD_START, PERIOD_END),
+            List.of(),
+            List.of(),
+            "segment-1",
+            null
+        );
+
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), false)).isFalse();
+    }
+
+    @Test
+    @DisplayName("세그먼트가 있고 매칭되면 통과한다")
+    void passesWhenSegmentMatched() {
+        final CouponIssueCondition condition = CouponIssueCondition.create(
+            CouponIssuablePeriod.create(PERIOD_START, PERIOD_END),
+            List.of(),
+            List.of(),
+            "segment-1",
+            null
+        );
+
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), true)).isTrue();
+    }
 }

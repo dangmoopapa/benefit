@@ -69,4 +69,60 @@ class CouponUsageValidityTest {
 
         assertThat(validity.resolveExpiresAt(ISSUED_AT)).isNull();
     }
+
+    @Test
+    @DisplayName("고정 기간 시작 전이면 비활성이다")
+    void inactiveBeforeFixedPeriodStart() {
+        final CouponUsageValidity validity = CouponUsageValidity.create(
+            CouponUsageValidityType.FIXED_PERIOD,
+            Instant.parse("2026-03-01T00:00:00Z"),
+            FIXED_END,
+            null,
+            null
+        );
+
+        assertThat(validity.isActiveAt(ISSUED_AT, Instant.parse("2026-02-28T23:59:59Z"))).isFalse();
+    }
+
+    @Test
+    @DisplayName("고정 기간 안이면 활성이다")
+    void activeInsideFixedPeriod() {
+        final CouponUsageValidity validity = CouponUsageValidity.create(
+            CouponUsageValidityType.FIXED_PERIOD,
+            Instant.parse("2026-03-01T00:00:00Z"),
+            FIXED_END,
+            null,
+            null
+        );
+
+        assertThat(validity.isActiveAt(ISSUED_AT, Instant.parse("2026-03-20T12:00:00Z"))).isTrue();
+    }
+
+    @Test
+    @DisplayName("만료 시각을 지나면 비활성이다")
+    void inactiveAfterExpiry() {
+        final CouponUsageValidity validity = CouponUsageValidity.create(
+            CouponUsageValidityType.DURATION,
+            null,
+            null,
+            1,
+            null
+        );
+
+        assertThat(validity.isActiveAt(ISSUED_AT, Instant.parse("2026-03-16T10:30:01Z"))).isFalse();
+    }
+
+    @Test
+    @DisplayName("구매 후 유효면 만료 없이 활성이다")
+    void alwaysActiveUntilPurchase() {
+        final CouponUsageValidity validity = CouponUsageValidity.create(
+            CouponUsageValidityType.AFTER_PURCHASE,
+            null,
+            null,
+            null,
+            null
+        );
+
+        assertThat(validity.isActiveAt(ISSUED_AT, Instant.parse("2030-01-01T00:00:00Z"))).isTrue();
+    }
 }

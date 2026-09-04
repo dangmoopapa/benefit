@@ -151,8 +151,8 @@ public class CouponPolicy {
         return status == CouponPolicyStatus.ACTIVE;
     }
 
-    public boolean isIssuableAt(final Instant now) {
-        return issueCondition.isSatisfiedAt(now);
+    public boolean isIssuableAt(final Instant now, final boolean segmentMatched) {
+        return issueCondition.isSatisfiedAt(now, segmentMatched);
     }
 
     public boolean hasIssueQuantityRemaining(final long issuedCount) {

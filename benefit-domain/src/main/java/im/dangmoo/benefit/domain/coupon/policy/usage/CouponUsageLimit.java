@@ -53,4 +53,23 @@ public class CouponUsageLimit {
     public Integer getPerHour() {
         return perHour;
     }
+
+    public boolean isSatisfiedBy(final CouponUsageCountSnapshot counts) {
+        if (perUser != null && counts.perUser() >= perUser) {
+            return false;
+        }
+        if (perUserPerMonth != null && counts.perUserPerMonth() >= perUserPerMonth) {
+            return false;
+        }
+        if (perOrder != null && counts.perOrder() >= perOrder) {
+            return false;
+        }
+        if (total != null && counts.total() >= total) {
+            return false;
+        }
+        if (perDay != null && counts.perDay() >= perDay) {
+            return false;
+        }
+        return perHour == null || counts.perHour() < perHour;
+    }
 }

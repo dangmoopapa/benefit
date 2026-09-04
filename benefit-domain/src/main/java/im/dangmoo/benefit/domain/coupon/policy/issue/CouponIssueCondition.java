@@ -34,6 +34,13 @@ public class CouponIssueCondition {
     }
 
     public boolean isSatisfiedAt(final Instant now) {
+        return isSatisfiedAt(now, true);
+    }
+
+    public boolean isSatisfiedAt(final Instant now, final boolean segmentMatched) {
+        if (segmentId != null && !segmentMatched) {
+            return false;
+        }
         if (period.getStart().isAfter(now) || period.getEnd().isBefore(now)) {
             return false;
         }

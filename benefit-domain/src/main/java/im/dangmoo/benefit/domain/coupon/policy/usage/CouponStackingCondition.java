@@ -60,4 +60,20 @@ public class CouponStackingCondition {
     public boolean isAutoSelectMaxDiscount() {
         return autoSelectMaxDiscount;
     }
+
+    public boolean isSatisfiedBy(final CouponStackingSnapshot stacking) {
+        if (stacking.otherCoupon() && !combinableWithOtherCoupons) {
+            return false;
+        }
+        if (stacking.productAndOrderTogether() && !combinableWithProductAndOrder) {
+            return false;
+        }
+        if (stacking.point() && !combinableWithPoint) {
+            return false;
+        }
+        if (stacking.promotion() && !combinableWithPromotion) {
+            return false;
+        }
+        return !stacking.freeShipping() || combinableWithFreeShipping;
+    }
 }
