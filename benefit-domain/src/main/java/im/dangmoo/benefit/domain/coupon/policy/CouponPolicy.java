@@ -153,6 +153,18 @@ public class CouponPolicy {
         return status == CouponPolicyStatus.ACTIVE;
     }
 
+    public boolean isIssuableAt(final Instant now) {
+        return issueCondition.isSatisfiedAt(now);
+    }
+
+    public boolean hasIssueQuantityRemaining(final long issuedCount) {
+        return issueCondition.hasRemainingQuantity(issuedCount);
+    }
+
+    public Instant resolveExpiresAt(final Instant issuedAt) {
+        return usageCondition.resolveExpiresAt(issuedAt);
+    }
+
     public String getId() {
         return id;
     }

@@ -1,6 +1,7 @@
 package im.dangmoo.benefit.domain.coupon.policy.usage;
 
 import java.util.List;
+import java.time.Instant;
 
 public class CouponUsageCondition {
 
@@ -61,5 +62,9 @@ public class CouponUsageCondition {
 
     public CouponUsageLimit getLimit() {
         return limit;
+    }
+
+    public Instant resolveExpiresAt(final Instant issuedAt) {
+        return validity.resolveExpiresAt(issuedAt);
     }
 }

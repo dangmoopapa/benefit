@@ -1,5 +1,9 @@
 package im.dangmoo.benefit.domain.coupon.policy.issue;
 
+import java.time.Instant;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public class CouponIssueCondition {
@@ -27,6 +31,27 @@ public class CouponIssueCondition {
         document.segmentId = segmentId;
         document.totalQuantity = totalQuantity;
         return document;
+    }
+
+    public boolean isSatisfiedAt(final Instant now) {
+        if (period.getStart().isAfter(now) || period.getEnd().isBefore(now)) {
+            return false;
+        }
+        final ZonedDateTime at = now.atZone(ZoneOffset.UTC);
+        if (!weekdays.isEmpty() && weekdays.stream().noneMatch(weekday -> weekday.dayOfWeek == at.getDayOfWeek())) {
+            return false;
+        }
+        if (!timeRanges.isEmpty()) {
+            final LocalTime time = at.toLocalTime();
+            return timeRanges.stream().anyMatch(range ->
+                !time.isBefore(range.getStart()) && !time.isAfter(range.getEnd())
+            );
+        }
+        return true;
+    }
+
+    public boolean hasRemainingQuantity(final long issuedCount) {
+        return totalQuantity == null || issuedCount < totalQuantity;
     }
 
     public CouponIssuablePeriod getPeriod() {

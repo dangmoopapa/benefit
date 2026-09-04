@@ -1,6 +1,8 @@
 package im.dangmoo.benefit.domain.coupon.policy.usage;
 
 import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 
 public class CouponUsageValidity {
 
@@ -27,6 +29,28 @@ public class CouponUsageValidity {
         document.days = days;
         document.hours = hours;
         return document;
+    }
+
+    public Instant resolveExpiresAt(final Instant issuedAt) {
+        return switch (type) {
+            case FIXED_PERIOD -> end;
+            case UNTIL_MIDNIGHT -> issuedAt.atZone(ZoneOffset.UTC)
+                .toLocalDate()
+                .plusDays(days)
+                .atStartOfDay(ZoneOffset.UTC)
+                .toInstant();
+            case DURATION -> {
+                Instant expiresAt = issuedAt;
+                if (days != null) {
+                    expiresAt = expiresAt.plus(days, ChronoUnit.DAYS);
+                }
+                if (hours != null) {
+                    expiresAt = expiresAt.plus(hours, ChronoUnit.HOURS);
+                }
+                yield expiresAt;
+            }
+            case AFTER_PURCHASE -> null;
+        };
     }
 
     public CouponUsageValidityType getType() {

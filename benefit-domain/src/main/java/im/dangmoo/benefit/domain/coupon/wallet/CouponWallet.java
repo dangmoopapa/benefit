@@ -40,9 +40,12 @@ public class CouponWallet {
         return Query.query(Criteria.where(POLICY_ID).is(policyId));
     }
 
+    public static Query queryByUserIdAndPolicyId(final String userId, final String policyId) {
+        return Query.query(Criteria.where(USER_ID).is(userId).and(POLICY_ID).is(policyId));
+    }
+
     public static CouponWallet create(
         final String userId,
-        final String orderId,
         final String policyId,
         final String policyCode,
         final Instant expiresAt
@@ -50,11 +53,9 @@ public class CouponWallet {
         final Instant now = Instant.now();
         final CouponWallet document = new CouponWallet();
         document.userId = userId;
-        document.orderId = orderId;
         document.policyId = policyId;
         document.policyCode = policyCode;
         document.status = CouponWalletStatus.AVAILABLE;
-        document.usedAmount = BigDecimal.ZERO;
         document.issuedAt = now;
         document.expiresAt = expiresAt;
         document.createdAt = now;
@@ -62,8 +63,9 @@ public class CouponWallet {
         return document;
     }
 
-    public void use(final BigDecimal usedAmount) {
+    public void use(final String orderId, final BigDecimal usedAmount) {
         this.status = CouponWalletStatus.USED;
+        this.orderId = orderId;
         this.usedAmount = usedAmount;
         this.usedAt = Instant.now();
         this.updatedAt = this.usedAt;
@@ -73,6 +75,14 @@ public class CouponWallet {
         this.status = CouponWalletStatus.RECOVERED;
         this.recoveredAt = Instant.now();
         this.updatedAt = this.recoveredAt;
+    }
+
+    public boolean isAvailable() {
+        return status == CouponWalletStatus.AVAILABLE;
+    }
+
+    public boolean isUsed() {
+        return status == CouponWalletStatus.USED;
     }
 
     public String getId() {
