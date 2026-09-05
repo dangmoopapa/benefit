@@ -29,7 +29,7 @@ class CouponIssueConditionTest {
             null
         );
 
-        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), true)).isTrue();
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), List.of())).isTrue();
     }
 
     @Test
@@ -43,7 +43,7 @@ class CouponIssueConditionTest {
             null
         );
 
-        assertThat(condition.isSatisfiedAt(Instant.parse("2026-02-28T23:59:59Z"), true)).isFalse();
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-02-28T23:59:59Z"), List.of())).isFalse();
     }
 
     @Test
@@ -57,7 +57,7 @@ class CouponIssueConditionTest {
             null
         );
 
-        assertThat(condition.isSatisfiedAt(Instant.parse("2026-04-01T00:00:00Z"), true)).isFalse();
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-04-01T00:00:00Z"), List.of())).isFalse();
     }
 
     @Test
@@ -71,7 +71,7 @@ class CouponIssueConditionTest {
             null
         );
 
-        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), true)).isFalse();
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), List.of())).isFalse();
     }
 
     @Test
@@ -85,7 +85,7 @@ class CouponIssueConditionTest {
             null
         );
 
-        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), true)).isTrue();
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), List.of())).isTrue();
     }
 
     @Test
@@ -99,7 +99,7 @@ class CouponIssueConditionTest {
             null
         );
 
-        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T13:00:00Z"), true)).isFalse();
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T13:00:00Z"), List.of())).isFalse();
     }
 
     @Test
@@ -113,7 +113,7 @@ class CouponIssueConditionTest {
             null
         );
 
-        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), true)).isTrue();
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), List.of())).isTrue();
     }
 
     @Test
@@ -169,7 +169,7 @@ class CouponIssueConditionTest {
             null
         );
 
-        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), false)).isTrue();
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), List.of())).isTrue();
     }
 
     @Test
@@ -183,7 +183,7 @@ class CouponIssueConditionTest {
             null
         );
 
-        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), false)).isFalse();
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), List.of("segment-2"))).isFalse();
     }
 
     @Test
@@ -197,6 +197,9 @@ class CouponIssueConditionTest {
             null
         );
 
-        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), true)).isTrue();
+        assertThat(condition.isSatisfiedAt(
+            Instant.parse("2026-03-15T12:00:00Z"),
+            List.of("segment-2", "segment-1")
+        )).isTrue();
     }
 }

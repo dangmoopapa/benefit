@@ -49,7 +49,7 @@ public class CouponWalletAdminService {
             request.userId(),
             request.policyId(),
             request.enforceIssueCondition(),
-            request.segmentMatched(),
+            request.segmentIds() == null ? List.of() : request.segmentIds(),
             adminId
         );
         return switch (result.reason()) {

@@ -10,5 +10,5 @@ Content-Type: application/json
   "userId": "{{userId}}",
   "policyId": "{{policyId}}",
   "enforceIssueCondition": true,
-  "segmentMatched": true
+  "segmentIds": ["segment-1"]
 }

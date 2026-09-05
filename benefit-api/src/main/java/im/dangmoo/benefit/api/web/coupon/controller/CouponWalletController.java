@@ -22,17 +22,27 @@ public class CouponWalletController {
     @PostMapping(ApiPath.COUPON_WALLET_ISSUE_CHECK)
     ApiResponse<CouponWalletIssueAvailabilityResponse> checkIssue(
         @RequestHeader(UserHeaders.USER_ID) final String userId,
+        @RequestHeader(value = UserHeaders.SEGMENT_IDS, required = false) final String segmentIds,
         @RequestBody final CouponWalletIssueRequest request
     ) {
-        return ApiResponse.of(couponWalletService.checkIssue(userId, request));
+        return ApiResponse.of(couponWalletService.checkIssue(
+            userId,
+            UserHeaders.parseSegmentIds(segmentIds),
+            request
+        ));
     }
 
     @PostMapping(ApiPath.COUPON_WALLET_ISSUE)
     ApiResponse<CouponWalletResponse> issue(
         @RequestHeader(UserHeaders.USER_ID) final String userId,
+        @RequestHeader(value = UserHeaders.SEGMENT_IDS, required = false) final String segmentIds,
         @RequestBody final CouponWalletIssueRequest request
     ) {
-        return ApiResponse.of(couponWalletService.issue(userId, request));
+        return ApiResponse.of(couponWalletService.issue(
+            userId,
+            UserHeaders.parseSegmentIds(segmentIds),
+            request
+        ));
     }
 
     @PostMapping(ApiPath.COUPON_WALLET_USE)

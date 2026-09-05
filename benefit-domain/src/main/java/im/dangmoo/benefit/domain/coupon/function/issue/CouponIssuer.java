@@ -10,6 +10,7 @@ import im.dangmoo.benefit.domain.coupon.data.wallet.CouponWalletRepository;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Optional;
 
 @Component
@@ -33,7 +34,7 @@ public class CouponIssuer {
         final String userId,
         final String policyId,
         final boolean enforceIssueCondition,
-        final boolean segmentMatched
+        final Collection<String> userSegmentIds
     ) {
         final Optional<CouponPolicy> found = couponPolicyRepository.findById(policyId);
         if (found.isEmpty()) {
@@ -44,7 +45,8 @@ public class CouponIssuer {
         final CouponIssueCondition issueCondition = policy.getIssueCondition();
         final Long totalQuantity = enforceIssueCondition ? issueCondition.getTotalQuantity() : null;
         final CouponStockSnapshot stock = couponStockRepository.inspect(policy.getId(), userId, totalQuantity);
-        final boolean issueOpen = !enforceIssueCondition || issueCondition.isSatisfiedAt(Instant.now(), segmentMatched);
+        final boolean issueOpen = !enforceIssueCondition
+            || issueCondition.isSatisfiedAt(Instant.now(), userSegmentIds);
 
         if (!policy.isActive()) {
             return CouponIssueAvailability.inactive(issueOpen, stock);
@@ -65,7 +67,7 @@ public class CouponIssuer {
         final String userId,
         final String policyId,
         final boolean enforceIssueCondition,
-        final boolean segmentMatched,
+        final Collection<String> userSegmentIds,
         final String actorId
     ) {
         final Optional<CouponPolicy> found = couponPolicyRepository.findById(policyId);
@@ -80,7 +82,7 @@ public class CouponIssuer {
 
         final Instant now = Instant.now();
         final CouponIssueCondition issueCondition = policy.getIssueCondition();
-        if (enforceIssueCondition && !issueCondition.isSatisfiedAt(now, segmentMatched)) {
+        if (enforceIssueCondition && !issueCondition.isSatisfiedAt(now, userSegmentIds)) {
             return CouponIssueResult.closed();
         }
 

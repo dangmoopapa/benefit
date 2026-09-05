@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Collection;
 import java.util.List;
 
 public class CouponIssueCondition {
@@ -33,8 +34,8 @@ public class CouponIssueCondition {
         return document;
     }
 
-    public boolean isSatisfiedAt(final Instant now, final boolean segmentMatched) {
-        if (segmentId != null && !segmentMatched) {
+    public boolean isSatisfiedAt(final Instant now, final Collection<String> userSegmentIds) {
+        if (segmentId != null && (userSegmentIds == null || !userSegmentIds.contains(segmentId))) {
             return false;
         }
         if (period.getStart().isAfter(now) || period.getEnd().isBefore(now)) {

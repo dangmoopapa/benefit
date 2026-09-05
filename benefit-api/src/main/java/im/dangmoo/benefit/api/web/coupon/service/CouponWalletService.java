@@ -14,6 +14,8 @@ import im.dangmoo.benefit.domain.coupon.function.redeem.CouponRedeemer;
 import im.dangmoo.benefit.domain.coupon.function.redeem.CouponUseResult;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 @Service
 public class CouponWalletService {
 
@@ -27,13 +29,14 @@ public class CouponWalletService {
 
     public CouponWalletIssueAvailabilityResponse checkIssue(
         final String userId,
+        final Collection<String> userSegmentIds,
         final CouponWalletIssueRequest request
     ) {
         final CouponIssueAvailability availability = couponIssuer.check(
             userId,
             request.policyId(),
             true,
-            request.segmentMatched()
+            userSegmentIds
         );
         return new CouponWalletIssueAvailabilityResponse(
             availability.issuable(),
@@ -47,12 +50,16 @@ public class CouponWalletService {
         );
     }
 
-    public CouponWalletResponse issue(final String userId, final CouponWalletIssueRequest request) {
+    public CouponWalletResponse issue(
+        final String userId,
+        final Collection<String> userSegmentIds,
+        final CouponWalletIssueRequest request
+    ) {
         final CouponIssueResult result = couponIssuer.issue(
             userId,
             request.policyId(),
             true,
-            request.segmentMatched(),
+            userSegmentIds,
             userId
         );
         return switch (result.reason()) {

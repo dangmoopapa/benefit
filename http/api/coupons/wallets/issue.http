@@ -3,9 +3,9 @@
 ### 유저 쿠폰 단건 발급
 POST {{host}}/coupons/wallets/issue
 X-User-Id: U120115
+X-Segment-Ids: segment-1,segment-2
 Content-Type: application/json
 
 {
-  "policyId": "{{policyId}}",
-  "segmentMatched": true
+  "policyId": "{{policyId}}"
 }
