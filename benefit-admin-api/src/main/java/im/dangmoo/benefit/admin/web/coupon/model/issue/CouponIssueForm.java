@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.admin.web.coupon.model.issue;
 
-import im.dangmoo.benefit.domain.coupon.data.policy.issue.CouponIssueCondition;
-import im.dangmoo.benefit.domain.coupon.data.policy.issue.CouponIssuableWeekday;
+import im.dangmoo.benefit.domain.data.coupon.policy.issue.CouponIssueCondition;
+import im.dangmoo.benefit.domain.data.coupon.policy.issue.CouponIssuableWeekday;
 
 import java.util.List;
 

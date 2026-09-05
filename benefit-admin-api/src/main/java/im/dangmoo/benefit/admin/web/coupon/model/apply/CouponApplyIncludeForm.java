@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.admin.web.coupon.model.apply;
 
-import im.dangmoo.benefit.domain.coupon.data.policy.apply.CouponApplyInclude;
+import im.dangmoo.benefit.domain.data.coupon.policy.apply.CouponApplyInclude;
 
 import java.util.List;
 

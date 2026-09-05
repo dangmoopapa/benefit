@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.admin.web.coupon.model.apply;
 
-import im.dangmoo.benefit.domain.coupon.data.policy.apply.CouponApplyCondition;
-import im.dangmoo.benefit.domain.coupon.data.policy.apply.CouponApplyUnit;
+import im.dangmoo.benefit.domain.data.coupon.policy.apply.CouponApplyCondition;
+import im.dangmoo.benefit.domain.data.coupon.policy.apply.CouponApplyUnit;
 
 public record CouponApplyForm(
     CouponApplyUnit unit,

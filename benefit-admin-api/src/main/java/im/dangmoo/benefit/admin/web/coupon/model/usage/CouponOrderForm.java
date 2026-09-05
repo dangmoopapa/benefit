@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.admin.web.coupon.model.usage;
 
-import im.dangmoo.benefit.domain.coupon.data.policy.usage.CouponOrderCondition;
+import im.dangmoo.benefit.domain.data.coupon.policy.usage.CouponOrderCondition;
 
 import java.math.BigDecimal;
 import java.util.List;

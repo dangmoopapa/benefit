@@ -4,7 +4,6 @@ plugins {
 
 dependencies {
     implementation project(':benefit-domain')
-    // Kafka (spring-kafka / spring-boot-starter-kafka) will be added when messaging is wired.
     implementation 'org.springframework.boot:spring-boot-starter'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

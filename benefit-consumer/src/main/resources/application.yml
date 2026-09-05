@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: benefit-consumer
+  main:
+    web-application-type: none
+  config:
+    import: optional:classpath:application.yml
+  threads:
+    virtual:
+      enabled: true

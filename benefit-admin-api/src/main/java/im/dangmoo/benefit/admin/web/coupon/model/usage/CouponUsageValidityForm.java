@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.admin.web.coupon.model.usage;
 
-import im.dangmoo.benefit.domain.coupon.data.policy.usage.CouponUsageValidity;
-import im.dangmoo.benefit.domain.coupon.data.policy.usage.CouponUsageValidityType;
+import im.dangmoo.benefit.domain.data.coupon.policy.usage.CouponUsageValidity;
+import im.dangmoo.benefit.domain.data.coupon.policy.usage.CouponUsageValidityType;
 
 import java.time.Instant;
 
