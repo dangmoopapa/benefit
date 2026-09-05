@@ -9,53 +9,70 @@ import java.util.List;
 @Repository
 public class CouponStockRepository {
 
-    private final StringRedisTemplate redis;
-    private final RedisScript<String> inspectScript;
+    private static final String UNLIMITED_TOTAL = "";
+    private static final long UNKNOWN_ISSUED_COUNT = 0L;
+
+    private final StringRedisTemplate redisTemplate;
     private final RedisScript<String> reserveScript;
-    private final RedisScript<Long> recallScript;
 
     public CouponStockRepository(
-        final StringRedisTemplate redis,
-        final RedisScript<String> couponStockInspectScript,
-        final RedisScript<String> couponStockReserveScript,
-        final RedisScript<Long> couponStockRecallScript
+        final StringRedisTemplate redisTemplate,
+        final RedisScript<String> couponStockReserveScript
     ) {
-        this.redis = redis;
-        this.inspectScript = couponStockInspectScript;
+        this.redisTemplate = redisTemplate;
         this.reserveScript = couponStockReserveScript;
-        this.recallScript = couponStockRecallScript;
     }
 
-    public CouponStockResult inspect(final String policyId, final String userId, final Long totalQuantity) {
-        final String reply = redis.execute(
-            inspectScript,
-            keys(policyId, userId),
-            totalArg(totalQuantity)
+    /**
+     * 총량 → 유저 순. 솔드아웃이면 유저 키를 보지 않는다.
+     * 무제한이면 유저 발급 여부만 본다.
+     */
+    public CouponStockSnapshot inspect(final String policyId, final String userId, final Long totalQuantity) {
+        if (totalQuantity != null) {
+            final long issuedCount = readIssuedCount(policyId);
+            if (issuedCount >= totalQuantity) {
+                return CouponStockSnapshot.soldOut(issuedCount, totalQuantity);
+            }
+            if (hasUserIssued(policyId, userId)) {
+                return CouponStockSnapshot.alreadyIssued(issuedCount, totalQuantity);
+            }
+            return CouponStockSnapshot.available(issuedCount, totalQuantity);
+        }
+
+        if (hasUserIssued(policyId, userId)) {
+            return CouponStockSnapshot.alreadyIssued(UNKNOWN_ISSUED_COUNT, null);
+        }
+        return CouponStockSnapshot.available(UNKNOWN_ISSUED_COUNT, null);
+    }
+
+    public CouponStockReserveResult reserve(final String policyId, final String userId, final Long totalQuantity) {
+        return CouponStockReserveResult.fromReply(
+            redisTemplate.execute(
+                reserveScript,
+                List.of(issuedCountKey(policyId), userMarkerKey(policyId, userId)),
+                totalArg(totalQuantity)
+            )
         );
-        return CouponStockResult.inspected(reply, totalQuantity);
     }
 
-    public CouponStockResult reserve(final String policyId, final String userId, final Long totalQuantity) {
-        final String reply = redis.execute(
-            reserveScript,
-            keys(policyId, userId),
-            totalArg(totalQuantity)
-        );
-        return CouponStockResult.reserved(reply, totalQuantity);
+    private long readIssuedCount(final String policyId) {
+        final String value = redisTemplate.opsForValue().get(issuedCountKey(policyId));
+        return value == null ? UNKNOWN_ISSUED_COUNT : Long.parseLong(value);
     }
 
-    public void recall(final String policyId, final String userId) {
-        redis.execute(recallScript, keys(policyId, userId));
+    private boolean hasUserIssued(final String policyId, final String userId) {
+        return Boolean.TRUE.equals(redisTemplate.hasKey(userMarkerKey(policyId, userId)));
     }
 
-    private static List<String> keys(final String policyId, final String userId) {
-        return List.of(
-            "c:stock:" + policyId + ":issued",
-            "c:stock:" + policyId + ":u:" + userId
-        );
+    private static String issuedCountKey(final String policyId) {
+        return "c:stock:" + policyId + ":issued";
+    }
+
+    private static String userMarkerKey(final String policyId, final String userId) {
+        return "c:stock:" + policyId + ":u:" + userId;
     }
 
     private static String totalArg(final Long totalQuantity) {
-        return totalQuantity == null ? "" : totalQuantity.toString();
+        return totalQuantity == null ? UNLIMITED_TOTAL : Long.toString(totalQuantity);
     }
 }

@@ -4,7 +4,7 @@ import im.dangmoo.benefit.domain.coupon.data.policy.CouponPolicy;
 import im.dangmoo.benefit.domain.coupon.data.policy.CouponPolicyRepository;
 import im.dangmoo.benefit.domain.coupon.data.policy.issue.CouponIssueCondition;
 import im.dangmoo.benefit.domain.coupon.data.stock.CouponStockRepository;
-import im.dangmoo.benefit.domain.coupon.data.stock.CouponStockResult;
+import im.dangmoo.benefit.domain.coupon.data.stock.CouponStockSnapshot;
 import im.dangmoo.benefit.domain.coupon.data.wallet.CouponWallet;
 import im.dangmoo.benefit.domain.coupon.data.wallet.CouponWalletRepository;
 import org.springframework.stereotype.Component;
@@ -43,7 +43,7 @@ public class CouponIssuer {
         final CouponPolicy policy = found.get();
         final CouponIssueCondition issueCondition = policy.getIssueCondition();
         final Long totalQuantity = enforceIssueCondition ? issueCondition.getTotalQuantity() : null;
-        final CouponStockResult stock = couponStockRepository.inspect(policy.getId(), userId, totalQuantity);
+        final CouponStockSnapshot stock = couponStockRepository.inspect(policy.getId(), userId, totalQuantity);
         final boolean issueOpen = !enforceIssueCondition || issueCondition.isSatisfiedAt(Instant.now(), segmentMatched);
 
         if (!policy.isActive()) {
@@ -85,25 +85,16 @@ public class CouponIssuer {
         }
 
         final Long totalQuantity = enforceIssueCondition ? issueCondition.getTotalQuantity() : null;
-        final CouponStockResult stock = couponStockRepository.reserve(policy.getId(), userId, totalQuantity);
-        return switch (stock.status()) {
+        return switch (couponStockRepository.reserve(policy.getId(), userId, totalQuantity)) {
             case ALREADY_ISSUED -> CouponIssueResult.alreadyIssued();
             case SOLD_OUT -> CouponIssueResult.soldOut();
-            case OK -> {
-                try {
-                    final CouponWallet wallet = couponWalletRepository.save(CouponWallet.create(
-                        userId,
-                        policy.getId(),
-                        policy.getCode(),
-                        policy.getUsageCondition().getValidity().resolveExpiresAt(now),
-                        actorId
-                    ));
-                    yield CouponIssueResult.issued(wallet);
-                } catch (final RuntimeException exception) {
-                    couponStockRepository.recall(policy.getId(), userId);
-                    throw exception;
-                }
-            }
+            case RESERVED -> CouponIssueResult.issued(couponWalletRepository.save(CouponWallet.create(
+                userId,
+                policy.getId(),
+                policy.getCode(),
+                policy.getUsageCondition().getValidity().resolveExpiresAt(now),
+                actorId
+            )));
         };
     }
 }
