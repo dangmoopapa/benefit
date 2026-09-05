@@ -75,6 +75,7 @@ public class CouponWalletAdminService {
             case USED -> CouponWalletResponse.of(result.wallet());
             case WALLET_NOT_FOUND -> throw new ApiException(ApiMessage.NOT_FOUND);
             case INVALID_STATE -> throw new ApiException(ApiMessage.INVALID_STATUS);
+            case USAGE_LIMIT_EXCEEDED -> throw new ApiException(ApiMessage.USAGE_LIMIT_EXCEEDED);
         };
     }
 

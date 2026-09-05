@@ -162,6 +162,13 @@ public class CouponPolicy {
         return status == CouponPolicyStatus.ACTIVE;
     }
 
+    public Long totalUsageLimit() {
+        if (usageCondition == null || usageCondition.getLimit() == null) {
+            return null;
+        }
+        return usageCondition.getLimit().getTotal();
+    }
+
     public String getId() {
         return id;
     }

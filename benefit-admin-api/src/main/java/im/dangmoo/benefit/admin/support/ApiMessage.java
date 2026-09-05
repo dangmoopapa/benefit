@@ -8,7 +8,8 @@ public enum ApiMessage {
     DUPLICATE_CODE("이미 존재하는 쿠폰 코드입니다"),
     INVALID_STATUS("현재 상태에서는 처리할 수 없습니다"),
     ALREADY_ISSUED("이미 발급된 쿠폰입니다"),
-    ISSUE_NOT_ALLOWED("발급 조건을 만족하지 않습니다");
+    ISSUE_NOT_ALLOWED("발급 조건을 만족하지 않습니다"),
+    USAGE_LIMIT_EXCEEDED("사용 한도를 초과했습니다");
 
     private final String message;
 
