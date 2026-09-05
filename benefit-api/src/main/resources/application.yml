@@ -1,6 +1,6 @@
 spring:
   application:
-    name: benefit-admin-api
+    name: benefit-api
   config:
     import: optional:classpath:application.yml
   jackson:
@@ -10,4 +10,4 @@ spring:
     virtual:
       enabled: true
 server:
-  port: 8081
+  port: 8080

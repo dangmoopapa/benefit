@@ -77,8 +77,15 @@ public class CouponWallet {
         this.updatedAt = this.recoveredAt;
     }
 
-    public boolean isAvailable() {
-        return status == CouponWalletStatus.AVAILABLE;
+    public boolean isNotAvailable() {
+        return status != CouponWalletStatus.AVAILABLE;
+    }
+
+    public boolean isUsableAt(final Instant now) {
+        if (isNotAvailable()) {
+            return false;
+        }
+        return expiresAt == null || !now.isAfter(expiresAt);
     }
 
     public boolean isUsed() {

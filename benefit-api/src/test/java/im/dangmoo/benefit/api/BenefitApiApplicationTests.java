@@ -1,9 +1,7 @@
 package im.dangmoo.benefit.api;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 class BenefitApiApplicationTests {
 
     @Test

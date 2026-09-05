@@ -1,0 +1,4 @@
+@userId = user-1
+
+### 쿠폰함 조회
+GET {{host}}/coupons/box?userId={{userId}}
