@@ -11,7 +11,6 @@ public record CouponUsageForm(
     List<CouponUsableWeekday> weekdays,
     List<CouponUsableTimeForm> timeRanges,
     CouponOrderForm orderCondition,
-    CouponStackingForm stackingCondition,
     CouponUsageLimitForm limit
 ) {
 
@@ -22,7 +21,6 @@ public record CouponUsageForm(
             weekdays,
             timeRanges.stream().map(CouponUsableTimeForm::toDocument).toList(),
             orderCondition.toDocument(),
-            stackingCondition.toDocument(),
             limit.toDocument()
         );
     }
@@ -34,7 +32,6 @@ public record CouponUsageForm(
             document.getWeekdays(),
             document.getTimeRanges().stream().map(CouponUsableTimeForm::of).toList(),
             CouponOrderForm.of(document.getOrderCondition()),
-            CouponStackingForm.of(document.getStackingCondition()),
             CouponUsageLimitForm.of(document.getLimit())
         );
     }

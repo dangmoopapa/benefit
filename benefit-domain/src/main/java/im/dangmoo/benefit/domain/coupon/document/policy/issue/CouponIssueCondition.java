@@ -33,10 +33,6 @@ public class CouponIssueCondition {
         return document;
     }
 
-    public boolean isSatisfiedAt(final Instant now) {
-        return isSatisfiedAt(now, true);
-    }
-
     public boolean isSatisfiedAt(final Instant now, final boolean segmentMatched) {
         if (segmentId != null && !segmentMatched) {
             return false;

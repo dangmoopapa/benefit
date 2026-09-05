@@ -62,15 +62,6 @@ Content-Type: application/json
       "firstPurchaseOnly": false,
       "minPurchaseCount": null
     },
-    "stackingCondition": {
-      "combinableWithOtherCoupons": false,
-      "combinableWithProductAndOrder": false,
-      "combinableWithPoint": true,
-      "combinableWithPromotion": false,
-      "combinableWithFreeShipping": true,
-      "priority": 100,
-      "autoSelectMaxDiscount": true
-    },
     "limit": {
       "perUser": 1,
       "perUserPerMonth": null,

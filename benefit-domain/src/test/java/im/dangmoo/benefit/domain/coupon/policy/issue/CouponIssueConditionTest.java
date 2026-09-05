@@ -29,7 +29,7 @@ class CouponIssueConditionTest {
             null
         );
 
-        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"))).isTrue();
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), true)).isTrue();
     }
 
     @Test
@@ -43,7 +43,7 @@ class CouponIssueConditionTest {
             null
         );
 
-        assertThat(condition.isSatisfiedAt(Instant.parse("2026-02-28T23:59:59Z"))).isFalse();
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-02-28T23:59:59Z"), true)).isFalse();
     }
 
     @Test
@@ -57,7 +57,7 @@ class CouponIssueConditionTest {
             null
         );
 
-        assertThat(condition.isSatisfiedAt(Instant.parse("2026-04-01T00:00:00Z"))).isFalse();
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-04-01T00:00:00Z"), true)).isFalse();
     }
 
     @Test
@@ -71,7 +71,7 @@ class CouponIssueConditionTest {
             null
         );
 
-        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"))).isFalse();
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), true)).isFalse();
     }
 
     @Test
@@ -85,7 +85,7 @@ class CouponIssueConditionTest {
             null
         );
 
-        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"))).isTrue();
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), true)).isTrue();
     }
 
     @Test
@@ -99,7 +99,7 @@ class CouponIssueConditionTest {
             null
         );
 
-        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T13:00:00Z"))).isFalse();
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T13:00:00Z"), true)).isFalse();
     }
 
     @Test
@@ -113,7 +113,7 @@ class CouponIssueConditionTest {
             null
         );
 
-        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"))).isTrue();
+        assertThat(condition.isSatisfiedAt(Instant.parse("2026-03-15T12:00:00Z"), true)).isTrue();
     }
 
     @Test

@@ -53,14 +53,6 @@ public class CouponUsageValidity {
         };
     }
 
-    public boolean isActiveAt(final Instant issuedAt, final Instant now) {
-        if (type == CouponUsageValidityType.FIXED_PERIOD && start != null && now.isBefore(start)) {
-            return false;
-        }
-        final Instant expiresAt = resolveExpiresAt(issuedAt);
-        return expiresAt == null || !now.isAfter(expiresAt);
-    }
-
     public CouponUsageValidityType getType() {
         return type;
     }

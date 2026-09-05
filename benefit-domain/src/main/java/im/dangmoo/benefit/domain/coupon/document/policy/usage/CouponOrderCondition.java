@@ -63,26 +63,4 @@ public class CouponOrderCondition {
     public Integer getMinPurchaseCount() {
         return minPurchaseCount;
     }
-
-    public boolean isSatisfiedBy(final CouponOrderSnapshot order) {
-        if (minAmount != null && order.amount().compareTo(minAmount) < 0) {
-            return false;
-        }
-        if (maxAmount != null && order.amount().compareTo(maxAmount) > 0) {
-            return false;
-        }
-        if (!paymentMethods.isEmpty() && !paymentMethods.contains(order.paymentMethod())) {
-            return false;
-        }
-        if (!shippingMethods.isEmpty() && !shippingMethods.contains(order.shippingMethod())) {
-            return false;
-        }
-        if (!regions.isEmpty() && !regions.contains(order.region())) {
-            return false;
-        }
-        if (firstPurchaseOnly && !order.firstPurchase()) {
-            return false;
-        }
-        return minPurchaseCount == null || order.purchaseCount() >= minPurchaseCount;
-    }
 }
