@@ -1,5 +1,6 @@
 package im.dangmoo.benefit.admin.web.coupon.controller;
 
+import im.dangmoo.benefit.admin.support.AdminHeaders;
 import im.dangmoo.benefit.admin.support.ApiResponse;
 import im.dangmoo.benefit.admin.web.ApiPath;
 import im.dangmoo.benefit.admin.web.coupon.model.CouponWalletIssueRequest;
@@ -30,20 +31,27 @@ public class CouponWalletAdminController {
     }
 
     @PostMapping(ApiPath.COUPON_WALLET_ISSUE)
-    ApiResponse<CouponWalletResponse> issue(@RequestBody final CouponWalletIssueRequest request) {
-        return ApiResponse.of(couponWalletAdminService.issue(request));
+    ApiResponse<CouponWalletResponse> issue(
+        @RequestHeader(AdminHeaders.ADMIN_ID) final String adminId,
+        @RequestBody final CouponWalletIssueRequest request
+    ) {
+        return ApiResponse.of(couponWalletAdminService.issue(adminId, request));
     }
 
     @PostMapping(ApiPath.COUPON_WALLET_USE)
     ApiResponse<CouponWalletResponse> use(
+        @RequestHeader(AdminHeaders.ADMIN_ID) final String adminId,
         @PathVariable final String walletId,
         @RequestBody final CouponWalletUseRequest request
     ) {
-        return ApiResponse.of(couponWalletAdminService.use(walletId, request));
+        return ApiResponse.of(couponWalletAdminService.use(adminId, walletId, request));
     }
 
     @PostMapping(ApiPath.COUPON_WALLET_RECOVER)
-    ApiResponse<CouponWalletResponse> recover(@PathVariable final String walletId) {
-        return ApiResponse.of(couponWalletAdminService.recover(walletId));
+    ApiResponse<CouponWalletResponse> recover(
+        @RequestHeader(AdminHeaders.ADMIN_ID) final String adminId,
+        @PathVariable final String walletId
+    ) {
+        return ApiResponse.of(couponWalletAdminService.recover(adminId, walletId));
     }
 }

@@ -2,3 +2,4 @@
 
 ### 관리자 쿠폰 회수
 POST {{host}}/coupons/wallets/{{walletId}}/recover
+X-Admin-Id: A120115

@@ -31,7 +31,9 @@ public class CouponPolicy {
     private CouponApplyCondition applyCondition;
     private CouponUsageCondition usageCondition;
     private CouponLifecycleCondition lifecycleCondition;
+    private String createdBy;
     private Instant createdAt;
+    private String updatedBy;
     private Instant updatedAt;
 
     private static final String CODE = "code";
@@ -87,7 +89,8 @@ public class CouponPolicy {
         final CouponBenefitCondition benefitCondition,
         final CouponApplyCondition applyCondition,
         final CouponUsageCondition usageCondition,
-        final CouponLifecycleCondition lifecycleCondition
+        final CouponLifecycleCondition lifecycleCondition,
+        final String createdBy
     ) {
         final Instant now = Instant.now();
         final CouponPolicy document = new CouponPolicy();
@@ -102,7 +105,9 @@ public class CouponPolicy {
         document.applyCondition = applyCondition;
         document.usageCondition = usageCondition;
         document.lifecycleCondition = lifecycleCondition;
+        document.createdBy = createdBy;
         document.createdAt = now;
+        document.updatedBy = createdBy;
         document.updatedAt = now;
         return document;
     }
@@ -117,7 +122,8 @@ public class CouponPolicy {
         final CouponBenefitCondition benefitCondition,
         final CouponApplyCondition applyCondition,
         final CouponUsageCondition usageCondition,
-        final CouponLifecycleCondition lifecycleCondition
+        final CouponLifecycleCondition lifecycleCondition,
+        final String updatedBy
     ) {
         this.code = code;
         this.name = name;
@@ -129,21 +135,25 @@ public class CouponPolicy {
         this.applyCondition = applyCondition;
         this.usageCondition = usageCondition;
         this.lifecycleCondition = lifecycleCondition;
+        this.updatedBy = updatedBy;
         this.updatedAt = Instant.now();
     }
 
-    public void updateIssueCondition(final CouponIssueCondition issueCondition) {
+    public void updateIssueCondition(final CouponIssueCondition issueCondition, final String updatedBy) {
         this.issueCondition = issueCondition;
+        this.updatedBy = updatedBy;
         this.updatedAt = Instant.now();
     }
 
-    public void activate() {
+    public void activate(final String updatedBy) {
         this.status = CouponPolicyStatus.ACTIVE;
+        this.updatedBy = updatedBy;
         this.updatedAt = Instant.now();
     }
 
-    public void suspend() {
+    public void suspend(final String updatedBy) {
         this.status = CouponPolicyStatus.SUSPENDED;
+        this.updatedBy = updatedBy;
         this.updatedAt = Instant.now();
     }
 
@@ -211,8 +221,16 @@ public class CouponPolicy {
         return lifecycleCondition;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
     public Instant getCreatedAt() {
         return createdAt;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
     }
 
     public Instant getUpdatedAt() {

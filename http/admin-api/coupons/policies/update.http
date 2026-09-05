@@ -2,6 +2,7 @@
 
 ### 쿠폰 정책 수정
 PUT {{host}}/coupons/policies/{{policyId}}
+X-Admin-Id: A120115
 Content-Type: application/json
 
 {

@@ -18,7 +18,9 @@ public record CouponWalletResponse(
     Instant expiresAt,
     Instant usedAt,
     Instant recoveredAt,
+    String createdBy,
     Instant createdAt,
+    String updatedBy,
     Instant updatedAt
 ) {
 
@@ -35,7 +37,9 @@ public record CouponWalletResponse(
             document.getExpiresAt(),
             document.getUsedAt(),
             document.getRecoveredAt(),
+            document.getCreatedBy(),
             document.getCreatedAt(),
+            document.getUpdatedBy(),
             document.getUpdatedAt()
         );
     }

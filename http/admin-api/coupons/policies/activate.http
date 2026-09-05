@@ -2,3 +2,4 @@
 
 ### 쿠폰 정책 활성화
 POST {{host}}/coupons/policies/{{policyId}}/activate
+X-Admin-Id: A120115

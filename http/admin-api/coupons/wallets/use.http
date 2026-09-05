@@ -2,6 +2,7 @@
 
 ### 관리자 쿠폰 사용
 POST {{host}}/coupons/wallets/{{walletId}}/use
+X-Admin-Id: A120115
 Content-Type: application/json
 
 {

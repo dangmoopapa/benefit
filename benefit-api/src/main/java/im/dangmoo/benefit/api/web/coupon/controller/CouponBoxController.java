@@ -1,11 +1,12 @@
 package im.dangmoo.benefit.api.web.coupon.controller;
 
 import im.dangmoo.benefit.api.support.ApiResponse;
+import im.dangmoo.benefit.api.support.UserHeaders;
 import im.dangmoo.benefit.api.web.ApiPath;
 import im.dangmoo.benefit.api.web.coupon.model.CouponBoxResponse;
 import im.dangmoo.benefit.api.web.coupon.service.CouponBoxService;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,7 +19,7 @@ public class CouponBoxController {
     }
 
     @GetMapping(ApiPath.COUPON_BOX)
-    ApiResponse<CouponBoxResponse> get(@RequestParam final String userId) {
+    ApiResponse<CouponBoxResponse> get(@RequestHeader(UserHeaders.USER_ID) final String userId) {
         return ApiResponse.of(couponBoxService.get(userId));
     }
 }

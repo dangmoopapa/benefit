@@ -1,5 +1,6 @@
 ### 쿠폰 정책 생성
 POST {{host}}/coupons/policies
+X-Admin-Id: A120115
 Content-Type: application/json
 
 {

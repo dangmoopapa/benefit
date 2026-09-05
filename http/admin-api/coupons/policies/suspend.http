@@ -2,3 +2,4 @@
 
 ### 쿠폰 정책 중지
 POST {{host}}/coupons/policies/{{policyId}}/suspend
+X-Admin-Id: A120115

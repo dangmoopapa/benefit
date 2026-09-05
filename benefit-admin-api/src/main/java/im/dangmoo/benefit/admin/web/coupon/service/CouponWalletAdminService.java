@@ -40,7 +40,7 @@ public class CouponWalletAdminService {
             .toList();
     }
 
-    public CouponWalletResponse issue(final CouponWalletIssueRequest request) {
+    public CouponWalletResponse issue(final String adminId, final CouponWalletIssueRequest request) {
         final CouponPolicy policy = couponPolicyRepository.findById(request.policyId())
             .orElseThrow(() -> new ApiException(ApiMessage.NOT_FOUND));
         if (!policy.isActive()) {
@@ -66,28 +66,29 @@ public class CouponWalletAdminService {
             request.userId(),
             policy.getId(),
             policy.getCode(),
-            policy.resolveExpiresAt(now)
+            policy.resolveExpiresAt(now),
+            adminId
         );
         return CouponWalletResponse.of(couponWalletRepository.save(wallet));
     }
 
-    public CouponWalletResponse use(final String walletId, final CouponWalletUseRequest request) {
+    public CouponWalletResponse use(final String adminId, final String walletId, final CouponWalletUseRequest request) {
         final CouponWallet wallet = couponWalletRepository.findById(walletId)
             .orElseThrow(() -> new ApiException(ApiMessage.NOT_FOUND));
-        if (!wallet.isAvailable()) {
+        if (wallet.isNotAvailable()) {
             throw new ApiException(ApiMessage.INVALID_STATUS);
         }
-        wallet.use(request.orderId(), request.usedAmount());
+        wallet.use(request.orderId(), request.usedAmount(), adminId);
         return CouponWalletResponse.of(couponWalletRepository.save(wallet));
     }
 
-    public CouponWalletResponse recover(final String walletId) {
+    public CouponWalletResponse recover(final String adminId, final String walletId) {
         final CouponWallet wallet = couponWalletRepository.findById(walletId)
             .orElseThrow(() -> new ApiException(ApiMessage.NOT_FOUND));
         if (!wallet.isUsed()) {
             throw new ApiException(ApiMessage.INVALID_STATUS);
         }
-        wallet.recover();
+        wallet.recover(adminId);
         return CouponWalletResponse.of(couponWalletRepository.save(wallet));
     }
 }

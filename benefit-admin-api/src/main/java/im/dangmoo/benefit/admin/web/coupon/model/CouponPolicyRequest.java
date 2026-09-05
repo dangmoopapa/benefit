@@ -21,7 +21,7 @@ public record CouponPolicyRequest(
     CouponLifecycleForm lifecycleCondition
 ) {
 
-    public CouponPolicy toDocument() {
+    public CouponPolicy toDocument(final String createdBy) {
         return CouponPolicy.create(
             code,
             name,
@@ -32,7 +32,8 @@ public record CouponPolicyRequest(
             benefitCondition.toDocument(),
             applyCondition.toDocument(),
             usageCondition.toDocument(),
-            lifecycleCondition.toDocument()
+            lifecycleCondition.toDocument(),
+            createdBy
         );
     }
 }

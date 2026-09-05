@@ -24,7 +24,9 @@ public record CouponPolicyResponse(
     CouponApplyForm applyCondition,
     CouponUsageForm usageCondition,
     CouponLifecycleForm lifecycleCondition,
+    String createdBy,
     Instant createdAt,
+    String updatedBy,
     Instant updatedAt
 ) {
 
@@ -42,7 +44,9 @@ public record CouponPolicyResponse(
             CouponApplyForm.of(document.getApplyCondition()),
             CouponUsageForm.of(document.getUsageCondition()),
             CouponLifecycleForm.of(document.getLifecycleCondition()),
+            document.getCreatedBy(),
             document.getCreatedAt(),
+            document.getUpdatedBy(),
             document.getUpdatedAt()
         );
     }

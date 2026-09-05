@@ -23,7 +23,9 @@ public class CouponWallet {
     private Instant expiresAt;
     private Instant usedAt;
     private Instant recoveredAt;
+    private String createdBy;
     private Instant createdAt;
+    private String updatedBy;
     private Instant updatedAt;
 
     private static final String USER_ID = "userId";
@@ -48,7 +50,8 @@ public class CouponWallet {
         final String userId,
         final String policyId,
         final String policyCode,
-        final Instant expiresAt
+        final Instant expiresAt,
+        final String createdBy
     ) {
         final Instant now = Instant.now();
         final CouponWallet document = new CouponWallet();
@@ -58,22 +61,26 @@ public class CouponWallet {
         document.status = CouponWalletStatus.AVAILABLE;
         document.issuedAt = now;
         document.expiresAt = expiresAt;
+        document.createdBy = createdBy;
         document.createdAt = now;
+        document.updatedBy = createdBy;
         document.updatedAt = now;
         return document;
     }
 
-    public void use(final String orderId, final BigDecimal usedAmount) {
+    public void use(final String orderId, final BigDecimal usedAmount, final String updatedBy) {
         this.status = CouponWalletStatus.USED;
         this.orderId = orderId;
         this.usedAmount = usedAmount;
         this.usedAt = Instant.now();
+        this.updatedBy = updatedBy;
         this.updatedAt = this.usedAt;
     }
 
-    public void recover() {
+    public void recover(final String updatedBy) {
         this.status = CouponWalletStatus.RECOVERED;
         this.recoveredAt = Instant.now();
+        this.updatedBy = updatedBy;
         this.updatedAt = this.recoveredAt;
     }
 
@@ -136,8 +143,16 @@ public class CouponWallet {
         return recoveredAt;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
     public Instant getCreatedAt() {
         return createdAt;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
     }
 
     public Instant getUpdatedAt() {
