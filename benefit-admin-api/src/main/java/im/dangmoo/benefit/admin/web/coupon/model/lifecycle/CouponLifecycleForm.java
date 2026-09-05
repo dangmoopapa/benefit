@@ -1,9 +1,9 @@
 package im.dangmoo.benefit.admin.web.coupon.model.lifecycle;
 
-import im.dangmoo.benefit.domain.coupon.policy.lifecycle.CouponLifecycleCondition;
-import im.dangmoo.benefit.domain.coupon.policy.lifecycle.CouponOnOrderCancel;
-import im.dangmoo.benefit.domain.coupon.policy.lifecycle.CouponOnPartialCancel;
-import im.dangmoo.benefit.domain.coupon.policy.lifecycle.CouponOnRefund;
+import im.dangmoo.benefit.domain.coupon.document.policy.lifecycle.CouponLifecycleCondition;
+import im.dangmoo.benefit.domain.coupon.document.policy.lifecycle.CouponOnOrderCancel;
+import im.dangmoo.benefit.domain.coupon.document.policy.lifecycle.CouponOnPartialCancel;
+import im.dangmoo.benefit.domain.coupon.document.policy.lifecycle.CouponOnRefund;
 
 public record CouponLifecycleForm(
     CouponOnOrderCancel onOrderCancel,

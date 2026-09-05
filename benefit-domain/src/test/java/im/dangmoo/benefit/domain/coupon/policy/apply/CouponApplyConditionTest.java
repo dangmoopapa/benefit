@@ -1,5 +1,6 @@
 package im.dangmoo.benefit.domain.coupon.policy.apply;
 
+import im.dangmoo.benefit.domain.coupon.document.policy.apply.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

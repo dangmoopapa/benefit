@@ -5,8 +5,8 @@ import im.dangmoo.benefit.admin.support.ApiMessage;
 import im.dangmoo.benefit.admin.web.coupon.model.CouponPolicyRequest;
 import im.dangmoo.benefit.admin.web.coupon.model.CouponPolicyResponse;
 import im.dangmoo.benefit.admin.web.coupon.model.CouponPolicySearchRequest;
-import im.dangmoo.benefit.domain.coupon.policy.CouponPolicy;
-import im.dangmoo.benefit.domain.coupon.policy.CouponPolicyRepository;
+import im.dangmoo.benefit.domain.coupon.document.policy.CouponPolicy;
+import im.dangmoo.benefit.domain.coupon.document.policy.CouponPolicyRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

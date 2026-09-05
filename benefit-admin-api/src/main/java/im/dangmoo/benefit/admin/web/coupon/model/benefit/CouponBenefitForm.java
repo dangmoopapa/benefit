@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.admin.web.coupon.model.benefit;
 
-import im.dangmoo.benefit.domain.coupon.policy.benefit.CouponBenefitCondition;
-import im.dangmoo.benefit.domain.coupon.policy.benefit.CouponBenefitType;
+import im.dangmoo.benefit.domain.coupon.document.policy.benefit.CouponBenefitCondition;
+import im.dangmoo.benefit.domain.coupon.document.policy.benefit.CouponBenefitType;
 
 import java.math.BigDecimal;
 

@@ -6,94 +6,74 @@ import im.dangmoo.benefit.api.web.coupon.model.CouponWalletBulkIssueRequest;
 import im.dangmoo.benefit.api.web.coupon.model.CouponWalletIssueRequest;
 import im.dangmoo.benefit.api.web.coupon.model.CouponWalletResponse;
 import im.dangmoo.benefit.api.web.coupon.model.CouponWalletUseRequest;
-import im.dangmoo.benefit.domain.coupon.policy.CouponPolicy;
-import im.dangmoo.benefit.domain.coupon.policy.CouponPolicyRepository;
-import im.dangmoo.benefit.domain.coupon.wallet.CouponWallet;
-import im.dangmoo.benefit.domain.coupon.wallet.CouponWalletRepository;
+import im.dangmoo.benefit.domain.coupon.function.issue.CouponIssueResult;
+import im.dangmoo.benefit.domain.coupon.function.issue.CouponIssuer;
+import im.dangmoo.benefit.domain.coupon.function.redeem.CouponRecoverResult;
+import im.dangmoo.benefit.domain.coupon.function.redeem.CouponRedeemer;
+import im.dangmoo.benefit.domain.coupon.function.redeem.CouponUseResult;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CouponWalletService {
 
-    private final CouponWalletRepository couponWalletRepository;
-    private final CouponPolicyRepository couponPolicyRepository;
+    private final CouponIssuer couponIssuer;
+    private final CouponRedeemer couponRedeemer;
 
-    public CouponWalletService(
-        final CouponWalletRepository couponWalletRepository,
-        final CouponPolicyRepository couponPolicyRepository
-    ) {
-        this.couponWalletRepository = couponWalletRepository;
-        this.couponPolicyRepository = couponPolicyRepository;
+    public CouponWalletService(final CouponIssuer couponIssuer, final CouponRedeemer couponRedeemer) {
+        this.couponIssuer = couponIssuer;
+        this.couponRedeemer = couponRedeemer;
     }
 
     public CouponWalletResponse issue(final String userId, final CouponWalletIssueRequest request) {
-        return CouponWalletResponse.of(issueOne(userId, request.policyId(), request.segmentMatched()));
+        final CouponIssueResult result = couponIssuer.issue(
+            userId,
+            request.policyId(),
+            true,
+            request.segmentMatched(),
+            userId
+        );
+        return switch (result.reason()) {
+            case ISSUED -> CouponWalletResponse.of(result.wallet());
+            case POLICY_NOT_FOUND -> throw new ApiException(ApiMessage.NOT_FOUND);
+            case POLICY_NOT_ACTIVE -> throw new ApiException(ApiMessage.INVALID_STATUS);
+            case ISSUE_NOT_ALLOWED -> throw new ApiException(ApiMessage.ISSUE_NOT_ALLOWED);
+            case ALREADY_ISSUED -> throw new ApiException(ApiMessage.ALREADY_ISSUED);
+        };
     }
 
     public List<CouponWalletResponse> issueBulk(final String userId, final CouponWalletBulkIssueRequest request) {
         final List<CouponWalletResponse> issued = new ArrayList<>();
         for (final CouponWalletIssueRequest item : request.items()) {
-            issued.add(CouponWalletResponse.of(issueOne(userId, item.policyId(), item.segmentMatched())));
+            issued.add(issue(userId, item));
         }
         return issued;
     }
 
     public CouponWalletResponse use(final String userId, final String walletId, final CouponWalletUseRequest request) {
-        final CouponWallet wallet = findOwnedWallet(userId, walletId);
-        if (!wallet.isUsableAt(Instant.now())) {
-            throw new ApiException(ApiMessage.INVALID_STATUS);
-        }
-        wallet.use(request.orderId(), request.usedAmount(), userId);
-        return CouponWalletResponse.of(couponWalletRepository.save(wallet));
+        final CouponUseResult result = couponRedeemer.use(
+            walletId,
+            request.orderId(),
+            request.usedAmount(),
+            userId,
+            true,
+            userId
+        );
+        return switch (result.reason()) {
+            case USED -> CouponWalletResponse.of(result.wallet());
+            case WALLET_NOT_FOUND -> throw new ApiException(ApiMessage.NOT_FOUND);
+            case INVALID_STATE -> throw new ApiException(ApiMessage.INVALID_STATUS);
+        };
     }
 
     public CouponWalletResponse cancel(final String userId, final String walletId) {
-        final CouponWallet wallet = findOwnedWallet(userId, walletId);
-        if (!wallet.isUsed()) {
-            throw new ApiException(ApiMessage.INVALID_STATUS);
-        }
-        wallet.recover(userId);
-        return CouponWalletResponse.of(couponWalletRepository.save(wallet));
-    }
-
-    private CouponWallet issueOne(final String userId, final String policyId, final boolean segmentMatched) {
-        final CouponPolicy policy = couponPolicyRepository.findById(policyId)
-            .orElseThrow(() -> new ApiException(ApiMessage.NOT_FOUND));
-        if (!policy.isActive()) {
-            throw new ApiException(ApiMessage.INVALID_STATUS);
-        }
-
-        final Instant now = Instant.now();
-        if (!policy.isIssuableAt(now, segmentMatched)) {
-            throw new ApiException(ApiMessage.ISSUE_NOT_ALLOWED);
-        }
-        final long issuedCount = couponWalletRepository.countByPolicyId(policy.getId());
-        if (!policy.hasIssueQuantityRemaining(issuedCount)) {
-            throw new ApiException(ApiMessage.ISSUE_NOT_ALLOWED);
-        }
-        if (couponWalletRepository.existsByUserIdAndPolicyId(userId, policy.getId())) {
-            throw new ApiException(ApiMessage.ALREADY_ISSUED);
-        }
-
-        return couponWalletRepository.save(CouponWallet.create(
-            userId,
-            policy.getId(),
-            policy.getCode(),
-            policy.resolveExpiresAt(now),
-            userId
-        ));
-    }
-
-    private CouponWallet findOwnedWallet(final String userId, final String walletId) {
-        final CouponWallet wallet = couponWalletRepository.findById(walletId)
-            .orElseThrow(() -> new ApiException(ApiMessage.NOT_FOUND));
-        if (!wallet.getUserId().equals(userId)) {
-            throw new ApiException(ApiMessage.NOT_FOUND);
-        }
-        return wallet;
+        final CouponRecoverResult result = couponRedeemer.recover(walletId, userId, userId);
+        return switch (result.reason()) {
+            case RECOVERED -> CouponWalletResponse.of(result.wallet());
+            case WALLET_NOT_FOUND -> throw new ApiException(ApiMessage.NOT_FOUND);
+            case INVALID_STATE -> throw new ApiException(ApiMessage.INVALID_STATUS);
+        };
     }
 }

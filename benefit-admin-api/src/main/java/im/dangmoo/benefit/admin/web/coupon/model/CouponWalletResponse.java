@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.admin.web.coupon.model;
 
-import im.dangmoo.benefit.domain.coupon.wallet.CouponWallet;
-import im.dangmoo.benefit.domain.coupon.wallet.CouponWalletStatus;
+import im.dangmoo.benefit.domain.coupon.document.wallet.CouponWallet;
+import im.dangmoo.benefit.domain.coupon.document.wallet.CouponWalletStatus;
 
 import java.math.BigDecimal;
 import java.time.Instant;

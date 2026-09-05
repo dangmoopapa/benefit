@@ -1,5 +1,9 @@
 package im.dangmoo.benefit.domain.coupon.policy.lifecycle;
 
+import im.dangmoo.benefit.domain.coupon.document.policy.lifecycle.CouponLifecycleCondition;
+import im.dangmoo.benefit.domain.coupon.document.policy.lifecycle.CouponOnOrderCancel;
+import im.dangmoo.benefit.domain.coupon.document.policy.lifecycle.CouponOnPartialCancel;
+import im.dangmoo.benefit.domain.coupon.document.policy.lifecycle.CouponOnRefund;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

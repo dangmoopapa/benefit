@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.admin.web.coupon.model.usage;
 
-import im.dangmoo.benefit.domain.coupon.policy.usage.CouponStackingCondition;
+import im.dangmoo.benefit.domain.coupon.document.policy.usage.CouponStackingCondition;
 
 public record CouponStackingForm(
     boolean combinableWithOtherCoupons,
