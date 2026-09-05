@@ -2,8 +2,8 @@ package im.dangmoo.benefit.api.web.coupon.service;
 
 import im.dangmoo.benefit.api.web.coupon.model.CouponBoxResponse;
 import im.dangmoo.benefit.api.web.coupon.model.CouponWalletResponse;
-import im.dangmoo.benefit.domain.coupon.document.wallet.CouponWallet;
-import im.dangmoo.benefit.domain.coupon.document.wallet.CouponWalletRepository;
+import im.dangmoo.benefit.domain.coupon.data.wallet.CouponWallet;
+import im.dangmoo.benefit.domain.coupon.data.wallet.CouponWalletRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

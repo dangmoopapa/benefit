@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.admin.web.coupon.model.usage;
 
-import im.dangmoo.benefit.domain.coupon.document.policy.usage.CouponUsableTime;
+import im.dangmoo.benefit.domain.coupon.data.policy.usage.CouponUsableTime;
 
 import java.time.LocalTime;
 

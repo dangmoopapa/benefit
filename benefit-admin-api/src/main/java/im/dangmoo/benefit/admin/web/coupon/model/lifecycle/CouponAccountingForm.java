@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.admin.web.coupon.model.lifecycle;
 
-import im.dangmoo.benefit.domain.coupon.document.policy.lifecycle.CouponAccountingCondition;
-import im.dangmoo.benefit.domain.coupon.document.policy.lifecycle.CouponCostBearer;
+import im.dangmoo.benefit.domain.coupon.data.policy.lifecycle.CouponAccountingCondition;
+import im.dangmoo.benefit.domain.coupon.data.policy.lifecycle.CouponCostBearer;
 
 public record CouponAccountingForm(
     CouponCostBearer bearer,

@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.domain.coupon.function.redeem;
 
-import im.dangmoo.benefit.domain.coupon.document.wallet.CouponWallet;
-import im.dangmoo.benefit.domain.coupon.document.wallet.CouponWalletRepository;
+import im.dangmoo.benefit.domain.coupon.data.wallet.CouponWallet;
+import im.dangmoo.benefit.domain.coupon.data.wallet.CouponWalletRepository;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;

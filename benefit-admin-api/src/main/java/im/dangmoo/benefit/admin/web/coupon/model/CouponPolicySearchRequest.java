@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.admin.web.coupon.model;
 
-import im.dangmoo.benefit.domain.coupon.document.policy.CouponPolicyStatus;
-import im.dangmoo.benefit.domain.coupon.document.policy.CouponPolicyType;
+import im.dangmoo.benefit.domain.coupon.data.policy.CouponPolicyStatus;
+import im.dangmoo.benefit.domain.coupon.data.policy.CouponPolicyType;
 
 public record CouponPolicySearchRequest(
     String code,

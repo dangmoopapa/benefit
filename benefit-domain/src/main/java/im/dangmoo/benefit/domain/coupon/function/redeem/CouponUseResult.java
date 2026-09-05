@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.domain.coupon.function.redeem;
 
-import im.dangmoo.benefit.domain.coupon.document.wallet.CouponWallet;
+import im.dangmoo.benefit.domain.coupon.data.wallet.CouponWallet;
 
 public record CouponUseResult(
     CouponUseReason reason,

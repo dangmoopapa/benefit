@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.admin.web.coupon.model.usage;
 
-import im.dangmoo.benefit.domain.coupon.document.policy.usage.CouponUsageLimit;
+import im.dangmoo.benefit.domain.coupon.data.policy.usage.CouponUsageLimit;
 
 public record CouponUsageLimitForm(
     Integer perUser,

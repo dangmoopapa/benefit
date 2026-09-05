@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.domain.coupon.policy.usage;
 
-import im.dangmoo.benefit.domain.coupon.document.policy.usage.CouponUsageValidity;
-import im.dangmoo.benefit.domain.coupon.document.policy.usage.CouponUsageValidityType;
+import im.dangmoo.benefit.domain.coupon.data.policy.usage.CouponUsageValidity;
+import im.dangmoo.benefit.domain.coupon.data.policy.usage.CouponUsageValidityType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

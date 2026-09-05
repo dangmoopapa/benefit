@@ -1,10 +1,12 @@
 package im.dangmoo.benefit.domain.coupon.function.issue;
 
-import im.dangmoo.benefit.domain.coupon.document.policy.CouponPolicy;
-import im.dangmoo.benefit.domain.coupon.document.policy.CouponPolicyRepository;
-import im.dangmoo.benefit.domain.coupon.document.policy.issue.CouponIssueCondition;
-import im.dangmoo.benefit.domain.coupon.document.wallet.CouponWallet;
-import im.dangmoo.benefit.domain.coupon.document.wallet.CouponWalletRepository;
+import im.dangmoo.benefit.domain.coupon.data.policy.CouponPolicy;
+import im.dangmoo.benefit.domain.coupon.data.policy.CouponPolicyRepository;
+import im.dangmoo.benefit.domain.coupon.data.policy.issue.CouponIssueCondition;
+import im.dangmoo.benefit.domain.coupon.data.stock.CouponStockRepository;
+import im.dangmoo.benefit.domain.coupon.data.stock.CouponStockResult;
+import im.dangmoo.benefit.domain.coupon.data.wallet.CouponWallet;
+import im.dangmoo.benefit.domain.coupon.data.wallet.CouponWalletRepository;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -15,13 +17,48 @@ public class CouponIssuer {
 
     private final CouponWalletRepository couponWalletRepository;
     private final CouponPolicyRepository couponPolicyRepository;
+    private final CouponStockRepository couponStockRepository;
 
     public CouponIssuer(
         final CouponWalletRepository couponWalletRepository,
-        final CouponPolicyRepository couponPolicyRepository
+        final CouponPolicyRepository couponPolicyRepository,
+        final CouponStockRepository couponStockRepository
     ) {
         this.couponWalletRepository = couponWalletRepository;
         this.couponPolicyRepository = couponPolicyRepository;
+        this.couponStockRepository = couponStockRepository;
+    }
+
+    public CouponIssueAvailability check(
+        final String userId,
+        final String policyId,
+        final boolean enforceIssueCondition,
+        final boolean segmentMatched
+    ) {
+        final Optional<CouponPolicy> found = couponPolicyRepository.findById(policyId);
+        if (found.isEmpty()) {
+            return CouponIssueAvailability.notFound();
+        }
+
+        final CouponPolicy policy = found.get();
+        final CouponIssueCondition issueCondition = policy.getIssueCondition();
+        final Long totalQuantity = enforceIssueCondition ? issueCondition.getTotalQuantity() : null;
+        final CouponStockResult stock = couponStockRepository.inspect(policy.getId(), userId, totalQuantity);
+        final boolean issueOpen = !enforceIssueCondition || issueCondition.isSatisfiedAt(Instant.now(), segmentMatched);
+
+        if (!policy.isActive()) {
+            return CouponIssueAvailability.inactive(issueOpen, stock);
+        }
+        if (enforceIssueCondition && !issueOpen) {
+            return CouponIssueAvailability.closed(stock);
+        }
+        if (enforceIssueCondition && !stock.remaining()) {
+            return CouponIssueAvailability.soldOut(stock);
+        }
+        if (stock.alreadyIssued()) {
+            return CouponIssueAvailability.alreadyIssued(stock);
+        }
+        return CouponIssueAvailability.issuable(stock);
     }
 
     public CouponIssueResult issue(
@@ -33,37 +70,40 @@ public class CouponIssuer {
     ) {
         final Optional<CouponPolicy> found = couponPolicyRepository.findById(policyId);
         if (found.isEmpty()) {
-            return CouponIssueResult.of(CouponIssueReason.POLICY_NOT_FOUND);
+            return CouponIssueResult.notFound();
         }
 
         final CouponPolicy policy = found.get();
         if (!policy.isActive()) {
-            return CouponIssueResult.of(CouponIssueReason.POLICY_NOT_ACTIVE);
+            return CouponIssueResult.inactive();
         }
 
         final Instant now = Instant.now();
-        if (enforceIssueCondition) {
-            final CouponIssueCondition issueCondition = policy.getIssueCondition();
-            if (!issueCondition.isSatisfiedAt(now, segmentMatched)) {
-                return CouponIssueResult.of(CouponIssueReason.ISSUE_NOT_ALLOWED);
-            }
-            final long issuedCount = couponWalletRepository.countByPolicyId(policy.getId());
-            if (!issueCondition.hasRemainingQuantity(issuedCount)) {
-                return CouponIssueResult.of(CouponIssueReason.ISSUE_NOT_ALLOWED);
-            }
+        final CouponIssueCondition issueCondition = policy.getIssueCondition();
+        if (enforceIssueCondition && !issueCondition.isSatisfiedAt(now, segmentMatched)) {
+            return CouponIssueResult.closed();
         }
 
-        if (couponWalletRepository.existsByUserIdAndPolicyId(userId, policy.getId())) {
-            return CouponIssueResult.of(CouponIssueReason.ALREADY_ISSUED);
-        }
-
-        final CouponWallet wallet = couponWalletRepository.save(CouponWallet.create(
-            userId,
-            policy.getId(),
-            policy.getCode(),
-            policy.getUsageCondition().getValidity().resolveExpiresAt(now),
-            actorId
-        ));
-        return CouponIssueResult.issued(wallet);
+        final Long totalQuantity = enforceIssueCondition ? issueCondition.getTotalQuantity() : null;
+        final CouponStockResult stock = couponStockRepository.reserve(policy.getId(), userId, totalQuantity);
+        return switch (stock.status()) {
+            case ALREADY_ISSUED -> CouponIssueResult.alreadyIssued();
+            case SOLD_OUT -> CouponIssueResult.soldOut();
+            case OK -> {
+                try {
+                    final CouponWallet wallet = couponWalletRepository.save(CouponWallet.create(
+                        userId,
+                        policy.getId(),
+                        policy.getCode(),
+                        policy.getUsageCondition().getValidity().resolveExpiresAt(now),
+                        actorId
+                    ));
+                    yield CouponIssueResult.issued(wallet);
+                } catch (final RuntimeException exception) {
+                    couponStockRepository.recall(policy.getId(), userId);
+                    throw exception;
+                }
+            }
+        };
     }
 }

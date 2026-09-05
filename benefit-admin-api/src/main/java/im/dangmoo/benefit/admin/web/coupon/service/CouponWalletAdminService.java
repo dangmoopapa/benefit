@@ -10,7 +10,7 @@ import im.dangmoo.benefit.domain.coupon.function.issue.CouponIssuer;
 import im.dangmoo.benefit.domain.coupon.function.redeem.CouponRecoverResult;
 import im.dangmoo.benefit.domain.coupon.function.redeem.CouponRedeemer;
 import im.dangmoo.benefit.domain.coupon.function.redeem.CouponUseResult;
-import im.dangmoo.benefit.domain.coupon.document.wallet.CouponWalletRepository;
+import im.dangmoo.benefit.domain.coupon.data.wallet.CouponWalletRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,6 +54,7 @@ public class CouponWalletAdminService {
         );
         return switch (result.reason()) {
             case ISSUED -> CouponWalletResponse.of(result.wallet());
+            case ISSUABLE -> throw new ApiException(ApiMessage.INTERNAL_ERROR);
             case POLICY_NOT_FOUND -> throw new ApiException(ApiMessage.NOT_FOUND);
             case POLICY_NOT_ACTIVE -> throw new ApiException(ApiMessage.INVALID_STATUS);
             case ISSUE_NOT_ALLOWED -> throw new ApiException(ApiMessage.ISSUE_NOT_ALLOWED);

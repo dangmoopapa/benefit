@@ -5,9 +5,9 @@ import im.dangmoo.benefit.admin.web.coupon.model.benefit.CouponBenefitForm;
 import im.dangmoo.benefit.admin.web.coupon.model.issue.CouponIssueForm;
 import im.dangmoo.benefit.admin.web.coupon.model.lifecycle.CouponLifecycleForm;
 import im.dangmoo.benefit.admin.web.coupon.model.usage.CouponUsageForm;
-import im.dangmoo.benefit.domain.coupon.document.policy.CouponPolicy;
-import im.dangmoo.benefit.domain.coupon.document.policy.CouponPolicyStatus;
-import im.dangmoo.benefit.domain.coupon.document.policy.CouponPolicyType;
+import im.dangmoo.benefit.domain.coupon.data.policy.CouponPolicy;
+import im.dangmoo.benefit.domain.coupon.data.policy.CouponPolicyStatus;
+import im.dangmoo.benefit.domain.coupon.data.policy.CouponPolicyType;
 
 import java.time.Instant;
 
