@@ -1,0 +1,11 @@
+@walletId = replace-wallet-id
+
+### 유저 쿠폰 사용
+POST {{host}}/coupons/wallets/{{walletId}}/use
+X-User-Id: U120115
+Content-Type: application/json
+
+{
+  "orderId": "order-1",
+  "usedAmount": 3000
+}

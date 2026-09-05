@@ -1,0 +1,20 @@
+@policyId1 = replace-policy-id-1
+@policyId2 = replace-policy-id-2
+
+### 유저 쿠폰 다건 발급
+POST {{host}}/coupons/wallets/issue-bulk
+X-User-Id: U120115
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "policyId": "{{policyId1}}",
+      "segmentMatched": true
+    },
+    {
+      "policyId": "{{policyId2}}",
+      "segmentMatched": true
+    }
+  ]
+}

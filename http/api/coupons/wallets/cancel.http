@@ -1,0 +1,5 @@
+@walletId = replace-wallet-id
+
+### 유저 쿠폰 사용 취소
+POST {{host}}/coupons/wallets/{{walletId}}/cancel
+X-User-Id: U120115

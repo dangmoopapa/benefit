@@ -1,0 +1,11 @@
+@policyId = replace-policy-id
+
+### 유저 쿠폰 단건 발급
+POST {{host}}/coupons/wallets/issue
+X-User-Id: U120115
+Content-Type: application/json
+
+{
+  "policyId": "{{policyId}}",
+  "segmentMatched": true
+}
