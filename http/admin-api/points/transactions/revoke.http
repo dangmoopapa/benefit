@@ -1,0 +1,10 @@
+### 포인트 회수
+POST {{host}}/points/transactions/revoke
+X-Admin-Id: A120115
+Content-Type: application/json
+
+{
+  "relatedTransactionId": "{{pointIssueTransactionId}}",
+  "orderId": "ORD-1",
+  "idempotencyKey": "revoke:{{pointIssueTransactionId}}"
+}

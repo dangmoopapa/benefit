@@ -2,7 +2,7 @@
 @policyId = replace-policy-id
 
 ### 관리자 쿠폰 발급
-POST {{host}}/coupons/wallets/issue
+POST {{host}}/coupons/wallets
 X-Admin-Id: A120115
 Content-Type: application/json
 

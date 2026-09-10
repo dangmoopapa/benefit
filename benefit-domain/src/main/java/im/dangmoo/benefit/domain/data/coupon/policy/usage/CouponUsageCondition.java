@@ -4,7 +4,7 @@ import java.util.List;
 
 public class CouponUsageCondition {
 
-    private CouponUsageValidity validity;
+    private CouponUsageExpiration usageExpiration;
     private boolean usableImmediately;
     private List<CouponUsableWeekday> weekdays;
     private List<CouponUsableTime> timeRanges;
@@ -15,7 +15,7 @@ public class CouponUsageCondition {
     }
 
     public static CouponUsageCondition create(
-        final CouponUsageValidity validity,
+        final CouponUsageExpiration usageExpiration,
         final boolean usableImmediately,
         final List<CouponUsableWeekday> weekdays,
         final List<CouponUsableTime> timeRanges,
@@ -23,7 +23,7 @@ public class CouponUsageCondition {
         final CouponUsageLimit limit
     ) {
         final CouponUsageCondition document = new CouponUsageCondition();
-        document.validity = validity;
+        document.usageExpiration = usageExpiration;
         document.usableImmediately = usableImmediately;
         document.weekdays = weekdays;
         document.timeRanges = timeRanges;
@@ -32,8 +32,8 @@ public class CouponUsageCondition {
         return document;
     }
 
-    public CouponUsageValidity getValidity() {
-        return validity;
+    public CouponUsageExpiration getUsageExpiration() {
+        return usageExpiration;
     }
 
     public boolean isUsableImmediately() {

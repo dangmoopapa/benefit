@@ -24,7 +24,6 @@ db.coupon_policies.createIndex(
   { name: 'ix_platformId_status_type' }
 );
 
-// 구버전 인덱스 정리 (있으면)
 dropIndexQuietly(db.coupon_policies, 'ix_platformId_status');
 
 // --- coupon_wallets --------------------------------------------------------
@@ -35,14 +34,13 @@ db.coupon_wallets.createIndex(
   { unique: true, name: 'uk_userId_policyId' }
 );
 
-// admin: 정책별 발급 목록
+// admin: 정책별 발급 목록 (issuedAt desc 정렬 가정)
 db.coupon_wallets.createIndex(
   { policyId: 1, issuedAt: -1 },
   { name: 'ix_policyId_issuedAt' }
 );
 
-// 쿠폰함 필터·만료 배치 후보: userId + status + expiresAt
-// (현재 앱은 userId만 조회 후 메모리 필터. 곧 DB 필터로 내릴 때 사용)
+// 쿠폰함 상태·만료 필터 (현재는 userId만 조회 후 메모리 필터. DB 필터 내릴 때 사용)
 db.coupon_wallets.createIndex(
   { userId: 1, status: 1, expiresAt: 1 },
   { name: 'ix_userId_status_expiresAt' }
@@ -57,13 +55,76 @@ db.coupon_wallets.createIndex(
   }
 );
 
-// 구버전: uk_userId_policyId prefix로 충분 → 중복 write 증폭만 남김
 dropIndexQuietly(db.coupon_wallets, 'ix_userId');
 dropIndexQuietly(db.coupon_wallets, 'ix_policyId');
+
+// --- point_policies --------------------------------------------------------
+
+db.point_policies.createIndex(
+  { code: 1 },
+  { unique: true, name: 'uk_code' }
+);
+
+db.point_policies.createIndex(
+  { platformId: 1, status: 1 },
+  { name: 'ix_platformId_status' }
+);
+
+dropIndexQuietly(db.point_policies, 'ix_platformId_status_type');
+
+// --- point_balances --------------------------------------------------------
+
+db.point_balances.createIndex(
+  { userId: 1 },
+  { unique: true, name: 'uk_userId' }
+);
+
+// --- point_transactions ----------------------------------------------------
+
+// 멱등 키
+db.point_transactions.createIndex(
+  { idempotencyKey: 1 },
+  { unique: true, name: 'uk_idempotencyKey' }
+);
+
+// 포인트북 거래내역: userId 범위 + transactionAt/_id desc 커서(keyset) 페이징
+// count/skip 없음. type $in 은 residual 필터.
+db.point_transactions.createIndex(
+  { userId: 1, transactionAt: -1, _id: -1 },
+  { name: 'ix_userId_transactionAt' }
+);
+
+// revoke/restore 중복 방지 (relatedTransactionId 있는 문서만)
+db.point_transactions.createIndex(
+  { relatedTransactionId: 1 },
+  { unique: true, sparse: true, name: 'uk_relatedTransactionId' }
+);
+
+// 구버전: policyId 조합 쿼리 없음 / type 단독 정렬 인덱스도 불필요
+dropIndexQuietly(db.point_transactions, 'ix_userId_type_policyId');
+dropIndexQuietly(db.point_transactions, 'ix_userId_type_transactionAt');
+dropIndexQuietly(db.point_transactions, 'ix_userId_transactionDate');
+dropIndexQuietly(db.point_transactions, 'uk_detail_relatedTransactionId');
+dropIndexQuietly(db.point_transactions, 'uk_usedTransactionId');
+
+// 레거시 컬렉션 인덱스 정리
+dropIndexQuietly(db.point_accounts, 'uk_userId');
+dropIndexQuietly(db.point_accounts, 'uk_earns_idempotencyKeys');
+dropIndexQuietly(db.point_accounts, 'uk_earns_idempotencyKey');
+dropIndexQuietly(db.point_histories, 'uk_idempotencyKey');
+dropIndexQuietly(db.point_histories, 'ix_userId_createdAt');
+dropIndexQuietly(db.point_histories, 'ix_relatedHistoryId_type');
+dropIndexQuietly(db.point_histories, 'ix_userId_type_policyId');
+dropIndexQuietly(db.point_earns, 'uk_idempotencyKey');
+dropIndexQuietly(db.point_earns, 'ix_user_usable');
+dropIndexQuietly(db.point_earns, 'ix_userId_policyId');
 
 print('indexes ok @ ' + dbName);
 printjson(db.coupon_policies.getIndexes());
 printjson(db.coupon_wallets.getIndexes());
+printjson(db.point_policies.getIndexes());
+printjson(db.point_balances.getIndexes());
+printjson(db.point_transactions.getIndexes());
 
 function dropIndexQuietly(coll, name) {
   try {

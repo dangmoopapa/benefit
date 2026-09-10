@@ -28,7 +28,7 @@ public class CouponRedeemer {
         this.couponUsageRepository = couponUsageRepository;
     }
 
-    public CouponUseResult use(
+    public CouponUse use(
         final String walletId,
         final String orderId,
         final BigDecimal usedAmount,
@@ -39,23 +39,23 @@ public class CouponRedeemer {
         final Optional<CouponWallet> found = couponWalletRepository.findById(walletId)
             .filter(wallet -> wallet.belongsTo(ownerUserId));
         if (found.isEmpty()) {
-            return CouponUseResult.of(CouponUseReason.WALLET_NOT_FOUND);
+            return new CouponUse.WalletNotFound();
         }
 
         final CouponWallet wallet = found.get();
         if (enforceUsable) {
             if (!wallet.isUsableAt(Instant.now())) {
-                return CouponUseResult.of(CouponUseReason.INVALID_STATE);
+                return new CouponUse.InvalidState();
             }
         } else if (wallet.isNotAvailable()) {
-            return CouponUseResult.of(CouponUseReason.INVALID_STATE);
+            return new CouponUse.InvalidState();
         }
 
         final Long totalLimit = couponPolicyRepository.findById(wallet.getPolicyId())
             .map(CouponPolicy::totalUsageLimit)
             .orElse(null);
         if (!couponUsageRepository.tryConsume(wallet.getPolicyId(), totalLimit)) {
-            return CouponUseResult.of(CouponUseReason.USAGE_LIMIT_EXCEEDED);
+            return new CouponUse.LimitExceeded();
         }
 
         final Optional<CouponWallet> used = couponWalletRepository.markUsed(
@@ -66,29 +66,29 @@ public class CouponRedeemer {
         );
         if (used.isEmpty()) {
             couponUsageRepository.release(wallet.getPolicyId());
-            return CouponUseResult.of(CouponUseReason.INVALID_STATE);
+            return new CouponUse.InvalidState();
         }
-        return CouponUseResult.used(used.get());
+        return CouponUse.Success.of(used.get());
     }
 
-    public CouponRecoverResult recover(final String walletId, final String actorId, final String ownerUserId) {
+    public CouponRecover recover(final String walletId, final String actorId, final String ownerUserId) {
         final Optional<CouponWallet> found = couponWalletRepository.findById(walletId)
             .filter(wallet -> wallet.belongsTo(ownerUserId));
         if (found.isEmpty()) {
-            return CouponRecoverResult.of(CouponRecoverReason.WALLET_NOT_FOUND);
+            return new CouponRecover.WalletNotFound();
         }
 
         final CouponWallet wallet = found.get();
         if (!wallet.isUsed()) {
-            return CouponRecoverResult.of(CouponRecoverReason.INVALID_STATE);
+            return new CouponRecover.InvalidState();
         }
 
         final Optional<CouponWallet> recovered = couponWalletRepository.markRecovered(walletId, actorId);
         if (recovered.isEmpty()) {
-            return CouponRecoverResult.of(CouponRecoverReason.INVALID_STATE);
+            return new CouponRecover.InvalidState();
         }
 
         couponUsageRepository.release(wallet.getPolicyId());
-        return CouponRecoverResult.recovered(recovered.get());
+        return CouponRecover.Success.of(recovered.get());
     }
 }

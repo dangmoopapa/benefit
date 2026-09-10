@@ -1,0 +1,11 @@
+### 포인트 지급
+POST {{host}}/points/issue
+X-User-Id: U1001
+Content-Type: application/json
+
+{
+  "policyCode": "REVIEW_EARN",
+  "point": 100,
+  "orderId": "ORD-1",
+  "idempotencyKey": "earn:U1001:ORD-1"
+}

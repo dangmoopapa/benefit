@@ -1,0 +1,17 @@
+### 포인트 정책 수정
+PUT {{host}}/points/policies/{{pointPolicyId}}
+X-Admin-Id: A120115
+Content-Type: application/json
+
+{
+  "code": "REVIEW_EARN",
+  "name": "리뷰 적립",
+  "description": "리뷰 작성 시 포인트 적립",
+  "platformId": "order",
+  "expirationCondition": {
+    "type": "DURATION",
+    "days": 180,
+    "hours": null,
+    "end": null
+  }
+}

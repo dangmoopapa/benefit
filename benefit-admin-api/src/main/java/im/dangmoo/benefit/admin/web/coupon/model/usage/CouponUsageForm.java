@@ -6,7 +6,7 @@ import im.dangmoo.benefit.domain.data.coupon.policy.usage.CouponUsableWeekday;
 import java.util.List;
 
 public record CouponUsageForm(
-    CouponUsageValidityForm validity,
+    CouponUsageExpirationForm usageExpiration,
     boolean usableImmediately,
     List<CouponUsableWeekday> weekdays,
     List<CouponUsableTimeForm> timeRanges,
@@ -16,7 +16,7 @@ public record CouponUsageForm(
 
     public CouponUsageCondition toDocument() {
         return CouponUsageCondition.create(
-            validity.toDocument(),
+            usageExpiration.toDocument(),
             usableImmediately,
             weekdays,
             timeRanges.stream().map(CouponUsableTimeForm::toDocument).toList(),
@@ -27,7 +27,7 @@ public record CouponUsageForm(
 
     public static CouponUsageForm of(final CouponUsageCondition document) {
         return new CouponUsageForm(
-            CouponUsageValidityForm.of(document.getValidity()),
+            CouponUsageExpirationForm.of(document.getUsageExpiration()),
             document.isUsableImmediately(),
             document.getWeekdays(),
             document.getTimeRanges().stream().map(CouponUsableTimeForm::of).toList(),

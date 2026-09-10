@@ -1,0 +1,11 @@
+### 포인트 사용
+POST {{host}}/points/transactions/use
+X-Admin-Id: A120115
+Content-Type: application/json
+
+{
+  "userId": "U1001",
+  "point": 30,
+  "orderId": "ORD-2",
+  "idempotencyKey": "use:U1001:ORD-2"
+}

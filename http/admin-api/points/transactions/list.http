@@ -1,0 +1,7 @@
+### 포인트 거래내역 조회
+GET {{host}}/points/transactions?userId=U1001&types=ISSUED&types=USED&size=20
+X-Admin-Id: A120115
+
+### 다음 페이지 (응답 nextCursor 사용)
+GET {{host}}/points/transactions?userId=U1001&types=ISSUED&types=USED&size=20&cursor={{nextCursor}}
+X-Admin-Id: A120115

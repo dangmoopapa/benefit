@@ -43,7 +43,7 @@ Content-Type: application/json
     }
   },
   "usageCondition": {
-    "validity": {
+    "usageExpiration": {
       "type": "DURATION",
       "start": null,
       "end": null,

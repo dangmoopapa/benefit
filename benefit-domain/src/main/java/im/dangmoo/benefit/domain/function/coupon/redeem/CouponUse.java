@@ -1,0 +1,53 @@
+package im.dangmoo.benefit.domain.function.coupon.redeem;
+
+import im.dangmoo.benefit.domain.data.coupon.wallet.CouponWallet;
+import im.dangmoo.benefit.domain.data.coupon.wallet.CouponWalletStatus;
+
+import java.math.BigDecimal;
+import java.time.Instant;
+
+public sealed interface CouponUse {
+
+    record Success(
+        String walletId,
+        String userId,
+        String orderId,
+        String policyId,
+        String policyCode,
+        CouponWalletStatus status,
+        BigDecimal usedAmount,
+        Instant usedAt,
+        Instant expiresAt,
+        String createdBy,
+        Instant createdAt,
+        String updatedBy,
+        Instant updatedAt
+    ) implements CouponUse {
+        static Success of(final CouponWallet wallet) {
+            return new Success(
+                wallet.getId(),
+                wallet.getUserId(),
+                wallet.getOrderId(),
+                wallet.getPolicyId(),
+                wallet.getPolicyCode(),
+                wallet.getStatus(),
+                wallet.getUsedAmount(),
+                wallet.getUsedAt(),
+                wallet.getExpiresAt(),
+                wallet.getCreatedBy(),
+                wallet.getCreatedAt(),
+                wallet.getUpdatedBy(),
+                wallet.getUpdatedAt()
+            );
+        }
+    }
+
+    record WalletNotFound() implements CouponUse {
+    }
+
+    record InvalidState() implements CouponUse {
+    }
+
+    record LimitExceeded() implements CouponUse {
+    }
+}

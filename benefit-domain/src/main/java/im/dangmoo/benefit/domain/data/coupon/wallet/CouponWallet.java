@@ -2,6 +2,7 @@ package im.dangmoo.benefit.domain.data.coupon.wallet;
 
 import im.dangmoo.benefit.domain.infrastructure.mongo.MongoCollections;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -31,6 +32,7 @@ public class CouponWallet {
 
     private static final String USER_ID = "userId";
     private static final String POLICY_ID = "policyId";
+    private static final String ISSUED_AT = "issuedAt";
 
     private CouponWallet() {
     }
@@ -40,7 +42,8 @@ public class CouponWallet {
     }
 
     public static Query queryByPolicyId(final String policyId) {
-        return Query.query(Criteria.where(POLICY_ID).is(policyId));
+        return Query.query(Criteria.where(POLICY_ID).is(policyId))
+            .with(Sort.by(Sort.Direction.DESC, ISSUED_AT));
     }
 
     public static CouponWallet create(

@@ -63,7 +63,7 @@ public class CouponIssuer {
         return CouponIssueAvailability.issuable(stock);
     }
 
-    public CouponIssueResult issue(
+    public CouponIssue issue(
         final String userId,
         final String policyId,
         final boolean enforceIssueCondition,
@@ -72,29 +72,29 @@ public class CouponIssuer {
     ) {
         final Optional<CouponPolicy> found = couponPolicyRepository.findById(policyId);
         if (found.isEmpty()) {
-            return CouponIssueResult.notFound();
+            return new CouponIssue.PolicyNotFound();
         }
 
         final CouponPolicy policy = found.get();
         if (!policy.isActive()) {
-            return CouponIssueResult.inactive();
+            return new CouponIssue.PolicyNotActive();
         }
 
         final Instant now = Instant.now();
         final CouponIssueCondition issueCondition = policy.getIssueCondition();
         if (enforceIssueCondition && !issueCondition.isSatisfiedAt(now, userSegmentIds)) {
-            return CouponIssueResult.closed();
+            return new CouponIssue.NotAllowed();
         }
 
         final Long totalQuantity = enforceIssueCondition ? issueCondition.getTotalQuantity() : null;
         return switch (couponStockRepository.reserve(policy.getId(), userId, totalQuantity)) {
-            case ALREADY_ISSUED -> CouponIssueResult.alreadyIssued();
-            case SOLD_OUT -> CouponIssueResult.soldOut();
-            case RESERVED -> CouponIssueResult.issued(couponWalletRepository.save(CouponWallet.create(
+            case ALREADY_ISSUED -> new CouponIssue.AlreadyIssued();
+            case SOLD_OUT -> new CouponIssue.NotAllowed();
+            case RESERVED -> CouponIssue.Success.of(couponWalletRepository.save(CouponWallet.create(
                 userId,
                 policy.getId(),
                 policy.getCode(),
-                policy.getUsageCondition().getValidity().resolveExpiresAt(now),
+                policy.getUsageCondition().getUsageExpiration().resolveExpiresAt(now),
                 actorId
             )));
         };

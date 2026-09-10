@@ -1,0 +1,3 @@
+### 포인트북 잔액 조회
+GET {{host}}/points/book/balances
+X-User-Id: U1001

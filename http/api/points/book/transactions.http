@@ -1,0 +1,7 @@
+### 포인트북 거래내역 조회
+GET {{host}}/points/book/transactions?types=ISSUED&types=USED&size=20
+X-User-Id: U1001
+
+### 다음 페이지 (응답 nextCursor 사용)
+GET {{host}}/points/book/transactions?types=ISSUED&types=USED&size=20&cursor={{nextCursor}}
+X-User-Id: U1001

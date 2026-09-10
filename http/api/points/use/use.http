@@ -1,0 +1,10 @@
+### 포인트 사용
+POST {{host}}/points/use
+X-User-Id: U1001
+Content-Type: application/json
+
+{
+  "point": 30,
+  "orderId": "ORD-2",
+  "idempotencyKey": "use:U1001:ORD-2"
+}

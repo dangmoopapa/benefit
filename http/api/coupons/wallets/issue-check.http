@@ -1,7 +1,7 @@
 @policyId = replace-policy-id
 
 ### 유저 쿠폰 발급 가능 여부 확인
-POST {{host}}/coupons/wallets/issue/check
+POST {{host}}/coupons/issue/check
 X-User-Id: U120115
 X-Segment-Ids: S1241,S15552
 Content-Type: application/json

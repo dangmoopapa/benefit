@@ -1,0 +1,10 @@
+### 포인트 사용 복구
+POST {{host}}/points/restore
+X-User-Id: U1001
+Content-Type: application/json
+
+{
+  "relatedTransactionId": "{{pointUseTransactionId}}",
+  "orderId": "ORD-2",
+  "idempotencyKey": "restore:{{pointUseTransactionId}}"
+}

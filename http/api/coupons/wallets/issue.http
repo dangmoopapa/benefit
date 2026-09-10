@@ -1,7 +1,7 @@
 @policyId = replace-policy-id
 
 ### 유저 쿠폰 단건 발급
-POST {{host}}/coupons/wallets/issue
+POST {{host}}/coupons/issue
 X-User-Id: U120115
 X-Segment-Ids: segment-1,segment-2
 Content-Type: application/json
