@@ -9,15 +9,15 @@ public record CouponApplyForm(
     CouponApplyExcludeForm exclude
 ) {
 
-    public CouponApplyCondition toDocument() {
-        return CouponApplyCondition.create(unit, include.toDocument(), exclude.toDocument());
+    public CouponApplyCondition toEntity() {
+        return CouponApplyCondition.create(unit, include.toEntity(), exclude.toEntity());
     }
 
-    public static CouponApplyForm of(final CouponApplyCondition document) {
+    public static CouponApplyForm of(final CouponApplyCondition entity) {
         return new CouponApplyForm(
-            document.getUnit(),
-            CouponApplyIncludeForm.of(document.getInclude()),
-            CouponApplyExcludeForm.of(document.getExclude())
+            entity.getUnit(),
+            CouponApplyIncludeForm.of(entity.getInclude()),
+            CouponApplyExcludeForm.of(entity.getExclude())
         );
     }
 }

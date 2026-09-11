@@ -1,0 +1,3 @@
+### 멤버십 가입
+POST {{host}}/memberships
+X-User-Id: U1001

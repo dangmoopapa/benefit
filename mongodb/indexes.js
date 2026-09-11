@@ -4,7 +4,7 @@
 // 원칙
 // - 실제 쿼리·유니크 제약만 둔다. 좌측 prefix로 커버되면 단일 필드 인덱스는 안 만든다.
 // - contains(name) 검색은 B-tree로 못 탄다 → name 인덱스 없음.
-// - (userId, policyId) unique = Redis 마커와 같은 1인 1장 안전망. N장 허용 시 이 unique를 바꿔야 한다.
+// - 쿠폰 발급 반복은 wallet.idempotencyKey unique. 총량·동시성은 Redis 마커.
 
 const dbName = 'benefit';
 db = db.getSiblingDB(dbName);
@@ -28,11 +28,19 @@ dropIndexQuietly(db.coupon_policies, 'ix_platformId_status');
 
 // --- coupon_wallets --------------------------------------------------------
 
-// 발급 레이스·중복 insert 안전망. prefix로 userId 전체 목록(쿠폰함)도 커버.
+// 공개 발급 1인 1장·반복 지급은 Redis 마커 + wallet.idempotencyKey.
+// MONTHLY 등은 키가 달라서 같은 정책 재지급이 가능하다.
 db.coupon_wallets.createIndex(
-  { userId: 1, policyId: 1 },
-  { unique: true, name: 'uk_userId_policyId' }
+  { idempotencyKey: 1 },
+  { unique: true, sparse: true, name: 'uk_idempotencyKey' }
 );
+
+db.coupon_wallets.createIndex(
+  { userId: 1, policyId: 1, issuedAt: -1 },
+  { name: 'ix_userId_policyId_issuedAt' }
+);
+
+dropIndexQuietly(db.coupon_wallets, 'uk_userId_policyId');
 
 // admin: 정책별 발급 목록 (issuedAt desc 정렬 가정)
 db.coupon_wallets.createIndex(
@@ -57,6 +65,26 @@ db.coupon_wallets.createIndex(
 
 dropIndexQuietly(db.coupon_wallets, 'ix_userId');
 dropIndexQuietly(db.coupon_wallets, 'ix_policyId');
+
+// --- membership_policies ---------------------------------------------------
+
+db.membership_policies.createIndex(
+  { version: 1 },
+  { unique: true, name: 'uk_version' }
+);
+
+dropIndexQuietly(db.membership_policies, 'ix_status_version');
+
+// --- memberships -----------------------------------------------------------
+
+db.membership_subscriptions.createIndex(
+  { userId: 1 },
+  { unique: true, name: 'uk_userId' }
+);
+
+dropIndexQuietly(db.memberships, 'uk_userId');
+dropIndexQuietly(db.memberships, 'ix_userId_status_startedAt');
+dropIndexQuietly(db.membership_grants, 'uk_userId_grantKey_periodKey');
 
 // --- point_policies --------------------------------------------------------
 
@@ -87,10 +115,10 @@ db.point_transactions.createIndex(
   { unique: true, name: 'uk_idempotencyKey' }
 );
 
-// 포인트북 거래내역: userId 범위 + transactionAt/_id desc 커서(keyset) 페이징
-// count/skip 없음. type $in 은 residual 필터.
+// 거래내역: userId + transactionAt desc
+dropIndexQuietly(db.point_transactions, 'ix_userId_transactionAt');
 db.point_transactions.createIndex(
-  { userId: 1, transactionAt: -1, _id: -1 },
+  { userId: 1, transactionAt: -1 },
   { name: 'ix_userId_transactionAt' }
 );
 
@@ -122,6 +150,8 @@ dropIndexQuietly(db.point_earns, 'ix_userId_policyId');
 print('indexes ok @ ' + dbName);
 printjson(db.coupon_policies.getIndexes());
 printjson(db.coupon_wallets.getIndexes());
+printjson(db.membership_policies.getIndexes());
+printjson(db.membership_subscriptions.getIndexes());
 printjson(db.point_policies.getIndexes());
 printjson(db.point_balances.getIndexes());
 printjson(db.point_transactions.getIndexes());

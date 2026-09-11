@@ -1,7 +1,9 @@
 package im.dangmoo.benefit.domain.data.coupon.wallet;
 
 import im.dangmoo.benefit.domain.infrastructure.mongo.MongoCollections;
+import im.dangmoo.benefit.domain.util.TimeUtils;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -19,6 +21,7 @@ public class CouponWallet {
     private String orderId;
     private String policyId;
     private String policyCode;
+    private String idempotencyKey;
     private CouponWalletStatus status;
     private BigDecimal usedAmount;
     private Instant issuedAt;
@@ -29,6 +32,8 @@ public class CouponWallet {
     private Instant createdAt;
     private String updatedBy;
     private Instant updatedAt;
+    @Version
+    private Long version;
 
     private static final String USER_ID = "userId";
     private static final String POLICY_ID = "policyId";
@@ -50,38 +55,50 @@ public class CouponWallet {
         final String userId,
         final String policyId,
         final String policyCode,
+        final String idempotencyKey,
         final Instant expiresAt,
         final String createdBy
     ) {
-        final Instant now = Instant.now();
-        final CouponWallet document = new CouponWallet();
-        document.userId = userId;
-        document.policyId = policyId;
-        document.policyCode = policyCode;
-        document.status = CouponWalletStatus.AVAILABLE;
-        document.issuedAt = now;
-        document.expiresAt = expiresAt;
-        document.createdBy = createdBy;
-        document.createdAt = now;
-        document.updatedBy = createdBy;
-        document.updatedAt = now;
-        return document;
+        final Instant now = TimeUtils.now();
+        final CouponWallet entity = new CouponWallet();
+        entity.userId = userId;
+        entity.policyId = policyId;
+        entity.policyCode = policyCode;
+        entity.idempotencyKey = idempotencyKey;
+        entity.status = CouponWalletStatus.AVAILABLE;
+        entity.issuedAt = now;
+        entity.expiresAt = expiresAt;
+        entity.createdBy = createdBy;
+        entity.createdAt = now;
+        entity.updatedBy = createdBy;
+        entity.updatedAt = now;
+        return entity;
     }
 
-    public void use(final String orderId, final BigDecimal usedAmount, final String updatedBy) {
+    public CouponWallet use(final String orderId, final BigDecimal usedAmount, final String updatedBy) {
+        if (status != CouponWalletStatus.AVAILABLE) {
+            throw new IllegalStateException("wallet is not available");
+        }
+        final Instant now = TimeUtils.now();
         this.status = CouponWalletStatus.USED;
         this.orderId = orderId;
         this.usedAmount = usedAmount;
-        this.usedAt = Instant.now();
+        this.usedAt = now;
         this.updatedBy = updatedBy;
-        this.updatedAt = this.usedAt;
+        this.updatedAt = now;
+        return this;
     }
 
-    public void recover(final String updatedBy) {
+    public CouponWallet recover(final String updatedBy) {
+        if (status != CouponWalletStatus.USED) {
+            throw new IllegalStateException("wallet is not used");
+        }
+        final Instant now = TimeUtils.now();
         this.status = CouponWalletStatus.RECOVERED;
-        this.recoveredAt = Instant.now();
+        this.recoveredAt = now;
         this.updatedBy = updatedBy;
-        this.updatedAt = this.recoveredAt;
+        this.updatedAt = now;
+        return this;
     }
 
     public boolean isNotAvailable() {
@@ -121,6 +138,10 @@ public class CouponWallet {
 
     public String getPolicyCode() {
         return policyCode;
+    }
+
+    public String getIdempotencyKey() {
+        return idempotencyKey;
     }
 
     public CouponWalletStatus getStatus() {

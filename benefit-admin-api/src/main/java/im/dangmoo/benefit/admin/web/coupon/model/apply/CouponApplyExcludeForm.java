@@ -11,16 +11,16 @@ public record CouponApplyExcludeForm(
     boolean otherCouponApplied
 ) {
 
-    public CouponApplyExclude toDocument() {
+    public CouponApplyExclude toEntity() {
         return CouponApplyExclude.create(productIds, categoryIds, alreadyDiscounted, otherCouponApplied);
     }
 
-    public static CouponApplyExcludeForm of(final CouponApplyExclude document) {
+    public static CouponApplyExcludeForm of(final CouponApplyExclude entity) {
         return new CouponApplyExcludeForm(
-            document.getProductIds(),
-            document.getCategoryIds(),
-            document.isAlreadyDiscounted(),
-            document.isOtherCouponApplied()
+            entity.getProductIds(),
+            entity.getCategoryIds(),
+            entity.isAlreadyDiscounted(),
+            entity.isOtherCouponApplied()
         );
     }
 }

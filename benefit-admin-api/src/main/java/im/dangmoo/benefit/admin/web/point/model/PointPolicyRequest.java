@@ -7,16 +7,18 @@ public record PointPolicyRequest(
     String name,
     String description,
     String platformId,
+    PointIssueConditionForm issueCondition,
     PointExpirationForm expirationCondition
 ) {
 
-    public PointPolicy toDocument(final String createdBy) {
+    public PointPolicy toEntity(final String createdBy) {
         return PointPolicy.create(
             code,
             name,
             description,
             platformId,
-            expirationCondition == null ? null : expirationCondition.toDocument(),
+            issueCondition == null ? null : issueCondition.toEntity(),
+            expirationCondition == null ? null : expirationCondition.toEntity(),
             createdBy
         );
     }

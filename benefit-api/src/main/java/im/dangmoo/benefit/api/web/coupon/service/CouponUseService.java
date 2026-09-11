@@ -4,9 +4,9 @@ import im.dangmoo.benefit.api.support.ApiException;
 import im.dangmoo.benefit.api.support.ApiMessage;
 import im.dangmoo.benefit.api.web.coupon.model.CouponWalletResponse;
 import im.dangmoo.benefit.api.web.coupon.model.CouponWalletUseRequest;
-import im.dangmoo.benefit.domain.function.coupon.redeem.CouponRecover;
-import im.dangmoo.benefit.domain.function.coupon.redeem.CouponRedeemer;
-import im.dangmoo.benefit.domain.function.coupon.redeem.CouponUse;
+import im.dangmoo.benefit.domain.component.coupon.redeem.CouponRecover;
+import im.dangmoo.benefit.domain.component.coupon.redeem.CouponRedeemer;
+import im.dangmoo.benefit.domain.component.coupon.redeem.CouponUse;
 import org.springframework.stereotype.Service;
 
 @Service

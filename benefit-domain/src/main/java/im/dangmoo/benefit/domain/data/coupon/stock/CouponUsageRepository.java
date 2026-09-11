@@ -24,14 +24,7 @@ public class CouponUsageRepository {
         this.releaseScript = couponUsageReleaseScript;
     }
 
-    /**
-     * @param totalLimit null 이면 무제한(카운트도 안 함)
-     * @return 사용 가능하면 true
-     */
-    public boolean tryConsume(final String policyId, final Long totalLimit) {
-        if (totalLimit == null) {
-            return true;
-        }
+    public boolean consume(final String policyId, final long totalLimit) {
         final Long ok = redisTemplate.execute(
             consumeScript,
             List.of(RedisKeys.couponUsageTotal(policyId)),

@@ -2,6 +2,7 @@ package im.dangmoo.benefit.admin.web.coupon.model.issue;
 
 import im.dangmoo.benefit.domain.data.coupon.policy.issue.CouponIssueCondition;
 import im.dangmoo.benefit.domain.data.coupon.policy.issue.CouponIssuableWeekday;
+import im.dangmoo.benefit.domain.data.coupon.policy.issue.CouponIssueRepeat;
 
 import java.util.List;
 
@@ -10,26 +11,29 @@ public record CouponIssueForm(
     List<CouponIssuableWeekday> weekdays,
     List<CouponIssuableTimeForm> timeRanges,
     String segmentId,
-    Long totalQuantity
+    Long totalQuantity,
+    CouponIssueRepeat repeat
 ) {
 
-    public CouponIssueCondition toDocument() {
+    public CouponIssueCondition toEntity() {
         return CouponIssueCondition.create(
-            period.toDocument(),
+            period.toEntity(),
             weekdays,
-            timeRanges.stream().map(CouponIssuableTimeForm::toDocument).toList(),
+            timeRanges.stream().map(CouponIssuableTimeForm::toEntity).toList(),
             segmentId,
-            totalQuantity
+            totalQuantity,
+            repeat
         );
     }
 
-    public static CouponIssueForm of(final CouponIssueCondition document) {
+    public static CouponIssueForm of(final CouponIssueCondition entity) {
         return new CouponIssueForm(
-            CouponIssuablePeriodForm.of(document.getPeriod()),
-            document.getWeekdays(),
-            document.getTimeRanges().stream().map(CouponIssuableTimeForm::of).toList(),
-            document.getSegmentId(),
-            document.getTotalQuantity()
+            CouponIssuablePeriodForm.of(entity.getPeriod()),
+            entity.getWeekdays(),
+            entity.getTimeRanges().stream().map(CouponIssuableTimeForm::of).toList(),
+            entity.getSegmentId(),
+            entity.getTotalQuantity(),
+            entity.getRepeat()
         );
     }
 }

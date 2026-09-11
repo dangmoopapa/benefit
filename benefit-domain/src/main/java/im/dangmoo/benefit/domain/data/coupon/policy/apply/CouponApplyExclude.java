@@ -18,12 +18,12 @@ public class CouponApplyExclude {
         final boolean alreadyDiscounted,
         final boolean otherCouponApplied
     ) {
-        final CouponApplyExclude document = new CouponApplyExclude();
-        document.productIds = productIds;
-        document.categoryIds = categoryIds;
-        document.alreadyDiscounted = alreadyDiscounted;
-        document.otherCouponApplied = otherCouponApplied;
-        return document;
+        final CouponApplyExclude entity = new CouponApplyExclude();
+        entity.productIds = productIds;
+        entity.categoryIds = categoryIds;
+        entity.alreadyDiscounted = alreadyDiscounted;
+        entity.otherCouponApplied = otherCouponApplied;
+        return entity;
     }
 
     public List<String> getProductIds() {

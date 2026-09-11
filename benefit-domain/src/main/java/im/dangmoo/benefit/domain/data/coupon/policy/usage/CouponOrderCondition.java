@@ -25,15 +25,15 @@ public class CouponOrderCondition {
         final boolean firstPurchaseOnly,
         final Integer minPurchaseCount
     ) {
-        final CouponOrderCondition document = new CouponOrderCondition();
-        document.minAmount = minAmount;
-        document.maxAmount = maxAmount;
-        document.paymentMethods = paymentMethods;
-        document.shippingMethods = shippingMethods;
-        document.regions = regions;
-        document.firstPurchaseOnly = firstPurchaseOnly;
-        document.minPurchaseCount = minPurchaseCount;
-        return document;
+        final CouponOrderCondition entity = new CouponOrderCondition();
+        entity.minAmount = minAmount;
+        entity.maxAmount = maxAmount;
+        entity.paymentMethods = paymentMethods;
+        entity.shippingMethods = shippingMethods;
+        entity.regions = regions;
+        entity.firstPurchaseOnly = firstPurchaseOnly;
+        entity.minPurchaseCount = minPurchaseCount;
+        return entity;
     }
 
     public BigDecimal getMinAmount() {

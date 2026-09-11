@@ -9,11 +9,11 @@ public record CouponIssuablePeriodForm(
     Instant end
 ) {
 
-    public CouponIssuablePeriod toDocument() {
+    public CouponIssuablePeriod toEntity() {
         return CouponIssuablePeriod.create(start, end);
     }
 
-    public static CouponIssuablePeriodForm of(final CouponIssuablePeriod document) {
-        return new CouponIssuablePeriodForm(document.getStart(), document.getEnd());
+    public static CouponIssuablePeriodForm of(final CouponIssuablePeriod entity) {
+        return new CouponIssuablePeriodForm(entity.getStart(), entity.getEnd());
     }
 }

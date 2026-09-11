@@ -22,14 +22,14 @@ public class CouponUsageCondition {
         final CouponOrderCondition orderCondition,
         final CouponUsageLimit limit
     ) {
-        final CouponUsageCondition document = new CouponUsageCondition();
-        document.usageExpiration = usageExpiration;
-        document.usableImmediately = usableImmediately;
-        document.weekdays = weekdays;
-        document.timeRanges = timeRanges;
-        document.orderCondition = orderCondition;
-        document.limit = limit;
-        return document;
+        final CouponUsageCondition entity = new CouponUsageCondition();
+        entity.usageExpiration = usageExpiration;
+        entity.usableImmediately = usableImmediately;
+        entity.weekdays = weekdays;
+        entity.timeRanges = timeRanges;
+        entity.orderCondition = orderCondition;
+        entity.limit = limit;
+        return entity;
     }
 
     public CouponUsageExpiration getUsageExpiration() {

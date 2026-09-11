@@ -1,7 +1,8 @@
 package im.dangmoo.benefit.domain.data.coupon.policy.usage;
 
+import im.dangmoo.benefit.domain.util.TimeUtils;
+
 import java.time.Instant;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 
 public class CouponUsageExpiration {
@@ -22,23 +23,19 @@ public class CouponUsageExpiration {
         final Integer days,
         final Integer hours
     ) {
-        final CouponUsageExpiration document = new CouponUsageExpiration();
-        document.type = type;
-        document.start = start;
-        document.end = end;
-        document.days = days;
-        document.hours = hours;
-        return document;
+        final CouponUsageExpiration entity = new CouponUsageExpiration();
+        entity.type = type;
+        entity.start = start;
+        entity.end = end;
+        entity.days = days;
+        entity.hours = hours;
+        return entity;
     }
 
     public Instant resolveExpiresAt(final Instant issuedAt) {
         return switch (type) {
             case FIXED_PERIOD -> end;
-            case UNTIL_MIDNIGHT -> issuedAt.atZone(ZoneOffset.UTC)
-                .toLocalDate()
-                .plusDays(days)
-                .atStartOfDay(ZoneOffset.UTC)
-                .toInstant();
+            case UNTIL_MIDNIGHT -> TimeUtils.startOfUtcDayAfter(issuedAt, days);
             case DURATION -> {
                 Instant expiresAt = issuedAt;
                 if (days != null) {

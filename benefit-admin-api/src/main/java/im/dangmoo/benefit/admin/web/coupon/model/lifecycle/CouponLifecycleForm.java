@@ -13,23 +13,23 @@ public record CouponLifecycleForm(
     CouponAccountingForm accountingCondition
 ) {
 
-    public CouponLifecycleCondition toDocument() {
+    public CouponLifecycleCondition toEntity() {
         return CouponLifecycleCondition.create(
             onOrderCancel,
             onPartialCancel,
             onRefund,
             reissuable,
-            accountingCondition.toDocument()
+            accountingCondition.toEntity()
         );
     }
 
-    public static CouponLifecycleForm of(final CouponLifecycleCondition document) {
+    public static CouponLifecycleForm of(final CouponLifecycleCondition entity) {
         return new CouponLifecycleForm(
-            document.getOnOrderCancel(),
-            document.getOnPartialCancel(),
-            document.getOnRefund(),
-            document.isReissuable(),
-            CouponAccountingForm.of(document.getAccountingCondition())
+            entity.getOnOrderCancel(),
+            entity.getOnPartialCancel(),
+            entity.getOnRefund(),
+            entity.isReissuable(),
+            CouponAccountingForm.of(entity.getAccountingCondition())
         );
     }
 }

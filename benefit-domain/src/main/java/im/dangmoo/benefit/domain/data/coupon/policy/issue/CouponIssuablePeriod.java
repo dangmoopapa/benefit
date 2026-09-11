@@ -11,10 +11,10 @@ public class CouponIssuablePeriod {
     }
 
     public static CouponIssuablePeriod create(final Instant start, final Instant end) {
-        final CouponIssuablePeriod document = new CouponIssuablePeriod();
-        document.start = start;
-        document.end = end;
-        return document;
+        final CouponIssuablePeriod entity = new CouponIssuablePeriod();
+        entity.start = start;
+        entity.end = end;
+        return entity;
     }
 
     public Instant getStart() {

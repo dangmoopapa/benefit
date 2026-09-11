@@ -5,9 +5,9 @@ import im.dangmoo.benefit.api.support.ApiMessage;
 import im.dangmoo.benefit.api.web.point.model.PointIssueRequest;
 import im.dangmoo.benefit.api.web.point.model.PointRevokeRequest;
 import im.dangmoo.benefit.api.web.point.model.PointTransactionResponse;
-import im.dangmoo.benefit.domain.function.point.issue.PointIssue;
-import im.dangmoo.benefit.domain.function.point.issue.PointIssuer;
-import im.dangmoo.benefit.domain.function.point.issue.PointRevoke;
+import im.dangmoo.benefit.domain.component.point.issue.PointIssue;
+import im.dangmoo.benefit.domain.component.point.issue.PointIssuer;
+import im.dangmoo.benefit.domain.component.point.issue.PointRevoke;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,7 +25,6 @@ public class PointIssueService {
             request.policyCode(),
             request.point(),
             request.orderId(),
-            request.idempotencyKey(),
             userId
         )) {
             case PointIssue.Success success -> PointTransactionResponse.of(success);

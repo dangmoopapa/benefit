@@ -5,9 +5,9 @@ import im.dangmoo.benefit.api.support.ApiMessage;
 import im.dangmoo.benefit.api.web.coupon.model.CouponWalletIssueAvailabilityResponse;
 import im.dangmoo.benefit.api.web.coupon.model.CouponWalletIssueRequest;
 import im.dangmoo.benefit.api.web.coupon.model.CouponWalletResponse;
-import im.dangmoo.benefit.domain.function.coupon.issue.CouponIssue;
-import im.dangmoo.benefit.domain.function.coupon.issue.CouponIssueAvailability;
-import im.dangmoo.benefit.domain.function.coupon.issue.CouponIssuer;
+import im.dangmoo.benefit.domain.component.coupon.issue.CouponIssue;
+import im.dangmoo.benefit.domain.component.coupon.issue.CouponIssueAvailability;
+import im.dangmoo.benefit.domain.component.coupon.issue.CouponIssuer;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;

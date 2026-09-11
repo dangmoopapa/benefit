@@ -21,18 +21,18 @@ public record CouponPolicyRequest(
     CouponLifecycleForm lifecycleCondition
 ) {
 
-    public CouponPolicy toDocument(final String createdBy) {
+    public CouponPolicy toEntity(final String createdBy) {
         return CouponPolicy.create(
             code,
             name,
             description,
             platformId,
             type,
-            issueCondition.toDocument(),
-            benefitCondition.toDocument(),
-            applyCondition.toDocument(),
-            usageCondition.toDocument(),
-            lifecycleCondition.toDocument(),
+            issueCondition.toEntity(),
+            benefitCondition.toEntity(),
+            applyCondition.toEntity(),
+            usageCondition.toEntity(),
+            lifecycleCondition.toEntity(),
             createdBy
         );
     }

@@ -12,16 +12,16 @@ public record CouponBenefitForm(
     BigDecimal minPaymentAmount
 ) {
 
-    public CouponBenefitCondition toDocument() {
+    public CouponBenefitCondition toEntity() {
         return CouponBenefitCondition.create(type, value, maxDiscountAmount, minPaymentAmount);
     }
 
-    public static CouponBenefitForm of(final CouponBenefitCondition document) {
+    public static CouponBenefitForm of(final CouponBenefitCondition entity) {
         return new CouponBenefitForm(
-            document.getType(),
-            document.getValue(),
-            document.getMaxDiscountAmount(),
-            document.getMinPaymentAmount()
+            entity.getType(),
+            entity.getValue(),
+            entity.getMaxDiscountAmount(),
+            entity.getMinPaymentAmount()
         );
     }
 }

@@ -5,28 +5,22 @@ import im.dangmoo.benefit.admin.support.ApiMessage;
 import im.dangmoo.benefit.admin.web.point.model.PointIssueRequest;
 import im.dangmoo.benefit.admin.web.point.model.PointRestoreRequest;
 import im.dangmoo.benefit.admin.web.point.model.PointRevokeRequest;
-import im.dangmoo.benefit.admin.web.point.model.PointTransactionPageResponse;
 import im.dangmoo.benefit.admin.web.point.model.PointTransactionResponse;
 import im.dangmoo.benefit.admin.web.point.model.PointUseRequest;
-import im.dangmoo.benefit.domain.data.point.transaction.PointTransaction;
 import im.dangmoo.benefit.domain.data.point.transaction.PointTransactionRepository;
 import im.dangmoo.benefit.domain.data.point.transaction.PointTransactionType;
-import im.dangmoo.benefit.domain.function.point.issue.PointIssue;
-import im.dangmoo.benefit.domain.function.point.issue.PointIssuer;
-import im.dangmoo.benefit.domain.function.point.issue.PointRevoke;
-import im.dangmoo.benefit.domain.function.point.use.PointRedeemer;
-import im.dangmoo.benefit.domain.function.point.use.PointRestore;
-import im.dangmoo.benefit.domain.function.point.use.PointUse;
-import im.dangmoo.benefit.domain.infrastructure.mongo.DocumentSlice;
+import im.dangmoo.benefit.domain.component.point.issue.PointIssue;
+import im.dangmoo.benefit.domain.component.point.issue.PointIssuer;
+import im.dangmoo.benefit.domain.component.point.issue.PointRevoke;
+import im.dangmoo.benefit.domain.component.point.use.PointRedeemer;
+import im.dangmoo.benefit.domain.component.point.use.PointRestore;
+import im.dangmoo.benefit.domain.component.point.use.PointUse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class PointTransactionService {
-
-    private static final int DEFAULT_SIZE = 20;
-    private static final int MAX_SIZE = 100;
 
     private final PointIssuer pointIssuer;
     private final PointRedeemer pointRedeemer;
@@ -42,23 +36,13 @@ public class PointTransactionService {
         this.pointTransactionRepository = pointTransactionRepository;
     }
 
-    public PointTransactionPageResponse list(
+    public List<PointTransactionResponse> list(
         final String userId,
-        final List<PointTransactionType> types,
-        final String cursor,
-        final Integer size
+        final List<PointTransactionType> types
     ) {
-        final int resolvedSize = Math.clamp(size == null ? DEFAULT_SIZE : size, 1, MAX_SIZE);
-        final DocumentSlice<PointTransaction> result = pointTransactionRepository.findByUserId(
-            userId,
-            types,
-            cursor,
-            resolvedSize
-        );
-        return PointTransactionPageResponse.of(
-            result,
-            result.content().stream().map(PointTransactionResponse::of).toList()
-        );
+        return pointTransactionRepository.findByUserId(userId, types).stream()
+            .map(PointTransactionResponse::of)
+            .toList();
     }
 
     public PointTransactionResponse issue(final String adminId, final PointIssueRequest request) {
@@ -67,7 +51,6 @@ public class PointTransactionService {
             request.policyCode(),
             request.point(),
             request.orderId(),
-            request.idempotencyKey(),
             adminId
         )) {
             case PointIssue.Success success -> PointTransactionResponse.of(success);

@@ -1,9 +1,9 @@
 package im.dangmoo.benefit.domain.data.coupon.policy.issue;
 
+import im.dangmoo.benefit.domain.util.TimeUtils;
+
 import java.time.Instant;
 import java.time.LocalTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,6 +14,7 @@ public class CouponIssueCondition {
     private List<CouponIssuableTime> timeRanges;
     private String segmentId;
     private Long totalQuantity;
+    private CouponIssueRepeat repeat;
 
     private CouponIssueCondition() {
     }
@@ -25,13 +26,29 @@ public class CouponIssueCondition {
         final String segmentId,
         final Long totalQuantity
     ) {
-        final CouponIssueCondition document = new CouponIssueCondition();
-        document.period = period;
-        document.weekdays = weekdays;
-        document.timeRanges = timeRanges;
-        document.segmentId = segmentId;
-        document.totalQuantity = totalQuantity;
-        return document;
+        return create(period, weekdays, timeRanges, segmentId, totalQuantity, CouponIssueRepeat.ONCE);
+    }
+
+    public static CouponIssueCondition create(
+        final CouponIssuablePeriod period,
+        final List<CouponIssuableWeekday> weekdays,
+        final List<CouponIssuableTime> timeRanges,
+        final String segmentId,
+        final Long totalQuantity,
+        final CouponIssueRepeat repeat
+    ) {
+        final CouponIssueCondition entity = new CouponIssueCondition();
+        entity.period = period;
+        entity.weekdays = weekdays;
+        entity.timeRanges = timeRanges;
+        entity.segmentId = segmentId;
+        entity.totalQuantity = totalQuantity;
+        entity.repeat = repeat == null ? CouponIssueRepeat.ONCE : repeat;
+        return entity;
+    }
+
+    public String idempotencyKey(final String policyId, final String userId, final Instant at) {
+        return getRepeat().idempotencyKey(policyId, userId, at);
     }
 
     public boolean isSatisfiedAt(final Instant now, final Collection<String> userSegmentIds) {
@@ -41,12 +58,12 @@ public class CouponIssueCondition {
         if (period.getStart().isAfter(now) || period.getEnd().isBefore(now)) {
             return false;
         }
-        final ZonedDateTime at = now.atZone(ZoneOffset.UTC);
-        if (!weekdays.isEmpty() && weekdays.stream().noneMatch(weekday -> weekday.dayOfWeek == at.getDayOfWeek())) {
+        if (!weekdays.isEmpty()
+            && weekdays.stream().noneMatch(weekday -> weekday.dayOfWeek == TimeUtils.toUtcDayOfWeek(now))) {
             return false;
         }
         if (!timeRanges.isEmpty()) {
-            final LocalTime time = at.toLocalTime();
+            final LocalTime time = TimeUtils.toUtcTime(now);
             return timeRanges.stream().anyMatch(range ->
                 !time.isBefore(range.getStart()) && !time.isAfter(range.getEnd())
             );
@@ -76,5 +93,9 @@ public class CouponIssueCondition {
 
     public Long getTotalQuantity() {
         return totalQuantity;
+    }
+
+    public CouponIssueRepeat getRepeat() {
+        return repeat == null ? CouponIssueRepeat.ONCE : repeat;
     }
 }

@@ -7,6 +7,7 @@ import im.dangmoo.benefit.admin.web.coupon.model.CouponPolicyResponse;
 import im.dangmoo.benefit.admin.web.coupon.model.CouponPolicySearchRequest;
 import im.dangmoo.benefit.domain.data.coupon.policy.CouponPolicy;
 import im.dangmoo.benefit.domain.data.coupon.policy.CouponPolicyChangedEvent;
+import im.dangmoo.benefit.domain.data.coupon.policy.CouponPolicyStatus;
 import im.dangmoo.benefit.domain.data.coupon.policy.CouponPolicyPublisher;
 import im.dangmoo.benefit.domain.data.coupon.policy.CouponPolicyRepository;
 import org.springframework.stereotype.Service;
@@ -49,8 +50,8 @@ public class CouponPolicyService {
         if (couponPolicyRepository.existsByCode(request.code())) {
             throw new ApiException(ApiMessage.DUPLICATE_CODE);
         }
-        final CouponPolicy saved = couponPolicyRepository.save(request.toDocument(adminId));
-        couponPolicyPublisher.publish(CouponPolicyChangedEvent.of(saved));
+        final CouponPolicy saved = couponPolicyRepository.save(request.toEntity(adminId));
+        publish(saved);
         return CouponPolicyResponse.of(saved);
     }
 
@@ -58,9 +59,10 @@ public class CouponPolicyService {
         final CouponPolicy policy = couponPolicyRepository.findById(policyId)
             .orElseThrow(() -> new ApiException(ApiMessage.NOT_FOUND));
         if (policy.isActive()) {
-            policy.updateIssueCondition(request.issueCondition().toDocument(), adminId);
-            final CouponPolicy saved = couponPolicyRepository.save(policy);
-            couponPolicyPublisher.publish(CouponPolicyChangedEvent.of(saved));
+            final CouponPolicy saved = couponPolicyRepository.save(
+                policy.updateIssueCondition(request.issueCondition().toEntity(), adminId)
+            );
+            publish(saved);
             return CouponPolicyResponse.of(saved);
         }
 
@@ -68,39 +70,43 @@ public class CouponPolicyService {
             throw new ApiException(ApiMessage.DUPLICATE_CODE);
         }
 
-        policy.update(
+        final CouponPolicy saved = couponPolicyRepository.save(policy.update(
             request.code(),
             request.name(),
             request.description(),
             request.platformId(),
             request.type(),
-            request.issueCondition().toDocument(),
-            request.benefitCondition().toDocument(),
-            request.applyCondition().toDocument(),
-            request.usageCondition().toDocument(),
-            request.lifecycleCondition().toDocument(),
+            request.issueCondition().toEntity(),
+            request.benefitCondition().toEntity(),
+            request.applyCondition().toEntity(),
+            request.usageCondition().toEntity(),
+            request.lifecycleCondition().toEntity(),
             adminId
-        );
-        final CouponPolicy saved = couponPolicyRepository.save(policy);
-        couponPolicyPublisher.publish(CouponPolicyChangedEvent.of(saved));
+        ));
+        publish(saved);
         return CouponPolicyResponse.of(saved);
     }
 
     public CouponPolicyResponse activate(final String adminId, final String policyId) {
         final CouponPolicy policy = couponPolicyRepository.findById(policyId)
             .orElseThrow(() -> new ApiException(ApiMessage.NOT_FOUND));
-        policy.activate(adminId);
-        final CouponPolicy saved = couponPolicyRepository.save(policy);
-        couponPolicyPublisher.publish(CouponPolicyChangedEvent.of(saved));
+        final CouponPolicy saved = couponPolicyRepository.save(policy.activate(adminId));
+        publish(saved);
         return CouponPolicyResponse.of(saved);
     }
 
     public CouponPolicyResponse suspend(final String adminId, final String policyId) {
         final CouponPolicy policy = couponPolicyRepository.findById(policyId)
             .orElseThrow(() -> new ApiException(ApiMessage.NOT_FOUND));
-        policy.suspend(adminId);
-        final CouponPolicy saved = couponPolicyRepository.save(policy);
-        couponPolicyPublisher.publish(CouponPolicyChangedEvent.of(saved));
+        final CouponPolicy saved = couponPolicyRepository.save(policy.suspend(adminId));
+        publish(saved);
         return CouponPolicyResponse.of(saved);
+    }
+
+    private void publish(final CouponPolicy policy) {
+        if (policy.getStatus() == CouponPolicyStatus.DRAFT) {
+            return;
+        }
+        couponPolicyPublisher.publish(CouponPolicyChangedEvent.of(policy));
     }
 }

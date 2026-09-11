@@ -11,10 +11,10 @@ public class CouponIssuableTime {
     }
 
     public static CouponIssuableTime create(final LocalTime start, final LocalTime end) {
-        final CouponIssuableTime document = new CouponIssuableTime();
-        document.start = start;
-        document.end = end;
-        return document;
+        final CouponIssuableTime entity = new CouponIssuableTime();
+        entity.start = start;
+        entity.end = end;
+        return entity;
     }
 
     public LocalTime getStart() {

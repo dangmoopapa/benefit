@@ -1,0 +1,9 @@
+### 멤버십 혜택 적용 (결제 캐시백)
+POST {{host}}/memberships/privileges/apply
+X-User-Id: U1001
+Content-Type: application/json
+
+{
+  "amount": 10000,
+  "orderId": "ORD-1"
+}

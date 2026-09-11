@@ -19,7 +19,8 @@ Content-Type: application/json
     "weekdays": [],
     "timeRanges": [],
     "segmentId": null,
-    "totalQuantity": 100000
+    "totalQuantity": 100000,
+    "repeat": "ONCE"
   },
   "benefitCondition": {
     "type": "AMOUNT",

@@ -13,17 +13,17 @@ public record CouponUsageExpirationForm(
     Integer hours
 ) {
 
-    public CouponUsageExpiration toDocument() {
+    public CouponUsageExpiration toEntity() {
         return CouponUsageExpiration.create(type, start, end, days, hours);
     }
 
-    public static CouponUsageExpirationForm of(final CouponUsageExpiration document) {
+    public static CouponUsageExpirationForm of(final CouponUsageExpiration entity) {
         return new CouponUsageExpirationForm(
-            document.getType(),
-            document.getStart(),
-            document.getEnd(),
-            document.getDays(),
-            document.getHours()
+            entity.getType(),
+            entity.getStart(),
+            entity.getEnd(),
+            entity.getDays(),
+            entity.getHours()
         );
     }
 }

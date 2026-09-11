@@ -12,16 +12,16 @@ public record PointExpirationForm(
     Instant end
 ) {
 
-    public PointExpirationCondition toDocument() {
+    public PointExpirationCondition toEntity() {
         return PointExpirationCondition.create(type, days, hours, end);
     }
 
-    public static PointExpirationForm of(final PointExpirationCondition document) {
+    public static PointExpirationForm of(final PointExpirationCondition entity) {
         return new PointExpirationForm(
-            document.getType(),
-            document.getDays(),
-            document.getHours(),
-            document.getEnd()
+            entity.getType(),
+            entity.getDays(),
+            entity.getHours(),
+            entity.getEnd()
         );
     }
 }

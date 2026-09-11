@@ -14,4 +14,9 @@ public final class ApiPath {
     public static final String POINT_REVOKE = "/points/revoke";
     public static final String POINT_USE = "/points/use";
     public static final String POINT_RESTORE = "/points/restore";
+
+    public static final String MEMBERSHIP = "/memberships";
+    public static final String MEMBERSHIP_CANCEL = "/memberships/cancel";
+    public static final String MEMBERSHIP_PRIVILEGE_APPLY = "/memberships/privileges/apply";
+    public static final String MEMBERSHIP_PRIVILEGE_COUPON_ISSUE = "/memberships/privileges/coupons/issue";
 }

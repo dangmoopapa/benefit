@@ -12,6 +12,7 @@ public record PointPolicyResponse(
     String description,
     String platformId,
     PointPolicyStatus status,
+    PointIssueConditionForm issueCondition,
     PointExpirationForm expirationCondition,
     String createdBy,
     Instant createdAt,
@@ -19,19 +20,20 @@ public record PointPolicyResponse(
     Instant updatedAt
 ) {
 
-    public static PointPolicyResponse of(final PointPolicy document) {
+    public static PointPolicyResponse of(final PointPolicy entity) {
         return new PointPolicyResponse(
-            document.getId(),
-            document.getCode(),
-            document.getName(),
-            document.getDescription(),
-            document.getPlatformId(),
-            document.getStatus(),
-            document.getExpirationCondition() == null ? null : PointExpirationForm.of(document.getExpirationCondition()),
-            document.getCreatedBy(),
-            document.getCreatedAt(),
-            document.getUpdatedBy(),
-            document.getUpdatedAt()
+            entity.getId(),
+            entity.getCode(),
+            entity.getName(),
+            entity.getDescription(),
+            entity.getPlatformId(),
+            entity.getStatus(),
+            PointIssueConditionForm.of(entity.getIssueCondition()),
+            entity.getExpirationCondition() == null ? null : PointExpirationForm.of(entity.getExpirationCondition()),
+            entity.getCreatedBy(),
+            entity.getCreatedAt(),
+            entity.getUpdatedBy(),
+            entity.getUpdatedAt()
         );
     }
 }

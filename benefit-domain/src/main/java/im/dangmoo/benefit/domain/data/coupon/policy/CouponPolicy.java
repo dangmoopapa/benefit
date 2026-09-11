@@ -3,9 +3,11 @@ package im.dangmoo.benefit.domain.data.coupon.policy;
 import im.dangmoo.benefit.domain.data.coupon.policy.apply.CouponApplyCondition;
 import im.dangmoo.benefit.domain.data.coupon.policy.benefit.CouponBenefitCondition;
 import im.dangmoo.benefit.domain.data.coupon.policy.issue.CouponIssueCondition;
+import im.dangmoo.benefit.domain.data.coupon.policy.issue.CouponIssueRepeat;
 import im.dangmoo.benefit.domain.data.coupon.policy.lifecycle.CouponLifecycleCondition;
 import im.dangmoo.benefit.domain.data.coupon.policy.usage.CouponUsageCondition;
 import im.dangmoo.benefit.domain.infrastructure.mongo.MongoCollections;
+import im.dangmoo.benefit.domain.util.TimeUtils;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -93,27 +95,27 @@ public class CouponPolicy {
         final CouponLifecycleCondition lifecycleCondition,
         final String createdBy
     ) {
-        final Instant now = Instant.now();
-        final CouponPolicy document = new CouponPolicy();
-        document.code = code;
-        document.name = name;
-        document.description = description;
-        document.platformId = platformId;
-        document.type = type;
-        document.status = CouponPolicyStatus.DRAFT;
-        document.issueCondition = issueCondition;
-        document.benefitCondition = benefitCondition;
-        document.applyCondition = applyCondition;
-        document.usageCondition = usageCondition;
-        document.lifecycleCondition = lifecycleCondition;
-        document.createdBy = createdBy;
-        document.createdAt = now;
-        document.updatedBy = createdBy;
-        document.updatedAt = now;
-        return document;
+        final Instant now = TimeUtils.now();
+        final CouponPolicy entity = new CouponPolicy();
+        entity.code = code;
+        entity.name = name;
+        entity.description = description;
+        entity.platformId = platformId;
+        entity.type = type;
+        entity.status = CouponPolicyStatus.DRAFT;
+        entity.issueCondition = issueCondition;
+        entity.benefitCondition = benefitCondition;
+        entity.applyCondition = applyCondition;
+        entity.usageCondition = usageCondition;
+        entity.lifecycleCondition = lifecycleCondition;
+        entity.createdBy = createdBy;
+        entity.createdAt = now;
+        entity.updatedBy = createdBy;
+        entity.updatedAt = now;
+        return entity;
     }
 
-    public void update(
+    public CouponPolicy update(
         final String code,
         final String name,
         final String description,
@@ -137,25 +139,29 @@ public class CouponPolicy {
         this.usageCondition = usageCondition;
         this.lifecycleCondition = lifecycleCondition;
         this.updatedBy = updatedBy;
-        this.updatedAt = Instant.now();
+        this.updatedAt = TimeUtils.now();
+        return this;
     }
 
-    public void updateIssueCondition(final CouponIssueCondition issueCondition, final String updatedBy) {
+    public CouponPolicy updateIssueCondition(final CouponIssueCondition issueCondition, final String updatedBy) {
         this.issueCondition = issueCondition;
         this.updatedBy = updatedBy;
-        this.updatedAt = Instant.now();
+        this.updatedAt = TimeUtils.now();
+        return this;
     }
 
-    public void activate(final String updatedBy) {
+    public CouponPolicy activate(final String updatedBy) {
         this.status = CouponPolicyStatus.ACTIVE;
         this.updatedBy = updatedBy;
-        this.updatedAt = Instant.now();
+        this.updatedAt = TimeUtils.now();
+        return this;
     }
 
-    public void suspend(final String updatedBy) {
+    public CouponPolicy suspend(final String updatedBy) {
         this.status = CouponPolicyStatus.SUSPENDED;
         this.updatedBy = updatedBy;
-        this.updatedAt = Instant.now();
+        this.updatedAt = TimeUtils.now();
+        return this;
     }
 
     public boolean isActive() {
@@ -199,6 +205,13 @@ public class CouponPolicy {
 
     public CouponIssueCondition getIssueCondition() {
         return issueCondition;
+    }
+
+    public String issueIdempotencyKey(final String userId, final Instant at) {
+        if (issueCondition == null) {
+            return CouponIssueRepeat.ONCE.idempotencyKey(id, userId, at);
+        }
+        return issueCondition.idempotencyKey(id, userId, at);
     }
 
     public CouponBenefitCondition getBenefitCondition() {

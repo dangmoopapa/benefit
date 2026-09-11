@@ -2,10 +2,10 @@ package im.dangmoo.benefit.api.web.point.model;
 
 import im.dangmoo.benefit.domain.data.point.transaction.PointTransaction;
 import im.dangmoo.benefit.domain.data.point.transaction.PointTransactionType;
-import im.dangmoo.benefit.domain.function.point.issue.PointIssue;
-import im.dangmoo.benefit.domain.function.point.issue.PointRevoke;
-import im.dangmoo.benefit.domain.function.point.use.PointRestore;
-import im.dangmoo.benefit.domain.function.point.use.PointUse;
+import im.dangmoo.benefit.domain.component.point.issue.PointIssue;
+import im.dangmoo.benefit.domain.component.point.issue.PointRevoke;
+import im.dangmoo.benefit.domain.component.point.use.PointRestore;
+import im.dangmoo.benefit.domain.component.point.use.PointUse;
 
 import java.time.Instant;
 import java.util.List;

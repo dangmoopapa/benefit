@@ -9,8 +9,8 @@ public final class RedisKeys {
         return "c:stock:" + policyId + ":issued";
     }
 
-    public static String couponStockUser(final String policyId, final String userId) {
-        return "c:stock:" + policyId + ":u:" + userId;
+    public static String couponStockUser(final String policyId, final String idempotencyKey) {
+        return "c:stock:" + policyId + ":k:" + idempotencyKey;
     }
 
     public static String couponUsageTotal(final String policyId) {

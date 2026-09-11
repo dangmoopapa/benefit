@@ -29,6 +29,10 @@ public class CouponPolicyRepository {
         return Optional.ofNullable(mongoTemplate.findById(policyId, CouponPolicy.class));
     }
 
+    public Optional<CouponPolicy> findByCode(final String code) {
+        return Optional.ofNullable(mongoTemplate.findOne(CouponPolicy.queryByCode(code), CouponPolicy.class));
+    }
+
     public boolean existsByCode(final String code) {
         return mongoTemplate.exists(CouponPolicy.queryByCode(code), CouponPolicy.class);
     }

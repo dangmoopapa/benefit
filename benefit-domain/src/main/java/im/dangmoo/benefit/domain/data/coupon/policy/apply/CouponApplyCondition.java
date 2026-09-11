@@ -14,11 +14,11 @@ public class CouponApplyCondition {
         final CouponApplyInclude include,
         final CouponApplyExclude exclude
     ) {
-        final CouponApplyCondition document = new CouponApplyCondition();
-        document.unit = unit;
-        document.include = include;
-        document.exclude = exclude;
-        return document;
+        final CouponApplyCondition entity = new CouponApplyCondition();
+        entity.unit = unit;
+        entity.include = include;
+        entity.exclude = exclude;
+        return entity;
     }
 
     public CouponApplyUnit getUnit() {

@@ -1,6 +1,9 @@
 package im.dangmoo.benefit.domain.data.point.policy;
 
+import im.dangmoo.benefit.domain.data.point.policy.issue.PointIssueCondition;
+import im.dangmoo.benefit.domain.data.point.policy.issue.PointIssueRepeat;
 import im.dangmoo.benefit.domain.infrastructure.mongo.MongoCollections;
+import im.dangmoo.benefit.domain.util.TimeUtils;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -21,6 +24,7 @@ public class PointPolicy {
     private String description;
     private String platformId;
     private PointPolicyStatus status;
+    private PointIssueCondition issueCondition;
     private PointExpirationCondition expirationCondition;
     private String createdBy;
     private Instant createdAt;
@@ -70,29 +74,32 @@ public class PointPolicy {
         final String name,
         final String description,
         final String platformId,
+        final PointIssueCondition issueCondition,
         final PointExpirationCondition expirationCondition,
         final String createdBy
     ) {
-        final Instant now = Instant.now();
-        final PointPolicy document = new PointPolicy();
-        document.code = code;
-        document.name = name;
-        document.description = description;
-        document.platformId = platformId;
-        document.status = PointPolicyStatus.DRAFT;
-        document.expirationCondition = expirationCondition;
-        document.createdBy = createdBy;
-        document.createdAt = now;
-        document.updatedBy = createdBy;
-        document.updatedAt = now;
-        return document;
+        final Instant now = TimeUtils.now();
+        final PointPolicy entity = new PointPolicy();
+        entity.code = code;
+        entity.name = name;
+        entity.description = description;
+        entity.platformId = platformId;
+        entity.status = PointPolicyStatus.DRAFT;
+        entity.issueCondition = issueCondition;
+        entity.expirationCondition = expirationCondition;
+        entity.createdBy = createdBy;
+        entity.createdAt = now;
+        entity.updatedBy = createdBy;
+        entity.updatedAt = now;
+        return entity;
     }
 
-    public void update(
+    public PointPolicy update(
         final String code,
         final String name,
         final String description,
         final String platformId,
+        final PointIssueCondition issueCondition,
         final PointExpirationCondition expirationCondition,
         final String updatedBy
     ) {
@@ -100,21 +107,25 @@ public class PointPolicy {
         this.name = name;
         this.description = description;
         this.platformId = platformId;
+        this.issueCondition = issueCondition;
         this.expirationCondition = expirationCondition;
         this.updatedBy = updatedBy;
-        this.updatedAt = Instant.now();
+        this.updatedAt = TimeUtils.now();
+        return this;
     }
 
-    public void activate(final String updatedBy) {
+    public PointPolicy activate(final String updatedBy) {
         this.status = PointPolicyStatus.ACTIVE;
         this.updatedBy = updatedBy;
-        this.updatedAt = Instant.now();
+        this.updatedAt = TimeUtils.now();
+        return this;
     }
 
-    public void suspend(final String updatedBy) {
+    public PointPolicy suspend(final String updatedBy) {
         this.status = PointPolicyStatus.SUSPENDED;
         this.updatedBy = updatedBy;
-        this.updatedAt = Instant.now();
+        this.updatedAt = TimeUtils.now();
+        return this;
     }
 
     public boolean isActive() {
@@ -150,6 +161,17 @@ public class PointPolicy {
 
     public PointPolicyStatus getStatus() {
         return status;
+    }
+
+    public PointIssueCondition getIssueCondition() {
+        return issueCondition;
+    }
+
+    public String issueIdempotencyKey(final String userId, final Instant at) {
+        if (issueCondition == null) {
+            return PointIssueRepeat.ONCE.idempotencyKey(id, userId, at);
+        }
+        return issueCondition.idempotencyKey(id, userId, at);
     }
 
     public PointExpirationCondition getExpirationCondition() {

@@ -1,0 +1,11 @@
+### 멤버십 정책 수정
+PUT {{host}}/memberships/policies/{{membershipPolicyId}}
+X-Admin-Id: A120115
+Content-Type: application/json
+
+{
+  "version": 1,
+  "period": {
+    "months": 1
+  }
+}

@@ -7,6 +7,5 @@ Content-Type: application/json
   "userId": "U1001",
   "policyCode": "REVIEW_EARN",
   "point": 100,
-  "orderId": "ORD-1",
-  "idempotencyKey": "earn:U1001:ORD-1"
+  "orderId": "ORD-1"
 }

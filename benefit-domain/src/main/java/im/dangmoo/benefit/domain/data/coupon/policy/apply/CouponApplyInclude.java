@@ -22,14 +22,14 @@ public class CouponApplyInclude {
         final List<String> sellerIds,
         final List<String> optionIds
     ) {
-        final CouponApplyInclude document = new CouponApplyInclude();
-        document.allProducts = allProducts;
-        document.productIds = productIds;
-        document.categoryIds = categoryIds;
-        document.brandIds = brandIds;
-        document.sellerIds = sellerIds;
-        document.optionIds = optionIds;
-        return document;
+        final CouponApplyInclude entity = new CouponApplyInclude();
+        entity.allProducts = allProducts;
+        entity.productIds = productIds;
+        entity.categoryIds = categoryIds;
+        entity.brandIds = brandIds;
+        entity.sellerIds = sellerIds;
+        entity.optionIds = optionIds;
+        return entity;
     }
 
     public boolean isAllProducts() {

@@ -11,18 +11,18 @@ public record CouponUsageLimitForm(
     Integer perHour
 ) {
 
-    public CouponUsageLimit toDocument() {
+    public CouponUsageLimit toEntity() {
         return CouponUsageLimit.create(perUser, perUserPerMonth, perOrder, total, perDay, perHour);
     }
 
-    public static CouponUsageLimitForm of(final CouponUsageLimit document) {
+    public static CouponUsageLimitForm of(final CouponUsageLimit entity) {
         return new CouponUsageLimitForm(
-            document.getPerUser(),
-            document.getPerUserPerMonth(),
-            document.getPerOrder(),
-            document.getTotal(),
-            document.getPerDay(),
-            document.getPerHour()
+            entity.getPerUser(),
+            entity.getPerUserPerMonth(),
+            entity.getPerOrder(),
+            entity.getTotal(),
+            entity.getPerDay(),
+            entity.getPerHour()
         );
     }
 }

@@ -24,4 +24,10 @@ public final class AdminApiPath {
     public static final String POINT_TRANSACTION_REVOKE = "/points/transactions/revoke";
     public static final String POINT_TRANSACTION_USE = "/points/transactions/use";
     public static final String POINT_TRANSACTION_RESTORE = "/points/transactions/restore";
+
+    public static final String MEMBERSHIP_POLICIES = "/memberships/policies";
+    public static final String MEMBERSHIP_POLICY = "/memberships/policies/{policyId}";
+
+    public static final String MEMBERSHIPS = "/memberships";
+    public static final String MEMBERSHIP_CANCEL = "/memberships/cancel";
 }

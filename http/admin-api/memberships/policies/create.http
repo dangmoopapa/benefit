@@ -1,0 +1,11 @@
+### 멤버십 정책 생성
+POST {{host}}/memberships/policies
+X-Admin-Id: A120115
+Content-Type: application/json
+
+{
+  "version": 1,
+  "period": {
+    "months": 1
+  }
+}

@@ -2,9 +2,9 @@ package im.dangmoo.benefit.admin.web.coupon.model;
 
 import im.dangmoo.benefit.domain.data.coupon.wallet.CouponWallet;
 import im.dangmoo.benefit.domain.data.coupon.wallet.CouponWalletStatus;
-import im.dangmoo.benefit.domain.function.coupon.issue.CouponIssue;
-import im.dangmoo.benefit.domain.function.coupon.redeem.CouponRecover;
-import im.dangmoo.benefit.domain.function.coupon.redeem.CouponUse;
+import im.dangmoo.benefit.domain.component.coupon.issue.CouponIssue;
+import im.dangmoo.benefit.domain.component.coupon.redeem.CouponRecover;
+import im.dangmoo.benefit.domain.component.coupon.redeem.CouponUse;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -15,6 +15,7 @@ public record CouponWalletResponse(
     String orderId,
     String policyId,
     String policyCode,
+    String idempotencyKey,
     CouponWalletStatus status,
     BigDecimal usedAmount,
     Instant issuedAt,
@@ -27,23 +28,24 @@ public record CouponWalletResponse(
     Instant updatedAt
 ) {
 
-    public static CouponWalletResponse of(final CouponWallet document) {
+    public static CouponWalletResponse of(final CouponWallet entity) {
         return new CouponWalletResponse(
-            document.getId(),
-            document.getUserId(),
-            document.getOrderId(),
-            document.getPolicyId(),
-            document.getPolicyCode(),
-            document.getStatus(),
-            document.getUsedAmount(),
-            document.getIssuedAt(),
-            document.getExpiresAt(),
-            document.getUsedAt(),
-            document.getRecoveredAt(),
-            document.getCreatedBy(),
-            document.getCreatedAt(),
-            document.getUpdatedBy(),
-            document.getUpdatedAt()
+            entity.getId(),
+            entity.getUserId(),
+            entity.getOrderId(),
+            entity.getPolicyId(),
+            entity.getPolicyCode(),
+            entity.getIdempotencyKey(),
+            entity.getStatus(),
+            entity.getUsedAmount(),
+            entity.getIssuedAt(),
+            entity.getExpiresAt(),
+            entity.getUsedAt(),
+            entity.getRecoveredAt(),
+            entity.getCreatedBy(),
+            entity.getCreatedAt(),
+            entity.getUpdatedBy(),
+            entity.getUpdatedAt()
         );
     }
 
@@ -54,6 +56,7 @@ public record CouponWalletResponse(
             null,
             issued.policyId(),
             issued.policyCode(),
+            issued.idempotencyKey(),
             issued.status(),
             null,
             issued.issuedAt(),
@@ -74,6 +77,7 @@ public record CouponWalletResponse(
             used.orderId(),
             used.policyId(),
             used.policyCode(),
+            used.idempotencyKey(),
             used.status(),
             used.usedAmount(),
             null,
@@ -94,6 +98,7 @@ public record CouponWalletResponse(
             recovered.orderId(),
             recovered.policyId(),
             recovered.policyCode(),
+            recovered.idempotencyKey(),
             recovered.status(),
             null,
             null,

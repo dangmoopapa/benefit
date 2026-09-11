@@ -13,7 +13,10 @@ public enum ApiMessage {
     ALREADY_RESTORED("이미 복구된 사용입니다"),
     ALREADY_ISSUED("이미 발급된 쿠폰입니다"),
     ISSUE_NOT_ALLOWED("발급 조건을 만족하지 않습니다"),
-    USAGE_LIMIT_EXCEEDED("사용 한도를 초과했습니다");
+    USAGE_LIMIT_EXCEEDED("사용 한도를 초과했습니다"),
+    DUPLICATE_VERSION("이미 존재하는 멤버십 버전입니다"),
+    PRIVILEGE_NOT_FOUND("멤버십 혜택을 찾을 수 없습니다"),
+    NOT_MEMBER("멤버십 회원이 아닙니다");
 
     private final String message;
 

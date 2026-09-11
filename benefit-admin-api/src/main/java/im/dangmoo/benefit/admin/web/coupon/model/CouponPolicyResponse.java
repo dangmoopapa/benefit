@@ -30,24 +30,24 @@ public record CouponPolicyResponse(
     Instant updatedAt
 ) {
 
-    public static CouponPolicyResponse of(final CouponPolicy document) {
+    public static CouponPolicyResponse of(final CouponPolicy entity) {
         return new CouponPolicyResponse(
-            document.getId(),
-            document.getCode(),
-            document.getName(),
-            document.getDescription(),
-            document.getPlatformId(),
-            document.getType(),
-            document.getStatus(),
-            CouponIssueForm.of(document.getIssueCondition()),
-            CouponBenefitForm.of(document.getBenefitCondition()),
-            CouponApplyForm.of(document.getApplyCondition()),
-            CouponUsageForm.of(document.getUsageCondition()),
-            CouponLifecycleForm.of(document.getLifecycleCondition()),
-            document.getCreatedBy(),
-            document.getCreatedAt(),
-            document.getUpdatedBy(),
-            document.getUpdatedAt()
+            entity.getId(),
+            entity.getCode(),
+            entity.getName(),
+            entity.getDescription(),
+            entity.getPlatformId(),
+            entity.getType(),
+            entity.getStatus(),
+            CouponIssueForm.of(entity.getIssueCondition()),
+            CouponBenefitForm.of(entity.getBenefitCondition()),
+            CouponApplyForm.of(entity.getApplyCondition()),
+            CouponUsageForm.of(entity.getUsageCondition()),
+            CouponLifecycleForm.of(entity.getLifecycleCondition()),
+            entity.getCreatedBy(),
+            entity.getCreatedAt(),
+            entity.getUpdatedBy(),
+            entity.getUpdatedAt()
         );
     }
 }

@@ -18,13 +18,13 @@ public class CouponLifecycleCondition {
         final boolean reissuable,
         final CouponAccountingCondition accountingCondition
     ) {
-        final CouponLifecycleCondition document = new CouponLifecycleCondition();
-        document.onOrderCancel = onOrderCancel;
-        document.onPartialCancel = onPartialCancel;
-        document.onRefund = onRefund;
-        document.reissuable = reissuable;
-        document.accountingCondition = accountingCondition;
-        return document;
+        final CouponLifecycleCondition entity = new CouponLifecycleCondition();
+        entity.onOrderCancel = onOrderCancel;
+        entity.onPartialCancel = onPartialCancel;
+        entity.onRefund = onRefund;
+        entity.reissuable = reissuable;
+        entity.accountingCondition = accountingCondition;
+        return entity;
     }
 
     public CouponOnOrderCancel getOnOrderCancel() {

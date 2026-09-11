@@ -13,18 +13,18 @@ public record CouponApplyIncludeForm(
     List<String> optionIds
 ) {
 
-    public CouponApplyInclude toDocument() {
+    public CouponApplyInclude toEntity() {
         return CouponApplyInclude.create(allProducts, productIds, categoryIds, brandIds, sellerIds, optionIds);
     }
 
-    public static CouponApplyIncludeForm of(final CouponApplyInclude document) {
+    public static CouponApplyIncludeForm of(final CouponApplyInclude entity) {
         return new CouponApplyIncludeForm(
-            document.isAllProducts(),
-            document.getProductIds(),
-            document.getCategoryIds(),
-            document.getBrandIds(),
-            document.getSellerIds(),
-            document.getOptionIds()
+            entity.isAllProducts(),
+            entity.getProductIds(),
+            entity.getCategoryIds(),
+            entity.getBrandIds(),
+            entity.getSellerIds(),
+            entity.getOptionIds()
         );
     }
 }

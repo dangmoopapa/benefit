@@ -4,7 +4,7 @@ import im.dangmoo.benefit.api.support.ApiResponse;
 import im.dangmoo.benefit.api.support.UserHeaders;
 import im.dangmoo.benefit.api.web.ApiPath;
 import im.dangmoo.benefit.api.web.point.model.PointBookResponse;
-import im.dangmoo.benefit.api.web.point.model.PointTransactionPageResponse;
+import im.dangmoo.benefit.api.web.point.model.PointTransactionResponse;
 import im.dangmoo.benefit.api.web.point.service.PointBookService;
 import im.dangmoo.benefit.domain.data.point.transaction.PointTransactionType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,12 +29,10 @@ public class PointBookController {
     }
 
     @GetMapping(ApiPath.POINT_BOOK_TRANSACTIONS)
-    ApiResponse<PointTransactionPageResponse> getTransactions(
+    ApiResponse<List<PointTransactionResponse>> getTransactions(
         @RequestHeader(UserHeaders.USER_ID) final String userId,
-        @RequestParam(required = false) final List<PointTransactionType> types,
-        @RequestParam(required = false) final String cursor,
-        @RequestParam(required = false) final Integer size
+        @RequestParam(required = false) final List<PointTransactionType> types
     ) {
-        return ApiResponse.of(pointBookService.getTransactions(userId, types, cursor, size));
+        return ApiResponse.of(pointBookService.getTransactions(userId, types));
     }
 }

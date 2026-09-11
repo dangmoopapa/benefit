@@ -14,11 +14,11 @@ public class CouponAccountingCondition {
         final String costCenter,
         final String accountCode
     ) {
-        final CouponAccountingCondition document = new CouponAccountingCondition();
-        document.bearer = bearer;
-        document.costCenter = costCenter;
-        document.accountCode = accountCode;
-        return document;
+        final CouponAccountingCondition entity = new CouponAccountingCondition();
+        entity.bearer = bearer;
+        entity.costCenter = costCenter;
+        entity.accountCode = accountCode;
+        return entity;
     }
 
     public CouponCostBearer getBearer() {

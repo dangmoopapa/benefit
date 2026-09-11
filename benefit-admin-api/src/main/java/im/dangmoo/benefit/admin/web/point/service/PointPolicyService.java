@@ -41,7 +41,7 @@ public class PointPolicyService {
         if (pointPolicyRepository.existsByCode(request.code())) {
             throw new ApiException(ApiMessage.DUPLICATE_CODE);
         }
-        final PointPolicy saved = pointPolicyRepository.save(request.toDocument(adminId));
+        final PointPolicy saved = pointPolicyRepository.save(request.toEntity(adminId));
         return PointPolicyResponse.of(saved);
     }
 
@@ -56,28 +56,26 @@ public class PointPolicyService {
             throw new ApiException(ApiMessage.DUPLICATE_CODE);
         }
 
-        policy.update(
+        return PointPolicyResponse.of(pointPolicyRepository.save(policy.update(
             request.code(),
             request.name(),
             request.description(),
             request.platformId(),
-            request.expirationCondition() == null ? null : request.expirationCondition().toDocument(),
+            request.issueCondition() == null ? null : request.issueCondition().toEntity(),
+            request.expirationCondition() == null ? null : request.expirationCondition().toEntity(),
             adminId
-        );
-        return PointPolicyResponse.of(pointPolicyRepository.save(policy));
+        )));
     }
 
     public PointPolicyResponse activate(final String adminId, final String policyId) {
         final PointPolicy policy = pointPolicyRepository.findById(policyId)
             .orElseThrow(() -> new ApiException(ApiMessage.NOT_FOUND));
-        policy.activate(adminId);
-        return PointPolicyResponse.of(pointPolicyRepository.save(policy));
+        return PointPolicyResponse.of(pointPolicyRepository.save(policy.activate(adminId)));
     }
 
     public PointPolicyResponse suspend(final String adminId, final String policyId) {
         final PointPolicy policy = pointPolicyRepository.findById(policyId)
             .orElseThrow(() -> new ApiException(ApiMessage.NOT_FOUND));
-        policy.suspend(adminId);
-        return PointPolicyResponse.of(pointPolicyRepository.save(policy));
+        return PointPolicyResponse.of(pointPolicyRepository.save(policy.suspend(adminId)));
     }
 }

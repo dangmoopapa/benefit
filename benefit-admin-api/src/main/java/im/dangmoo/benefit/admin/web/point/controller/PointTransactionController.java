@@ -6,7 +6,6 @@ import im.dangmoo.benefit.admin.web.AdminApiPath;
 import im.dangmoo.benefit.admin.web.point.model.PointIssueRequest;
 import im.dangmoo.benefit.admin.web.point.model.PointRestoreRequest;
 import im.dangmoo.benefit.admin.web.point.model.PointRevokeRequest;
-import im.dangmoo.benefit.admin.web.point.model.PointTransactionPageResponse;
 import im.dangmoo.benefit.admin.web.point.model.PointTransactionResponse;
 import im.dangmoo.benefit.admin.web.point.model.PointUseRequest;
 import im.dangmoo.benefit.admin.web.point.service.PointTransactionService;
@@ -30,13 +29,11 @@ public class PointTransactionController {
     }
 
     @GetMapping(AdminApiPath.POINT_TRANSACTIONS)
-    ApiResponse<PointTransactionPageResponse> list(
+    ApiResponse<List<PointTransactionResponse>> list(
         @RequestParam final String userId,
-        @RequestParam(required = false) final List<PointTransactionType> types,
-        @RequestParam(required = false) final String cursor,
-        @RequestParam(required = false) final Integer size
+        @RequestParam(required = false) final List<PointTransactionType> types
     ) {
-        return ApiResponse.of(pointTransactionService.list(userId, types, cursor, size));
+        return ApiResponse.of(pointTransactionService.list(userId, types));
     }
 
     @PostMapping(AdminApiPath.POINT_TRANSACTION_ISSUE)

@@ -8,6 +8,9 @@ Content-Type: application/json
   "name": "리뷰 적립",
   "description": "리뷰 작성 시 포인트 적립",
   "platformId": "order",
+  "issueCondition": {
+    "repeat": "ONCE"
+  },
   "expirationCondition": {
     "type": "DURATION",
     "days": 365,

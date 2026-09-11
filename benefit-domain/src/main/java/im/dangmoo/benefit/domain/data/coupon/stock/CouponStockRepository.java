@@ -11,7 +11,6 @@ import java.util.List;
 public class CouponStockRepository {
 
     private static final String UNLIMITED_TOTAL = "";
-    private static final long UNKNOWN_ISSUED_COUNT = 0L;
 
     private final StringRedisTemplate redisTemplate;
     private final RedisScript<String> reserveScript;
@@ -24,51 +23,29 @@ public class CouponStockRepository {
         this.reserveScript = couponStockReserveScript;
     }
 
-    /**
-     * 총량 → 유저 순. 솔드아웃이면 유저 키를 보지 않는다.
-     * 무제한이면 유저 발급 여부만 본다.
-     */
-    public CouponStockSnapshot inspect(final String policyId, final String userId, final Long totalQuantity) {
-        if (totalQuantity != null) {
-            final long issuedCount = readIssuedCount(policyId);
-            if (issuedCount >= totalQuantity) {
-                return CouponStockSnapshot.soldOut(issuedCount, totalQuantity);
-            }
-            if (hasUserIssued(policyId, userId)) {
-                return CouponStockSnapshot.alreadyIssued(issuedCount, totalQuantity);
-            }
-            return CouponStockSnapshot.available(issuedCount, totalQuantity);
-        }
-
-        if (hasUserIssued(policyId, userId)) {
-            return CouponStockSnapshot.alreadyIssued(UNKNOWN_ISSUED_COUNT, null);
-        }
-        return CouponStockSnapshot.available(UNKNOWN_ISSUED_COUNT, null);
+    public long getIssuedCount(final String policyId) {
+        final String value = redisTemplate.opsForValue().get(RedisKeys.couponStockIssued(policyId));
+        return value == null ? 0L : Long.parseLong(value);
     }
 
-    public CouponStockReserveResult reserve(final String policyId, final String userId, final Long totalQuantity) {
+    public boolean hasIssued(final String policyId, final String idempotencyKey) {
+        return Boolean.TRUE.equals(redisTemplate.hasKey(RedisKeys.couponStockUser(policyId, idempotencyKey)));
+    }
+
+    public CouponStockReserveResult reserve(
+        final String policyId,
+        final String idempotencyKey,
+        final Long totalQuantity
+    ) {
         return CouponStockReserveResult.fromReply(
             redisTemplate.execute(
                 reserveScript,
                 List.of(
                     RedisKeys.couponStockIssued(policyId),
-                    RedisKeys.couponStockUser(policyId, userId)
+                    RedisKeys.couponStockUser(policyId, idempotencyKey)
                 ),
-                totalArg(totalQuantity)
+                totalQuantity == null ? UNLIMITED_TOTAL : Long.toString(totalQuantity)
             )
         );
-    }
-
-    private long readIssuedCount(final String policyId) {
-        final String value = redisTemplate.opsForValue().get(RedisKeys.couponStockIssued(policyId));
-        return value == null ? UNKNOWN_ISSUED_COUNT : Long.parseLong(value);
-    }
-
-    private boolean hasUserIssued(final String policyId, final String userId) {
-        return Boolean.TRUE.equals(redisTemplate.hasKey(RedisKeys.couponStockUser(policyId, userId)));
-    }
-
-    private static String totalArg(final Long totalQuantity) {
-        return totalQuantity == null ? UNLIMITED_TOTAL : Long.toString(totalQuantity);
     }
 }

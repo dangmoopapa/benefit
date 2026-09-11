@@ -14,25 +14,25 @@ public record CouponUsageForm(
     CouponUsageLimitForm limit
 ) {
 
-    public CouponUsageCondition toDocument() {
+    public CouponUsageCondition toEntity() {
         return CouponUsageCondition.create(
-            usageExpiration.toDocument(),
+            usageExpiration.toEntity(),
             usableImmediately,
             weekdays,
-            timeRanges.stream().map(CouponUsableTimeForm::toDocument).toList(),
-            orderCondition.toDocument(),
-            limit.toDocument()
+            timeRanges.stream().map(CouponUsableTimeForm::toEntity).toList(),
+            orderCondition.toEntity(),
+            limit.toEntity()
         );
     }
 
-    public static CouponUsageForm of(final CouponUsageCondition document) {
+    public static CouponUsageForm of(final CouponUsageCondition entity) {
         return new CouponUsageForm(
-            CouponUsageExpirationForm.of(document.getUsageExpiration()),
-            document.isUsableImmediately(),
-            document.getWeekdays(),
-            document.getTimeRanges().stream().map(CouponUsableTimeForm::of).toList(),
-            CouponOrderForm.of(document.getOrderCondition()),
-            CouponUsageLimitForm.of(document.getLimit())
+            CouponUsageExpirationForm.of(entity.getUsageExpiration()),
+            entity.isUsableImmediately(),
+            entity.getWeekdays(),
+            entity.getTimeRanges().stream().map(CouponUsableTimeForm::of).toList(),
+            CouponOrderForm.of(entity.getOrderCondition()),
+            CouponUsageLimitForm.of(entity.getLimit())
         );
     }
 }

@@ -9,11 +9,11 @@ public record CouponUsableTimeForm(
     LocalTime end
 ) {
 
-    public CouponUsableTime toDocument() {
+    public CouponUsableTime toEntity() {
         return CouponUsableTime.create(start, end);
     }
 
-    public static CouponUsableTimeForm of(final CouponUsableTime document) {
-        return new CouponUsableTimeForm(document.getStart(), document.getEnd());
+    public static CouponUsableTimeForm of(final CouponUsableTime entity) {
+        return new CouponUsableTimeForm(entity.getStart(), entity.getEnd());
     }
 }

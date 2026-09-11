@@ -14,9 +14,6 @@ public class CouponPolicyPublisher {
     }
 
     public void publish(final CouponPolicyChangedEvent event) {
-        if (event.status() == CouponPolicyStatus.DRAFT) {
-            return;
-        }
         kafkaTemplate.send(KafkaTopics.COUPON_POLICY_CHANGED, event.policyId(), event);
     }
 }

@@ -3,6 +3,7 @@ package im.dangmoo.benefit.domain.data.coupon.policy;
 import im.dangmoo.benefit.domain.data.coupon.policy.apply.CouponApplyCondition;
 import im.dangmoo.benefit.domain.data.coupon.policy.benefit.CouponBenefitCondition;
 import im.dangmoo.benefit.domain.data.coupon.policy.issue.CouponIssueCondition;
+import im.dangmoo.benefit.domain.util.TimeUtils;
 
 import java.time.Instant;
 
@@ -29,7 +30,7 @@ public record CouponPolicyChangedEvent(
             policy.getIssueCondition(),
             policy.getBenefitCondition(),
             policy.getApplyCondition(),
-            Instant.now()
+            TimeUtils.now()
         );
     }
 }

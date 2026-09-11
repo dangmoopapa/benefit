@@ -20,14 +20,14 @@ public class CouponUsageLimit {
         final Integer perDay,
         final Integer perHour
     ) {
-        final CouponUsageLimit document = new CouponUsageLimit();
-        document.perUser = perUser;
-        document.perUserPerMonth = perUserPerMonth;
-        document.perOrder = perOrder;
-        document.total = total;
-        document.perDay = perDay;
-        document.perHour = perHour;
-        return document;
+        final CouponUsageLimit entity = new CouponUsageLimit();
+        entity.perUser = perUser;
+        entity.perUserPerMonth = perUserPerMonth;
+        entity.perOrder = perOrder;
+        entity.total = total;
+        entity.perDay = perDay;
+        entity.perHour = perHour;
+        return entity;
     }
 
     public Integer getPerUser() {

@@ -6,11 +6,11 @@ import im.dangmoo.benefit.admin.web.coupon.model.CouponWalletIssueRequest;
 import im.dangmoo.benefit.admin.web.coupon.model.CouponWalletResponse;
 import im.dangmoo.benefit.admin.web.coupon.model.CouponWalletUseRequest;
 import im.dangmoo.benefit.domain.data.coupon.wallet.CouponWalletRepository;
-import im.dangmoo.benefit.domain.function.coupon.issue.CouponIssue;
-import im.dangmoo.benefit.domain.function.coupon.issue.CouponIssuer;
-import im.dangmoo.benefit.domain.function.coupon.redeem.CouponRecover;
-import im.dangmoo.benefit.domain.function.coupon.redeem.CouponRedeemer;
-import im.dangmoo.benefit.domain.function.coupon.redeem.CouponUse;
+import im.dangmoo.benefit.domain.component.coupon.issue.CouponIssue;
+import im.dangmoo.benefit.domain.component.coupon.issue.CouponIssuer;
+import im.dangmoo.benefit.domain.component.coupon.redeem.CouponRecover;
+import im.dangmoo.benefit.domain.component.coupon.redeem.CouponRedeemer;
+import im.dangmoo.benefit.domain.component.coupon.redeem.CouponUse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

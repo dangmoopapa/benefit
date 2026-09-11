@@ -19,12 +19,12 @@ public class PointExpirationCondition {
         final Integer hours,
         final Instant end
     ) {
-        final PointExpirationCondition document = new PointExpirationCondition();
-        document.type = type;
-        document.days = days;
-        document.hours = hours;
-        document.end = end;
-        return document;
+        final PointExpirationCondition entity = new PointExpirationCondition();
+        entity.type = type;
+        entity.days = days;
+        entity.hours = hours;
+        entity.end = end;
+        return entity;
     }
 
     public Instant resolveExpiresAt(final Instant issuedAt) {

@@ -10,15 +10,15 @@ public record CouponStockSnapshot(
     Long totalQuantity
 ) {
 
-    static CouponStockSnapshot soldOut(final long issuedCount, final Long totalQuantity) {
+    public static CouponStockSnapshot soldOut(final long issuedCount, final Long totalQuantity) {
         return new CouponStockSnapshot(false, false, issuedCount, totalQuantity);
     }
 
-    static CouponStockSnapshot alreadyIssued(final long issuedCount, final Long totalQuantity) {
+    public static CouponStockSnapshot alreadyIssued(final long issuedCount, final Long totalQuantity) {
         return new CouponStockSnapshot(true, true, issuedCount, totalQuantity);
     }
 
-    static CouponStockSnapshot available(final long issuedCount, final Long totalQuantity) {
+    public static CouponStockSnapshot available(final long issuedCount, final Long totalQuantity) {
         return new CouponStockSnapshot(false, true, issuedCount, totalQuantity);
     }
 }

@@ -1,0 +1,8 @@
+### 멤버십 해지
+POST {{host}}/memberships/cancel
+X-Admin-Id: A120115
+Content-Type: application/json
+
+{
+  "userId": "U1001"
+}

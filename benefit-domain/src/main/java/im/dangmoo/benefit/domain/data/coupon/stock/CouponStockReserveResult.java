@@ -16,7 +16,7 @@ public enum CouponStockReserveResult {
     private static final String REPLY_ALREADY_ISSUED = "ALREADY_ISSUED";
     private static final String REPLY_SOLD_OUT = "SOLD_OUT";
 
-    static CouponStockReserveResult fromReply(final String reply) {
+    public static CouponStockReserveResult fromReply(final String reply) {
         final String code = StringUtils.delimitedListToStringArray(reply, REPLY_DELIMITER)[0];
         return switch (code) {
             case REPLY_OK -> RESERVED;

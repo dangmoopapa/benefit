@@ -48,34 +48,17 @@ public class PointTransaction {
 
     public static Query queryByUserId(
         final String userId,
-        final Collection<PointTransactionType> types,
-        final Instant beforeTransactionAt,
-        final String beforeId
+        final Collection<PointTransactionType> types
     ) {
         final Criteria criteria = Criteria.where(USER_ID).is(userId);
         if (types != null && !types.isEmpty()) {
             criteria.and(TYPE).in(types);
-        }
-        if (beforeTransactionAt != null && beforeId != null) {
-            criteria.andOperator(
-                new Criteria().orOperator(
-                    Criteria.where(TRANSACTION_AT).lt(beforeTransactionAt),
-                    new Criteria().andOperator(
-                        Criteria.where(TRANSACTION_AT).is(beforeTransactionAt),
-                        Criteria.where("_id").lt(beforeId)
-                    )
-                )
-            );
         }
         return Query.query(criteria);
     }
 
     public static String transactionAtField() {
         return TRANSACTION_AT;
-    }
-
-    public static String idField() {
-        return "_id";
     }
 
     public static PointTransaction issued(
@@ -88,10 +71,10 @@ public class PointTransaction {
         final String createdBy,
         final Instant now
     ) {
-        final PointTransaction document = base(userId, PointTransactionType.ISSUED, point, orderId, idempotencyKey, createdBy, now);
-        document.policyId = policyId;
-        document.expiresAt = expiresAt;
-        return document;
+        final PointTransaction entity = base(userId, PointTransactionType.ISSUED, point, orderId, idempotencyKey, createdBy, now);
+        entity.policyId = policyId;
+        entity.expiresAt = expiresAt;
+        return entity;
     }
 
     public static PointTransaction revoked(
@@ -105,11 +88,11 @@ public class PointTransaction {
         final String createdBy,
         final Instant now
     ) {
-        final PointTransaction document = base(userId, PointTransactionType.REVOKED, point, orderId, idempotencyKey, createdBy, now);
-        document.relatedTransactionId = relatedTransactionId;
-        document.policyId = policyId;
-        document.expiresAt = expiresAt;
-        return document;
+        final PointTransaction entity = base(userId, PointTransactionType.REVOKED, point, orderId, idempotencyKey, createdBy, now);
+        entity.relatedTransactionId = relatedTransactionId;
+        entity.policyId = policyId;
+        entity.expiresAt = expiresAt;
+        return entity;
     }
 
     public static PointTransaction used(
@@ -121,9 +104,9 @@ public class PointTransaction {
         final String createdBy,
         final Instant now
     ) {
-        final PointTransaction document = base(userId, PointTransactionType.USED, point, orderId, idempotencyKey, createdBy, now);
-        document.usedLots = usedLots;
-        return document;
+        final PointTransaction entity = base(userId, PointTransactionType.USED, point, orderId, idempotencyKey, createdBy, now);
+        entity.usedLots = usedLots;
+        return entity;
     }
 
     public static PointTransaction restored(
@@ -136,10 +119,10 @@ public class PointTransaction {
         final String createdBy,
         final Instant now
     ) {
-        final PointTransaction document = base(userId, PointTransactionType.RESTORED, point, orderId, idempotencyKey, createdBy, now);
-        document.relatedTransactionId = relatedTransactionId;
-        document.usedLots = usedLots;
-        return document;
+        final PointTransaction entity = base(userId, PointTransactionType.RESTORED, point, orderId, idempotencyKey, createdBy, now);
+        entity.relatedTransactionId = relatedTransactionId;
+        entity.usedLots = usedLots;
+        return entity;
     }
 
     private static PointTransaction base(
@@ -151,16 +134,16 @@ public class PointTransaction {
         final String createdBy,
         final Instant now
     ) {
-        final PointTransaction document = new PointTransaction();
-        document.userId = userId;
-        document.type = type;
-        document.point = point;
-        document.orderId = orderId;
-        document.idempotencyKey = idempotencyKey;
-        document.transactionAt = now;
-        document.createdBy = createdBy;
-        document.createdAt = now;
-        return document;
+        final PointTransaction entity = new PointTransaction();
+        entity.userId = userId;
+        entity.type = type;
+        entity.point = point;
+        entity.orderId = orderId;
+        entity.idempotencyKey = idempotencyKey;
+        entity.transactionAt = now;
+        entity.createdBy = createdBy;
+        entity.createdAt = now;
+        return entity;
     }
 
     public String getId() {

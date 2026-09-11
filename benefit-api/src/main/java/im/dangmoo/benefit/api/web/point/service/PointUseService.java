@@ -5,9 +5,9 @@ import im.dangmoo.benefit.api.support.ApiMessage;
 import im.dangmoo.benefit.api.web.point.model.PointRestoreRequest;
 import im.dangmoo.benefit.api.web.point.model.PointTransactionResponse;
 import im.dangmoo.benefit.api.web.point.model.PointUseRequest;
-import im.dangmoo.benefit.domain.function.point.use.PointRedeemer;
-import im.dangmoo.benefit.domain.function.point.use.PointRestore;
-import im.dangmoo.benefit.domain.function.point.use.PointUse;
+import im.dangmoo.benefit.domain.component.point.use.PointRedeemer;
+import im.dangmoo.benefit.domain.component.point.use.PointRestore;
+import im.dangmoo.benefit.domain.component.point.use.PointUse;
 import org.springframework.stereotype.Service;
 
 @Service

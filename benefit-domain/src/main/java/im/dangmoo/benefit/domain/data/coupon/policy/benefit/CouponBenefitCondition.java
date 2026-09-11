@@ -18,12 +18,12 @@ public class CouponBenefitCondition {
         final BigDecimal maxDiscountAmount,
         final BigDecimal minPaymentAmount
     ) {
-        final CouponBenefitCondition document = new CouponBenefitCondition();
-        document.type = type;
-        document.value = value;
-        document.maxDiscountAmount = maxDiscountAmount;
-        document.minPaymentAmount = minPaymentAmount;
-        return document;
+        final CouponBenefitCondition entity = new CouponBenefitCondition();
+        entity.type = type;
+        entity.value = value;
+        entity.maxDiscountAmount = maxDiscountAmount;
+        entity.minPaymentAmount = minPaymentAmount;
+        return entity;
     }
 
     public CouponBenefitType getType() {

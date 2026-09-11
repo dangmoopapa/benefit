@@ -15,7 +15,7 @@ public record CouponOrderForm(
     Integer minPurchaseCount
 ) {
 
-    public CouponOrderCondition toDocument() {
+    public CouponOrderCondition toEntity() {
         return CouponOrderCondition.create(
             minAmount,
             maxAmount,
@@ -27,15 +27,15 @@ public record CouponOrderForm(
         );
     }
 
-    public static CouponOrderForm of(final CouponOrderCondition document) {
+    public static CouponOrderForm of(final CouponOrderCondition entity) {
         return new CouponOrderForm(
-            document.getMinAmount(),
-            document.getMaxAmount(),
-            document.getPaymentMethods(),
-            document.getShippingMethods(),
-            document.getRegions(),
-            document.isFirstPurchaseOnly(),
-            document.getMinPurchaseCount()
+            entity.getMinAmount(),
+            entity.getMaxAmount(),
+            entity.getPaymentMethods(),
+            entity.getShippingMethods(),
+            entity.getRegions(),
+            entity.isFirstPurchaseOnly(),
+            entity.getMinPurchaseCount()
         );
     }
 }

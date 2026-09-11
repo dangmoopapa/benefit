@@ -9,15 +9,15 @@ public record CouponAccountingForm(
     String accountCode
 ) {
 
-    public CouponAccountingCondition toDocument() {
+    public CouponAccountingCondition toEntity() {
         return CouponAccountingCondition.create(bearer, costCenter, accountCode);
     }
 
-    public static CouponAccountingForm of(final CouponAccountingCondition document) {
+    public static CouponAccountingForm of(final CouponAccountingCondition entity) {
         return new CouponAccountingForm(
-            document.getBearer(),
-            document.getCostCenter(),
-            document.getAccountCode()
+            entity.getBearer(),
+            entity.getCostCenter(),
+            entity.getAccountCode()
         );
     }
 }
