@@ -56,7 +56,7 @@ public class PointBalance {
             .sum();
     }
 
-    public void issue(final long amount, final Instant expiresAt, final String updatedBy, final Instant now) {
+    public PointBalance issue(final long amount, final Instant expiresAt, final String updatedBy, final Instant now) {
         if (amount <= 0) {
             throw new IllegalArgumentException("amount must be positive");
         }
@@ -64,9 +64,10 @@ public class PointBalance {
         addLot(amount, expiresAt);
         this.point = sumLots();
         touch(updatedBy, now);
+        return this;
     }
 
-    public void revoke(final long amount, final Instant expiresAt, final String updatedBy, final Instant now) {
+    public PointBalance revoke(final long amount, final Instant expiresAt, final String updatedBy, final Instant now) {
         if (amount <= 0) {
             throw new IllegalArgumentException("amount must be positive");
         }
@@ -79,6 +80,7 @@ public class PointBalance {
         lots().removeIf(item -> item.getPoint() <= 0);
         this.point = sumLots();
         touch(updatedBy, now);
+        return this;
     }
 
     public List<PointLot> spend(final long amount, final String updatedBy, final Instant now) {
@@ -106,7 +108,7 @@ public class PointBalance {
         return List.copyOf(used);
     }
 
-    public void restore(final List<PointLot> usedLots, final String updatedBy, final Instant now) {
+    public PointBalance restore(final List<PointLot> usedLots, final String updatedBy, final Instant now) {
         purgeExpired(now);
         for (final PointLot usedLot : usedLots) {
             if (usedLot.getPoint() <= 0) {
@@ -116,6 +118,7 @@ public class PointBalance {
         }
         this.point = sumLots();
         touch(updatedBy, now);
+        return this;
     }
 
     private void touch(final String updatedBy, final Instant now) {
