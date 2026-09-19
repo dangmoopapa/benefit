@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: benefit-batch
+  main:
+    web-application-type: none
+  threads:
+    virtual:
+      enabled: true
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+  datasource:
+    url: jdbc:h2:mem:benefit-batch;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  mongodb:
+    uri: mongodb://localhost:27017/benefit
+  data:
+    redis:
+      url: redis://localhost:6379

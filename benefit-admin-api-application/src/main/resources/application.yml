@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: benefit-admin-api
+  threads:
+    virtual:
+      enabled: true
+  mongodb:
+    uri: mongodb://localhost:27017/benefit
+  data:
+    redis:
+      url: redis://localhost:6379
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

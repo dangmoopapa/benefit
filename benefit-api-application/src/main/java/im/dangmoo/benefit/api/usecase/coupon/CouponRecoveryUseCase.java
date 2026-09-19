@@ -1,0 +1,58 @@
+package im.dangmoo.benefit.api.usecase.coupon;
+
+import im.dangmoo.benefit.api.model.coupon.CouponRecoveryRequest;
+import im.dangmoo.benefit.api.model.coupon.CouponRecoveryResponse;
+import im.dangmoo.benefit.api.usecase.ApiException;
+import im.dangmoo.benefit.domain.coupon.CouponRecoveryDomain;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CachedCouponPolicy;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCacheRepository;
+import im.dangmoo.benefit.infrastructure.data.coupon.stock.CouponUsageStockRedisRepository;
+import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWallet;
+import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletMongoRepository;
+import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletStatus;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CouponRecoveryUseCase {
+
+    private final CouponWalletMongoRepository couponWalletMongoRepository;
+    private final CouponPolicyCacheRepository couponPolicyCacheRepository;
+    private final CouponUsageStockRedisRepository couponUsageStockRedisRepository;
+
+    public CouponRecoveryUseCase(
+        final CouponWalletMongoRepository couponWalletMongoRepository,
+        final CouponPolicyCacheRepository couponPolicyCacheRepository,
+        final CouponUsageStockRedisRepository couponUsageStockRedisRepository
+    ) {
+        this.couponWalletMongoRepository = couponWalletMongoRepository;
+        this.couponPolicyCacheRepository = couponPolicyCacheRepository;
+        this.couponUsageStockRedisRepository = couponUsageStockRedisRepository;
+    }
+
+    public CouponRecoveryResponse execute(final String userId, final CouponRecoveryRequest request) {
+        final CouponWallet wallet = couponWalletMongoRepository.findById(request.walletId())
+            .orElseThrow(ApiException::notFound);
+        if (!userId.equals(wallet.getUserId())) {
+            throw ApiException.notFound();
+        }
+
+        final CouponWalletStatus status = wallet.getStatus();
+        if (status != CouponWalletStatus.USED) {
+            throw ApiException.invalidStatus();
+        }
+
+        final CachedCouponPolicy policy = couponPolicyCacheRepository.findByKey(wallet.getPolicyKey());
+        if (policy == null) {
+            throw ApiException.notFound();
+        }
+
+        final boolean recoverable = CouponRecoveryDomain.of(policy.lifecycleCondition()).isRecoverable();
+        if (!recoverable) {
+            throw ApiException.conditionNotSatisfied();
+        }
+
+        final CouponWallet saved = couponWalletMongoRepository.save(wallet.recover(userId));
+        couponUsageStockRedisRepository.decrement(wallet.getPolicyId());
+        return CouponRecoveryResponse.of(saved);
+    }
+}

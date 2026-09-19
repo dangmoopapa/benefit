@@ -1,0 +1,8 @@
+rootProject.name = 'benefit'
+
+include 'benefit-api-application'
+include 'benefit-admin-api-application'
+include 'benefit-batch-application'
+include 'benefit-consumer-application'
+include 'benefit-domain-module'
+include 'benefit-infrastructure-module'
