@@ -30,10 +30,6 @@ public record CouponTimeAttackIssueResult(
         return new CouponTimeAttackIssueResult(status, issuedCount);
     }
 
-    public boolean isReserved() {
-        return status == Status.RESERVED;
-    }
-
     public boolean isAlreadyIssued() {
         return status == Status.ALREADY_ISSUED;
     }

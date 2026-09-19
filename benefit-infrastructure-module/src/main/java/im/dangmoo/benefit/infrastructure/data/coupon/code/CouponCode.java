@@ -62,13 +62,6 @@ public class CouponCode {
         return entity;
     }
 
-    public CouponCode disable(final String updatedBy) {
-        this.status = CouponCodeStatus.DISABLED;
-        this.updatedBy = updatedBy;
-        this.updatedAt = Instant.now();
-        return this;
-    }
-
     public boolean isAvailable() {
         return status == CouponCodeStatus.AVAILABLE;
     }

@@ -38,7 +38,6 @@ public class CouponWallet {
     public static final String USER_ID = "userId";
     public static final String ORDER_ID = "orderId";
     public static final String POLICY_ID = "policyId";
-    public static final String POLICY_KEY = "policyKey";
     public static final String IDEMPOTENCY_KEY = "idempotencyKey";
     public static final String STATUS = "status";
     public static final String CREATED_BY = "createdBy";
@@ -87,10 +86,6 @@ public class CouponWallet {
 
     public static Query queryByIdempotencyKey(final String idempotencyKey) {
         return Query.query(Criteria.where(IDEMPOTENCY_KEY).is(idempotencyKey));
-    }
-
-    public static Query queryByPolicyId(final String policyId) {
-        return Query.query(Criteria.where(POLICY_ID).is(policyId));
     }
 
     public static CouponWallet create(

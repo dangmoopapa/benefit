@@ -23,8 +23,9 @@ class CouponWalletDomainTest {
     @Test
     @DisplayName("같은 입력이면 항상 같은 키를 만든다")
     void idempotencyKey_stable() {
-        assertThat(CouponWalletDomain.idempotencyKey("p", "u"))
-            .isEqualTo(CouponWalletDomain.idempotencyKey("p", "u"));
+        final String first = CouponWalletDomain.idempotencyKey("p", "u");
+        final String second = CouponWalletDomain.idempotencyKey("p", "u");
+        assertThat(first).isEqualTo(second);
     }
 
     @Test

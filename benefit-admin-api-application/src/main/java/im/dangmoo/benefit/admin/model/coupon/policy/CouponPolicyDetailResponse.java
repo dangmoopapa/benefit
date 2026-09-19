@@ -1,5 +1,8 @@
 package im.dangmoo.benefit.admin.model.coupon.policy;
 
+import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCode;
+import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeStatus;
+import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeType;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponAccountCondition;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponApplyCondition;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponBenefitCondition;
@@ -29,13 +32,17 @@ public record CouponPolicyDetailResponse(
     ApplyCondition applyCondition,
     LifecycleCondition lifecycleCondition,
     AccountCondition accountCondition,
+    List<Code> codes,
     String createdBy,
     Instant createdAt,
     String updatedBy,
     Instant updatedAt
 ) {
 
-    public static CouponPolicyDetailResponse of(final CouponPolicy policy) {
+    public static CouponPolicyDetailResponse of(
+        final CouponPolicy policy,
+        final List<CouponCode> codes
+    ) {
         return new CouponPolicyDetailResponse(
             policy.getId(),
             policy.getName(),
@@ -49,11 +56,37 @@ public record CouponPolicyDetailResponse(
             ApplyCondition.of(policy.getApplyCondition()),
             LifecycleCondition.of(policy.getLifecycleCondition()),
             AccountCondition.of(policy.getAccountCondition()),
+            codes.stream().map(Code::of).toList(),
             policy.getCreatedBy(),
             policy.getCreatedAt(),
             policy.getUpdatedBy(),
             policy.getUpdatedAt()
         );
+    }
+
+    public record Code(
+        String id,
+        String code,
+        CouponCodeType type,
+        CouponCodeStatus status,
+        String createdBy,
+        Instant createdAt,
+        String updatedBy,
+        Instant updatedAt
+    ) {
+
+        public static Code of(final CouponCode code) {
+            return new Code(
+                code.getId(),
+                code.getCode(),
+                code.getType(),
+                code.getStatus(),
+                code.getCreatedBy(),
+                code.getCreatedAt(),
+                code.getUpdatedBy(),
+                code.getUpdatedAt()
+            );
+        }
     }
 
     public record BenefitCondition(

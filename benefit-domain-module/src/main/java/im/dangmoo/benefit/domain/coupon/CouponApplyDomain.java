@@ -51,10 +51,7 @@ public class CouponApplyDomain {
         if (excludes(brandIds, brandId)) {
             return false;
         }
-        if (hasText(segmentId) && !segmentId.equals(requestSegmentId)) {
-            return false;
-        }
-        return true;
+        return !hasText(segmentId) || segmentId.equals(requestSegmentId);
     }
 
     private boolean excludes(final List<String> values, final String target) {

@@ -2,6 +2,8 @@ package im.dangmoo.benefit.batch.support;
 
 import java.util.Collection;
 import java.util.Properties;
+
+import org.jspecify.annotations.NonNull;
 import org.springframework.batch.core.converter.DefaultJobParametersConverter;
 import org.springframework.batch.core.converter.JobParametersConverter;
 import org.springframework.batch.core.job.Job;
@@ -39,7 +41,7 @@ public class BatchJobLauncher implements ApplicationRunner, ExitCodeGenerator {
     }
 
     @Override
-    public void run(final ApplicationArguments args) throws Exception {
+    public void run(final @NonNull ApplicationArguments args) throws Exception {
         final String jobName = environment.getProperty("spring.batch.job.name");
         if (!StringUtils.hasText(jobName)) {
             throw new IllegalStateException("spring.batch.job.name is required");

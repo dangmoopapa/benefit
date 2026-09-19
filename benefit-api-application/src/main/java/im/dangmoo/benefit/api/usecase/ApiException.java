@@ -17,10 +17,6 @@ public class ApiException extends RuntimeException {
         return new ApiException(ApiMessage.NOT_FOUND);
     }
 
-    public static ApiException duplicateKey() {
-        return new ApiException(ApiMessage.DUPLICATE_KEY);
-    }
-
     public static ApiException invalidStatus() {
         return new ApiException(ApiMessage.INVALID_STATUS);
     }

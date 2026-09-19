@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import;
 @Import({BenefitDomainModule.class, BenefitInfrastructureModule.class})
 public class BenefitAdminApplication {
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         SpringApplication.run(BenefitAdminApplication.class, args);
     }
 }

@@ -20,8 +20,8 @@ class CouponIssueDomainTest {
 
     private static final ZoneId SEOUL = ZoneId.of("Asia/Seoul");
 
-    private static Instant seoul(final int year, final int month, final int day, final int hour) {
-        return LocalDateTime.of(year, month, day, hour, 0).atZone(SEOUL).toInstant();
+    private static Instant seoul(final int day, final int hour) {
+        return LocalDateTime.of(2024, 6, day, hour, 0).atZone(SEOUL).toInstant();
     }
 
     private static CouponIssueDomain domain(
@@ -48,15 +48,15 @@ class CouponIssueDomainTest {
         @Test
         @DisplayName("startAt 이전이면 실패한다")
         void beforeStartAt_false() {
-            final Instant start = seoul(2024, 6, 10, 0);
+            final Instant start = seoul(10, 0);
             final CouponIssueDomain domain = domain(start, null, null, List.of(), List.of());
-            assertThat(domain.isSatisfiedAt(seoul(2024, 6, 9, 23))).isFalse();
+            assertThat(domain.isSatisfiedAt(seoul(9, 23))).isFalse();
         }
 
         @Test
         @DisplayName("startAt 과 같으면 통과한다")
         void atStartAt_true() {
-            final Instant start = seoul(2024, 6, 10, 0);
+            final Instant start = seoul(10, 0);
             final CouponIssueDomain domain = domain(start, null, null, List.of(), List.of());
             assertThat(domain.isSatisfiedAt(start)).isTrue();
         }
@@ -64,15 +64,15 @@ class CouponIssueDomainTest {
         @Test
         @DisplayName("endAt 이후면 실패한다")
         void afterEndAt_false() {
-            final Instant end = seoul(2024, 6, 10, 12);
+            final Instant end = seoul(10, 12);
             final CouponIssueDomain domain = domain(null, end, null, List.of(), List.of());
-            assertThat(domain.isSatisfiedAt(seoul(2024, 6, 10, 12).plusSeconds(1))).isFalse();
+            assertThat(domain.isSatisfiedAt(seoul(10, 12).plusSeconds(1))).isFalse();
         }
 
         @Test
         @DisplayName("endAt 과 같으면 통과한다")
         void atEndAt_true() {
-            final Instant end = seoul(2024, 6, 10, 12);
+            final Instant end = seoul(10, 12);
             final CouponIssueDomain domain = domain(null, end, null, List.of(), List.of());
             assertThat(domain.isSatisfiedAt(end)).isTrue();
         }
@@ -82,28 +82,28 @@ class CouponIssueDomainTest {
         void allowedDay_true() {
             // 2024-06-10 = Monday (KST)
             final CouponIssueDomain domain = domain(null, null, null, List.of(DayOfWeek.MONDAY), List.of());
-            assertThat(domain.isSatisfiedAt(seoul(2024, 6, 10, 10))).isTrue();
+            assertThat(domain.isSatisfiedAt(seoul(10, 10))).isTrue();
         }
 
         @Test
         @DisplayName("허용 요일에 없으면 실패한다")
         void disallowedDay_false() {
             final CouponIssueDomain domain = domain(null, null, null, List.of(DayOfWeek.MONDAY), List.of());
-            assertThat(domain.isSatisfiedAt(seoul(2024, 6, 11, 10))).isFalse();
+            assertThat(domain.isSatisfiedAt(seoul(11, 10))).isFalse();
         }
 
         @Test
         @DisplayName("허용 시간에 포함되면 통과한다")
         void allowedHour_true() {
             final CouponIssueDomain domain = domain(null, null, null, List.of(), List.of(14));
-            assertThat(domain.isSatisfiedAt(seoul(2024, 6, 10, 14))).isTrue();
+            assertThat(domain.isSatisfiedAt(seoul(10, 14))).isTrue();
         }
 
         @Test
         @DisplayName("허용 시간에 없으면 실패한다")
         void disallowedHour_false() {
             final CouponIssueDomain domain = domain(null, null, null, List.of(), List.of(14));
-            assertThat(domain.isSatisfiedAt(seoul(2024, 6, 10, 15))).isFalse();
+            assertThat(domain.isSatisfiedAt(seoul(10, 15))).isFalse();
         }
 
         @Test
@@ -116,20 +116,20 @@ class CouponIssueDomainTest {
                 List.of(DayOfWeek.MONDAY),
                 List.of(10)
             );
-            assertThat(domain.isSatisfiedAt(seoul(2024, 6, 10, 11))).isFalse();
+            assertThat(domain.isSatisfiedAt(seoul(10, 11))).isFalse();
         }
 
         @Test
         @DisplayName("기간·요일·시간을 모두 만족하면 통과한다")
         void allConstraintsSatisfied_true() {
             final CouponIssueDomain domain = domain(
-                seoul(2024, 6, 1, 0),
-                seoul(2024, 6, 30, 23),
+                seoul(1, 0),
+                seoul(30, 23),
                 null,
                 List.of(DayOfWeek.MONDAY),
                 List.of(10, 11)
             );
-            assertThat(domain.isSatisfiedAt(seoul(2024, 6, 10, 10))).isTrue();
+            assertThat(domain.isSatisfiedAt(seoul(10, 10))).isTrue();
         }
     }
 
@@ -169,13 +169,13 @@ class CouponIssueDomainTest {
         @DisplayName("시간 조건 실패면 재고가 남아도 실패한다")
         void timeFail_false() {
             final CouponIssueDomain domain = domain(
-                seoul(2024, 6, 10, 0),
+                seoul(10, 0),
                 null,
                 100L,
                 List.of(),
                 List.of()
             );
-            assertThat(domain.isSatisfied(seoul(2024, 6, 9, 0), 0)).isFalse();
+            assertThat(domain.isSatisfied(seoul(9, 0), 0)).isFalse();
         }
 
         @Test

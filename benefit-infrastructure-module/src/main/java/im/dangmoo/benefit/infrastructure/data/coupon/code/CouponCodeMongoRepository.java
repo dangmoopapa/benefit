@@ -24,16 +24,16 @@ public class CouponCodeMongoRepository {
         return Optional.ofNullable(mongoTemplate.findOne(CouponCode.queryByCode(code), CouponCode.class));
     }
 
+    public List<CouponCode> findByPolicyId(final String policyId) {
+        return mongoTemplate.find(CouponCode.queryByPolicyId(policyId), CouponCode.class);
+    }
+
     public boolean existsByCode(final String code) {
         return mongoTemplate.exists(CouponCode.queryByCode(code), CouponCode.class);
     }
 
     public long countByPolicyId(final String policyId) {
         return mongoTemplate.count(CouponCode.queryByPolicyId(policyId), CouponCode.class);
-    }
-
-    public List<CouponCode> findByPolicyId(final String policyId) {
-        return mongoTemplate.find(CouponCode.queryByPolicyId(policyId), CouponCode.class);
     }
 
     public CouponCode insert(final CouponCode code) {
