@@ -15,10 +15,10 @@ public final class ApiPath {
 
     public static final String POINT_BALANCES = "/point/balances";
     public static final String POINT_TRANSACTIONS = "/point/transactions";
-    public static final String POINT_TRANSACTION_GRANTS = "/point/transactions/grants";
-    public static final String POINT_TRANSACTION_RECLAIMS = "/point/transactions/reclaims";
-    public static final String POINT_TRANSACTION_USAGES = "/point/transactions/usages";
-    public static final String POINT_TRANSACTION_RECOVERIES = "/point/transactions/recoveries";
+    public static final String POINT_TRANSACTION_GRANT = "/point/transactions/grant";
+    public static final String POINT_TRANSACTION_RECLAIM = "/point/transactions/reclaim";
+    public static final String POINT_TRANSACTION_USAGE = "/point/transactions/usage";
+    public static final String POINT_TRANSACTION_RECOVERY = "/point/transactions/recovery";
 
     private ApiPath() {
     }

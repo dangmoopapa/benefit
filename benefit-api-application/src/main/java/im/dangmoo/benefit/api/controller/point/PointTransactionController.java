@@ -56,7 +56,7 @@ public class PointTransactionController {
         return ApiResponse.of(pointTransactionSearchUseCase.execute(userId, request));
     }
 
-    @PostMapping(ApiPath.POINT_TRANSACTION_GRANTS)
+    @PostMapping(ApiPath.POINT_TRANSACTION_GRANT)
     ApiResponse<PointGrantResponse> grant(
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @RequestBody final PointGrantRequest request
@@ -64,7 +64,7 @@ public class PointTransactionController {
         return ApiResponse.of(pointTransactionGrantUseCase.execute(userId, request));
     }
 
-    @PostMapping(ApiPath.POINT_TRANSACTION_RECLAIMS)
+    @PostMapping(ApiPath.POINT_TRANSACTION_RECLAIM)
     ApiResponse<PointReclaimResponse> reclaim(
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @RequestBody final PointReclaimRequest request
@@ -72,7 +72,7 @@ public class PointTransactionController {
         return ApiResponse.of(pointTransactionReclaimUseCase.execute(userId, request));
     }
 
-    @PostMapping(ApiPath.POINT_TRANSACTION_USAGES)
+    @PostMapping(ApiPath.POINT_TRANSACTION_USAGE)
     ApiResponse<PointUsageResponse> use(
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @RequestBody final PointUsageRequest request
@@ -80,7 +80,7 @@ public class PointTransactionController {
         return ApiResponse.of(pointTransactionUsageUseCase.execute(userId, request));
     }
 
-    @PostMapping(ApiPath.POINT_TRANSACTION_RECOVERIES)
+    @PostMapping(ApiPath.POINT_TRANSACTION_RECOVERY)
     ApiResponse<PointRecoveryResponse> recover(
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @RequestBody final PointRecoveryRequest request
