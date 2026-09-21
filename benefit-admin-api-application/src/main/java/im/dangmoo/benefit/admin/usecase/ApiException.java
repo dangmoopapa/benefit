@@ -28,4 +28,12 @@ public class ApiException extends RuntimeException {
     public static ApiException conditionNotSatisfied() {
         return new ApiException(ApiMessage.CONDITION_NOT_SATISFIED);
     }
+
+    public static ApiException insufficientPoint() {
+        return new ApiException(ApiMessage.INSUFFICIENT_POINT);
+    }
+
+    public static ApiException stockExhausted() {
+        return new ApiException(ApiMessage.STOCK_EXHAUSTED);
+    }
 }

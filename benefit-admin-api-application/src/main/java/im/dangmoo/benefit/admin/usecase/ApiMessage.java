@@ -6,7 +6,9 @@ public enum ApiMessage {
     NOT_FOUND("대상을 찾을 수 없습니다"),
     DUPLICATE_KEY("이미 존재하는 키입니다"),
     INVALID_STATUS("현재 상태에서는 처리할 수 없습니다"),
-    CONDITION_NOT_SATISFIED("조건을 만족하지 않습니다");
+    CONDITION_NOT_SATISFIED("조건을 만족하지 않습니다"),
+    INSUFFICIENT_POINT("포인트가 부족합니다"),
+    STOCK_EXHAUSTED("수량이 소진되었습니다");
 
     private final String message;
 

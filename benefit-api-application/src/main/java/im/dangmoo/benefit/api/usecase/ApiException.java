@@ -36,4 +36,8 @@ public class ApiException extends RuntimeException {
     public static ApiException policyIssue() {
         return new ApiException(ApiMessage.POLICY_ISSUE);
     }
+
+    public static ApiException insufficientPoint() {
+        return new ApiException(ApiMessage.INSUFFICIENT_POINT);
+    }
 }

@@ -11,6 +11,16 @@ public final class AdminApiPath {
     public static final String COUPON_WALLET_USAGE = "/coupon/wallets/{id}/usage";
     public static final String COUPON_WALLET_RECOVERY = "/coupon/wallets/{id}/recovery";
 
+    public static final String POINT_POLICIES = "/point/policies";
+    public static final String POINT_POLICY = "/point/policies/{id}";
+    public static final String POINT_POLICY_STATUS = "/point/policies/{id}/status";
+
+    public static final String POINT_TRANSACTIONS = "/point/transactions";
+    public static final String POINT_TRANSACTION_GRANTS = "/point/transactions/grants";
+    public static final String POINT_TRANSACTION_RECLAIMS = "/point/transactions/reclaims";
+    public static final String POINT_TRANSACTION_USAGES = "/point/transactions/usages";
+    public static final String POINT_TRANSACTION_RECOVERIES = "/point/transactions/recoveries";
+
     private AdminApiPath() {
     }
 }
