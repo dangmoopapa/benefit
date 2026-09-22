@@ -13,12 +13,13 @@ public final class ApiPath {
     public static final String COUPON_TIME_ATTACK_ISSUABLE = "/coupon/time-attacks/issuable";
     public static final String COUPON_MARKETING_ISSUE = "/coupon/marketings/issue";
 
+    public static final String POINT_ISSUABLE = "/point/issuable";
+    public static final String POINT_CLAIM = "/point/claim";
+    public static final String POINT_RECLAIM = "/point/reclaim";
+    public static final String POINT_USAGE = "/point/usage";
+    public static final String POINT_RECOVERY = "/point/recovery";
     public static final String POINT_BALANCES = "/point/balances";
     public static final String POINT_TRANSACTIONS = "/point/transactions";
-    public static final String POINT_TRANSACTION_GRANT = "/point/transactions/grant";
-    public static final String POINT_TRANSACTION_RECLAIM = "/point/transactions/reclaim";
-    public static final String POINT_TRANSACTION_USAGE = "/point/transactions/usage";
-    public static final String POINT_TRANSACTION_RECOVERY = "/point/transactions/recovery";
 
     public static final String MEMBERSHIP_CONTRACTS = "/membership/contracts";
     public static final String MEMBERSHIP_CONTRACT_JOIN = "/membership/contracts/join";
@@ -27,6 +28,11 @@ public final class ApiPath {
     public static final String MEMBERSHIP_BENEFIT_CANCEL = "/membership/benefit/cancel";
     public static final String MEMBERSHIP_BENEFIT_HISTORIES = "/membership/benefit/histories";
     public static final String MEMBERSHIP_BENEFIT_COUPON_ISSUE = "/membership/benefit/coupon/issue";
+
+    public static final String PROMOTIONS = "/promotions";
+    public static final String PROMOTION = "/promotions/{key}";
+    public static final String PROMOTION_APPLY = "/promotions/{key}/apply";
+    public static final String PROMOTION_BANNERS = "/promotion/banners/{key}";
 
     private ApiPath() {
     }

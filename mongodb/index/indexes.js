@@ -115,3 +115,43 @@ db.membership_benefit_histories.createIndex(
   { userId: 1, transactionAt: -1 },
   { name: 'ix_userId_transactionAt' }
 );
+
+db.promotion_policies.createIndex(
+  { key: 1 },
+  { unique: true, name: 'uk_key' }
+);
+
+db.promotion_policies.createIndex(
+  { status: 1, startAt: 1, endAt: 1, sortOrder: 1 },
+  { name: 'ix_status_period_sortOrder' }
+);
+
+db.promotion_appliers.createIndex(
+  { policyId: 1, userId: 1 },
+  { unique: true, name: 'uk_policyId_userId' }
+);
+
+db.promotion_appliers.createIndex(
+  { policyId: 1, appliedAt: -1 },
+  { name: 'ix_policyId_appliedAt' }
+);
+
+db.promotion_winners.createIndex(
+  { policyId: 1, userId: 1 },
+  { unique: true, name: 'uk_policyId_userId' }
+);
+
+db.promotion_winners.createIndex(
+  { policyId: 1, drawnAt: -1 },
+  { name: 'ix_policyId_drawnAt' }
+);
+
+db.promotion_banners.createIndex(
+  { key: 1 },
+  { unique: true, name: 'uk_key' }
+);
+
+db.promotion_banners.createIndex(
+  { status: 1 },
+  { name: 'ix_status' }
+);

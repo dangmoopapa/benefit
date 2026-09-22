@@ -1,0 +1,36 @@
+package im.dangmoo.benefit.admin.usecase.promotion;
+
+import im.dangmoo.benefit.admin.model.promotion.policy.PromotionPolicyUpdateRequest;
+import im.dangmoo.benefit.admin.model.promotion.policy.PromotionPolicyUpdateResponse;
+import im.dangmoo.benefit.admin.usecase.ApiException;
+import im.dangmoo.benefit.domain.promotion.PromotionFeatureDomain;
+import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyMongoRepository;
+import org.springframework.stereotype.Service;
+
+@Service
+public class PromotionPolicyUpdateUseCase {
+
+    private final PromotionPolicyMongoRepository promotionPolicyMongoRepository;
+
+    public PromotionPolicyUpdateUseCase(
+        final PromotionPolicyMongoRepository promotionPolicyMongoRepository
+    ) {
+        this.promotionPolicyMongoRepository = promotionPolicyMongoRepository;
+    }
+
+    public PromotionPolicyUpdateResponse update(
+        final String adminId,
+        final String id,
+        final PromotionPolicyUpdateRequest request
+    ) {
+        final var policy = promotionPolicyMongoRepository.findById(id)
+            .orElseThrow(ApiException::notFound);
+        try {
+            PromotionFeatureDomain.of(request.features()).requireReady();
+        } catch (final PromotionFeatureDomain.InvalidFeatureException ex) {
+            throw ApiException.invalidPromotionFeature();
+        }
+        final var saved = promotionPolicyMongoRepository.save(request.toUpdate(policy, adminId));
+        return PromotionPolicyUpdateResponse.of(saved);
+    }
+}

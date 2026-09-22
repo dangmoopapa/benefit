@@ -40,4 +40,16 @@ public class ApiException extends RuntimeException {
     public static ApiException preparingMembership() {
         return new ApiException(ApiMessage.PREPARING_MEMBERSHIP);
     }
+
+    public static ApiException invalidPromotionFeature() {
+        return new ApiException(ApiMessage.INVALID_PROMOTION_FEATURE);
+    }
+
+    public static ApiException alreadyDrawnPromotion() {
+        return new ApiException(ApiMessage.ALREADY_DRAWN_PROMOTION);
+    }
+
+    public static ApiException lotteryNotReady() {
+        return new ApiException(ApiMessage.LOTTERY_NOT_READY);
+    }
 }

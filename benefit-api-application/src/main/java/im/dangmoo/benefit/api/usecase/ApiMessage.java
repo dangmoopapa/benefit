@@ -11,7 +11,12 @@ public enum ApiMessage {
     STOCK_EXHAUSTED_COUPON("쿠폰 수량이 소진되었습니다"),
     POLICY_ISSUE_COUPON("쿠폰 정책 조건에 맞지 않습니다"),
     INSUFFICIENT_POINT("포인트가 부족합니다"),
-    PREPARING_MEMBERSHIP("준비 중인 멤버십입니다");
+    PREPARING_MEMBERSHIP("준비 중인 멤버십입니다"),
+    ALREADY_APPLIED_PROMOTION("이미 응모한 프로모션입니다"),
+    INVALID_PROMOTION("참여할 수 없는 프로모션입니다"),
+    ALREADY_GRANTED_POINT("이미 지급된 포인트입니다"),
+    STOCK_EXHAUSTED_POINT("포인트 수량이 소진되었습니다"),
+    POLICY_ISSUE_POINT("포인트 정책 조건에 맞지 않습니다");
 
     private final String message;
 

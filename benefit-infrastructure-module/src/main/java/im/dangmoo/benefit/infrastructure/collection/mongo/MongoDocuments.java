@@ -14,6 +14,11 @@ public final class MongoDocuments {
     public static final String MEMBERSHIP_CONTRACTS = "membership_contracts";
     public static final String MEMBERSHIP_BENEFIT_HISTORIES = "membership_benefit_histories";
 
+    public static final String PROMOTION_POLICIES = "promotion_policies";
+    public static final String PROMOTION_APPLIERS = "promotion_appliers";
+    public static final String PROMOTION_WINNERS = "promotion_winners";
+    public static final String PROMOTION_BANNERS = "promotion_banners";
+
     private MongoDocuments() {
     }
 }

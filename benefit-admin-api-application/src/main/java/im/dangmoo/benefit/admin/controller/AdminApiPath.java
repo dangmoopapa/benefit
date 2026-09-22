@@ -30,6 +30,16 @@ public final class AdminApiPath {
     public static final String MEMBERSHIP_CONTRACT_RENEW = "/membership/contracts/renew";
     public static final String MEMBERSHIP_BENEFIT_HISTORIES = "/membership/benefit/histories";
 
+    public static final String PROMOTION_POLICIES = "/promotion/policies";
+    public static final String PROMOTION_POLICY = "/promotion/policies/{id}";
+    public static final String PROMOTION_POLICY_STATUS = "/promotion/policies/{id}/status";
+    public static final String PROMOTION_POLICY_APPLIERS = "/promotion/policies/{id}/appliers";
+    public static final String PROMOTION_POLICY_WINNERS = "/promotion/policies/{id}/winners";
+    public static final String PROMOTION_POLICY_DRAW = "/promotion/policies/{id}/draw";
+    public static final String PROMOTION_BANNERS = "/promotion/banners";
+    public static final String PROMOTION_BANNER = "/promotion/banners/{id}";
+    public static final String PROMOTION_BANNER_STATUS = "/promotion/banners/{id}/status";
+
     private AdminApiPath() {
     }
 }

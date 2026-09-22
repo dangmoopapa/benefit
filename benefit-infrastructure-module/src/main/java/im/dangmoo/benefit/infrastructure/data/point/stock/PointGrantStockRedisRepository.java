@@ -11,6 +11,10 @@ public class PointGrantStockRedisRepository extends RedisRepository<PointGrantSt
         super(redisTemplate);
     }
 
+    public long get(final String policyId) {
+        return super.getAsLong(PointGrantStockKey.of(policyId));
+    }
+
     public boolean tryReserve(final String policyId, final Long stockQuantity) {
         final PointGrantStockKey key = PointGrantStockKey.of(policyId);
         final long after = super.increment(key);

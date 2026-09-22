@@ -48,4 +48,12 @@ public class ApiException extends RuntimeException {
     public static ApiException preparingMembership() {
         return new ApiException(ApiMessage.PREPARING_MEMBERSHIP);
     }
+
+    public static ApiException alreadyAppliedPromotion() {
+        return new ApiException(ApiMessage.ALREADY_APPLIED_PROMOTION);
+    }
+
+    public static ApiException invalidPromotion() {
+        return new ApiException(ApiMessage.INVALID_PROMOTION);
+    }
 }
