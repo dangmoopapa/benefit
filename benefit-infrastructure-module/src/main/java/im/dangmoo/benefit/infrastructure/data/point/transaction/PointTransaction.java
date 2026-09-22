@@ -41,23 +41,23 @@ public class PointTransaction {
     private PointTransaction() {
     }
 
-    public static String grantKey(final String policyId, final String userId) {
+    private static String grantKey(final String policyId, final String userId) {
         return PointTransactionType.GRANT.name() + ":" + policyId + ":" + userId;
     }
 
-    public static String reclaimKey(final String idempotencyKey) {
+    private static String reclaimKey(final String idempotencyKey) {
         return PointTransactionType.RECLAIM.name() + ":" + idempotencyKey;
     }
 
-    public static String useKey(final String orderId) {
+    private static String useKey(final String orderId) {
         return PointTransactionType.USE.name() + ":" + orderId;
     }
 
-    public static String useCancelKey(final String orderId) {
+    private static String useCancelKey(final String orderId) {
         return PointTransactionType.USE_CANCEL.name() + ":" + orderId;
     }
 
-    public static String expireKey(final String userId, final Instant expiresAt) {
+    private static String expireKey(final String userId, final Instant expiresAt) {
         return PointTransactionType.EXPIRE.name() + ":" + userId + ":" + expiresAt;
     }
 

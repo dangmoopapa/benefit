@@ -25,19 +25,27 @@ public class ApiException extends RuntimeException {
         return new ApiException(ApiMessage.CONDITION_NOT_SATISFIED);
     }
 
-    public static ApiException alreadyIssued() {
-        return new ApiException(ApiMessage.ALREADY_ISSUED);
+    public static ApiException alreadyIssuedCoupon() {
+        return new ApiException(ApiMessage.ALREADY_ISSUED_COUPON);
     }
 
     public static ApiException stockExhausted() {
         return new ApiException(ApiMessage.STOCK_EXHAUSTED);
     }
 
-    public static ApiException policyIssue() {
-        return new ApiException(ApiMessage.POLICY_ISSUE);
+    public static ApiException stockExhaustedCoupon() {
+        return new ApiException(ApiMessage.STOCK_EXHAUSTED_COUPON);
+    }
+
+    public static ApiException policyIssueCoupon() {
+        return new ApiException(ApiMessage.POLICY_ISSUE_COUPON);
     }
 
     public static ApiException insufficientPoint() {
         return new ApiException(ApiMessage.INSUFFICIENT_POINT);
+    }
+
+    public static ApiException preparingMembership() {
+        return new ApiException(ApiMessage.PREPARING_MEMBERSHIP);
     }
 }

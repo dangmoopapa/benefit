@@ -20,6 +20,14 @@ public final class ApiPath {
     public static final String POINT_TRANSACTION_USAGE = "/point/transactions/usage";
     public static final String POINT_TRANSACTION_RECOVERY = "/point/transactions/recovery";
 
+    public static final String MEMBERSHIP_CONTRACTS = "/membership/contracts";
+    public static final String MEMBERSHIP_CONTRACT_JOIN = "/membership/contracts/join";
+    public static final String MEMBERSHIP_CONTRACT_LEAVE = "/membership/contracts/leave";
+    public static final String MEMBERSHIP_BENEFIT_APPLY = "/membership/benefit/apply";
+    public static final String MEMBERSHIP_BENEFIT_CANCEL = "/membership/benefit/cancel";
+    public static final String MEMBERSHIP_BENEFIT_HISTORIES = "/membership/benefit/histories";
+    public static final String MEMBERSHIP_BENEFIT_COUPON_ISSUE = "/membership/benefit/coupon/issue";
+
     private ApiPath() {
     }
 }

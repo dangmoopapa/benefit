@@ -64,14 +64,14 @@ public class CouponIssueUseCase {
             couponCodeMongoRepository.redeem(code.getId(), userId)
                 .orElseThrow(ApiException::stockExhausted);
         } else if (!code.isAvailable()) {
-            throw ApiException.stockExhausted();
+            throw ApiException.stockExhaustedCoupon();
         }
         return execute(userId, policy);
     }
 
     private CouponIssueResponse execute(final String userId, final CachedCouponPolicy policy) {
         if (policy.status().isNotActive()) {
-            throw ApiException.policyIssue();
+            throw ApiException.policyIssueCoupon();
         }
 
         final CouponIssueDomain issueDomain = CouponIssueDomain.of(policy.issueCondition());
@@ -79,16 +79,16 @@ public class CouponIssueUseCase {
         final String idempotencyKey = CouponWalletDomain.idempotencyKey(policy.id(), userId);
         final boolean alreadyIssued = couponWalletMongoRepository.findByIdempotencyKey(idempotencyKey).isPresent();
         if (alreadyIssued) {
-            throw ApiException.alreadyIssued();
+            throw ApiException.alreadyIssuedCoupon();
         }
 
         final Instant now = Instant.now();
         final long issuedCount = couponIssueStockRedisRepository.get(policy.id());
         if (exhaustionDomain.isExhausted(issuedCount)) {
-            throw ApiException.stockExhausted();
+            throw ApiException.stockExhaustedCoupon();
         }
         if (!issueDomain.isSatisfiedAt(now)) {
-            throw ApiException.policyIssue();
+            throw ApiException.policyIssueCoupon();
         }
 
         final Instant expiresAt = CouponUsageDomain.of(

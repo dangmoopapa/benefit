@@ -5,6 +5,7 @@ import im.dangmoo.benefit.admin.model.point.grant.PointGrantResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
 import im.dangmoo.benefit.domain.point.PointExpireDomain;
 import im.dangmoo.benefit.domain.point.PointIssueDomain;
+import im.dangmoo.benefit.domain.point.PointTransactionDomain;
 import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicy;
 import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyMongoRepository;
@@ -48,7 +49,7 @@ public class PointTransactionGrantUseCase {
         }
 
         final var existing = pointTransactionMongoRepository.findByIdempotencyKey(
-            PointTransaction.grantKey(policy.getId(), request.userId())
+            PointTransactionDomain.grantKey(policy.getId(), request.userId())
         );
         if (existing.isPresent()) {
             return PointGrantResponse.of(existing.get());

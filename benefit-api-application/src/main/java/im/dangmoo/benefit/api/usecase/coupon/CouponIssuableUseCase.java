@@ -42,10 +42,10 @@ public class CouponIssuableUseCase {
     ) {
         final CachedCouponPolicy policy = couponPolicyCacheRepository.findByKey(request.policyKey());
         if (policy == null) {
-            return CouponIssuableResponse.ofNotIssuable(ApiMessage.POLICY_ISSUE, isTimeAttack);
+            return CouponIssuableResponse.ofNotIssuable(ApiMessage.POLICY_ISSUE_COUPON, isTimeAttack);
         }
         if (policy.status().isNotActive()) {
-            return CouponIssuableResponse.ofNotIssuable(ApiMessage.POLICY_ISSUE, isTimeAttack);
+            return CouponIssuableResponse.ofNotIssuable(ApiMessage.POLICY_ISSUE_COUPON, isTimeAttack);
         }
 
         final CouponIssueDomain issueDomain = CouponIssueDomain.of(policy.issueCondition());
@@ -55,16 +55,16 @@ public class CouponIssuableUseCase {
             ? couponTimeAttackIssueScript.hasIssued(idempotencyKey)
             : couponWalletMongoRepository.findByIdempotencyKey(idempotencyKey).isPresent();
         if (alreadyIssued) {
-            return CouponIssuableResponse.ofNotIssuable(ApiMessage.ALREADY_ISSUED, isTimeAttack);
+            return CouponIssuableResponse.ofNotIssuable(ApiMessage.ALREADY_ISSUED_COUPON, isTimeAttack);
         }
 
         final Instant now = Instant.now();
         final long issuedCount = couponIssueStockRedisRepository.get(policy.id());
         if (exhaustionDomain.isExhausted(issuedCount)) {
-            return CouponIssuableResponse.ofNotIssuable(ApiMessage.STOCK_EXHAUSTED, isTimeAttack);
+            return CouponIssuableResponse.ofNotIssuable(ApiMessage.STOCK_EXHAUSTED_COUPON, isTimeAttack);
         }
         if (!issueDomain.isSatisfiedAt(now)) {
-            return CouponIssuableResponse.ofNotIssuable(ApiMessage.POLICY_ISSUE, isTimeAttack);
+            return CouponIssuableResponse.ofNotIssuable(ApiMessage.POLICY_ISSUE_COUPON, isTimeAttack);
         }
 
         return CouponIssuableResponse.ofIssuable(isTimeAttack);

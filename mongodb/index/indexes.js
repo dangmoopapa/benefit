@@ -85,3 +85,33 @@ db.point_transactions.createIndex(
   { userId: 1, type: 1, transactionAt: -1 },
   { name: 'ix_userId_type_transactionAt' }
 );
+
+db.membership_policies.createIndex(
+  { key: 1 },
+  { unique: true, name: 'uk_key' }
+);
+
+db.membership_policies.createIndex(
+  { status: 1, season: 1 },
+  { name: 'ix_status_season' }
+);
+
+db.membership_contracts.createIndex(
+  { userId: 1, status: 1, periodEnd: 1 },
+  { name: 'ix_userId_status_periodEnd' }
+);
+
+db.membership_contracts.createIndex(
+  { idempotencyKey: 1 },
+  { unique: true, name: 'uk_idempotencyKey' }
+);
+
+db.membership_benefit_histories.createIndex(
+  { orderId: 1 },
+  { unique: true, name: 'uk_orderId' }
+);
+
+db.membership_benefit_histories.createIndex(
+  { userId: 1, transactionAt: -1 },
+  { name: 'ix_userId_transactionAt' }
+);

@@ -46,14 +46,14 @@ public class CouponTimeAttackIssueUseCase {
             throw ApiException.notFound();
         }
         if (policy.status().isNotActive()) {
-            throw ApiException.policyIssue();
+            throw ApiException.policyIssueCoupon();
         }
 
         final CouponIssueDomain issueDomain = CouponIssueDomain.of(policy.issueCondition());
         final CouponExhaustionDomain exhaustionDomain = CouponExhaustionDomain.of(policy.issueCondition());
         final Instant now = Instant.now();
         if (!issueDomain.isSatisfiedAt(now)) {
-            throw ApiException.policyIssue();
+            throw ApiException.policyIssueCoupon();
         }
 
         final String idempotencyKey = CouponWalletDomain.idempotencyKey(policy.id(), userId);
@@ -63,10 +63,10 @@ public class CouponTimeAttackIssueUseCase {
             issueDomain.getStockQuantity()
         );
         if (result.isAlreadyIssued()) {
-            throw ApiException.alreadyIssued();
+            throw ApiException.alreadyIssuedCoupon();
         }
         if (result.isSoldOut()) {
-            throw ApiException.stockExhausted();
+            throw ApiException.stockExhaustedCoupon();
         }
 
         final Instant expiresAt = CouponUsageDomain.of(

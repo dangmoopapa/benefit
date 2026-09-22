@@ -3,6 +3,7 @@ package im.dangmoo.benefit.api.usecase.point;
 import im.dangmoo.benefit.api.model.point.PointRecoveryRequest;
 import im.dangmoo.benefit.api.model.point.PointRecoveryResponse;
 import im.dangmoo.benefit.api.usecase.ApiException;
+import im.dangmoo.benefit.domain.point.PointTransactionDomain;
 import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalance;
 import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransaction;
@@ -25,7 +26,7 @@ public class PointTransactionRecoveryUseCase {
 
     public PointRecoveryResponse execute(final String userId, final PointRecoveryRequest request) {
         final PointTransaction use = pointTransactionMongoRepository
-            .findByIdempotencyKey(PointTransaction.useKey(request.orderId()))
+            .findByIdempotencyKey(PointTransactionDomain.useKey(request.orderId()))
             .orElseThrow(ApiException::notFound);
         if (!userId.equals(use.getUserId())) {
             throw ApiException.notFound();

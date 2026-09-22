@@ -5,9 +5,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CouponWalletDomainTest {
+
+    private static final ZoneId SEOUL = ZoneId.of("Asia/Seoul");
 
     @ParameterizedTest
     @CsvSource({
@@ -35,5 +41,24 @@ class CouponWalletDomainTest {
             .isNotEqualTo(CouponWalletDomain.idempotencyKey("p2", "u1"));
         assertThat(CouponWalletDomain.idempotencyKey("p1", "u1"))
             .isNotEqualTo(CouponWalletDomain.idempotencyKey("p1", "u2"));
+    }
+
+    @Test
+    @DisplayName("monthlyIdempotencyKey 는 policyId:userId:yyyy-MM 형식이다")
+    void monthlyIdempotencyKey_format() {
+        final Instant at = LocalDateTime.of(2026, 9, 23, 12, 0)
+            .atZone(SEOUL)
+            .toInstant();
+        assertThat(CouponWalletDomain.monthlyIdempotencyKey("p1", "u1", at))
+            .isEqualTo("p1:u1:2026-09");
+    }
+
+    @Test
+    @DisplayName("monthlyIdempotencyKey 는 같은 월이면 동일하다")
+    void monthlyIdempotencyKey_sameMonth() {
+        final Instant first = LocalDateTime.of(2026, 9, 1, 0, 0).atZone(SEOUL).toInstant();
+        final Instant last = LocalDateTime.of(2026, 9, 30, 23, 59).atZone(SEOUL).toInstant();
+        assertThat(CouponWalletDomain.monthlyIdempotencyKey("p", "u", first))
+            .isEqualTo(CouponWalletDomain.monthlyIdempotencyKey("p", "u", last));
     }
 }

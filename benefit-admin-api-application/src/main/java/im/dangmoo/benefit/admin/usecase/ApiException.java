@@ -36,4 +36,8 @@ public class ApiException extends RuntimeException {
     public static ApiException stockExhausted() {
         return new ApiException(ApiMessage.STOCK_EXHAUSTED);
     }
+
+    public static ApiException preparingMembership() {
+        return new ApiException(ApiMessage.PREPARING_MEMBERSHIP);
+    }
 }

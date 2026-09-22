@@ -10,6 +10,10 @@ public final class MongoDocuments {
     public static final String POINT_BALANCES = "point_balances";
     public static final String POINT_TRANSACTIONS = "point_transactions";
 
+    public static final String MEMBERSHIP_POLICIES = "membership_policies";
+    public static final String MEMBERSHIP_CONTRACTS = "membership_contracts";
+    public static final String MEMBERSHIP_BENEFIT_HISTORIES = "membership_benefit_histories";
+
     private MongoDocuments() {
     }
 }
