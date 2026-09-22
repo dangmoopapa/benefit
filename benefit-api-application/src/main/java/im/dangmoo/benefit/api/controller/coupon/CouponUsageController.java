@@ -39,7 +39,7 @@ public class CouponUsageController {
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @RequestBody final CouponUsableRequest request
     ) {
-        return ApiResponse.of(couponUsableUseCase.execute(userId, request));
+        return ApiResponse.of(couponUsableUseCase.usable(userId, request));
     }
 
     @PostMapping(ApiPath.COUPON_USAGE)
@@ -47,7 +47,7 @@ public class CouponUsageController {
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @RequestBody final CouponUsageRequest request
     ) {
-        return ApiResponse.of(couponUsageUseCase.execute(userId, request));
+        return ApiResponse.of(couponUsageUseCase.use(userId, request));
     }
 
     @PostMapping(ApiPath.COUPON_RECOVERY)
@@ -55,6 +55,6 @@ public class CouponUsageController {
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @RequestBody final CouponRecoveryRequest request
     ) {
-        return ApiResponse.of(couponRecoveryUseCase.execute(userId, request));
+        return ApiResponse.of(couponRecoveryUseCase.recover(userId, request));
     }
 }

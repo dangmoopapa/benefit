@@ -48,7 +48,7 @@ public class CouponIssueDomain {
         return !isStockExhausted(issuedCount);
     }
 
-    public boolean isStockExhausted(final long issuedCount) {
+    private boolean isStockExhausted(final long issuedCount) {
         return stockQuantity != null && issuedCount >= stockQuantity;
     }
 

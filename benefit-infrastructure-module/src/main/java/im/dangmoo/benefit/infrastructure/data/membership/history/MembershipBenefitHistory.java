@@ -84,10 +84,11 @@ public class MembershipBenefitHistory {
         return history;
     }
 
-    public void cancel(final String updatedBy) {
+    public MembershipBenefitHistory cancel(final String updatedBy) {
         this.status = MembershipBenefitHistoryStatus.CANCELLED;
         this.updatedBy = updatedBy;
         this.updatedAt = Instant.now();
+        return this;
     }
 
     public String getId() {

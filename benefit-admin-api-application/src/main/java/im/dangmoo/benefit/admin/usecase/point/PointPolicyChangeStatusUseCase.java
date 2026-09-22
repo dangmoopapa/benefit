@@ -16,15 +16,16 @@ public class PointPolicyChangeStatusUseCase {
         this.pointPolicyMongoRepository = pointPolicyMongoRepository;
     }
 
-    public PointPolicyChangeStatusResponse execute(
+    public PointPolicyChangeStatusResponse changeStatus(
         final String adminId,
         final String id,
         final PointPolicyChangeStatusRequest request
     ) {
         final PointPolicy policy = pointPolicyMongoRepository.findById(id)
             .orElseThrow(ApiException::notFound);
-        final PointPolicy changed = policy.changeStatus(request.status(), adminId);
-        final PointPolicy saved = pointPolicyMongoRepository.save(changed);
+        final PointPolicy saved = pointPolicyMongoRepository.save(
+            policy.changeStatus(request.status(), adminId)
+        );
         return PointPolicyChangeStatusResponse.of(saved);
     }
 }

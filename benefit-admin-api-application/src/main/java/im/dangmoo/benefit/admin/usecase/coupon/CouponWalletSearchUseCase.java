@@ -17,7 +17,7 @@ public class CouponWalletSearchUseCase {
         this.couponWalletMongoRepository = couponWalletMongoRepository;
     }
 
-    public CouponWalletSearchResponse execute(final CouponWalletSearchRequest request) {
+    public CouponWalletSearchResponse search(final CouponWalletSearchRequest request) {
         final List<CouponWallet> wallets = couponWalletMongoRepository.search(
             request.userId(),
             request.orderId(),

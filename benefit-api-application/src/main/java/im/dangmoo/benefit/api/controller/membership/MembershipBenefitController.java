@@ -45,7 +45,7 @@ public class MembershipBenefitController {
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @RequestBody final MembershipBenefitApplyRequest request
     ) {
-        return ApiResponse.of(membershipBenefitApplyUseCase.execute(userId, request));
+        return ApiResponse.of(membershipBenefitApplyUseCase.apply(userId, request));
     }
 
     @PostMapping(ApiPath.MEMBERSHIP_BENEFIT_CANCEL)
@@ -53,7 +53,7 @@ public class MembershipBenefitController {
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @RequestBody final MembershipBenefitCancelRequest request
     ) {
-        return ApiResponse.of(membershipBenefitCancelUseCase.execute(userId, request));
+        return ApiResponse.of(membershipBenefitCancelUseCase.cancel(userId, request));
     }
 
     @GetMapping(ApiPath.MEMBERSHIP_BENEFIT_HISTORIES)
@@ -61,13 +61,13 @@ public class MembershipBenefitController {
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @ModelAttribute final MembershipBenefitHistoryPageRequest request
     ) {
-        return ApiResponse.of(membershipBenefitHistoryListUseCase.execute(userId, request));
+        return ApiResponse.of(membershipBenefitHistoryListUseCase.list(userId, request));
     }
 
     @PostMapping(ApiPath.MEMBERSHIP_BENEFIT_COUPON_ISSUE)
     ApiResponse<CouponIssueResponse> issueCoupon(
         @RequestHeader(ApiHeaders.USER_ID) final String userId
     ) {
-        return ApiResponse.of(membershipBenefitCouponIssueUseCase.execute(userId));
+        return ApiResponse.of(membershipBenefitCouponIssueUseCase.issue(userId));
     }
 }

@@ -16,7 +16,7 @@ public class PointPolicyUpdateUseCase {
         this.pointPolicyMongoRepository = pointPolicyMongoRepository;
     }
 
-    public PointPolicyUpdateResponse execute(
+    public PointPolicyUpdateResponse update(
         final String adminId,
         final String id,
         final PointPolicyUpdateRequest request

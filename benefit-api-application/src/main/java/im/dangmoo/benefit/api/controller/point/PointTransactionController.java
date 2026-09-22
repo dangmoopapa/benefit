@@ -53,7 +53,7 @@ public class PointTransactionController {
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @ModelAttribute final PointTransactionPageRequest request
     ) {
-        return ApiResponse.of(pointTransactionSearchUseCase.execute(userId, request));
+        return ApiResponse.of(pointTransactionSearchUseCase.search(userId, request));
     }
 
     @PostMapping(ApiPath.POINT_TRANSACTION_GRANT)
@@ -61,7 +61,7 @@ public class PointTransactionController {
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @RequestBody final PointGrantRequest request
     ) {
-        return ApiResponse.of(pointTransactionGrantUseCase.execute(userId, request));
+        return ApiResponse.of(pointTransactionGrantUseCase.grant(userId, request));
     }
 
     @PostMapping(ApiPath.POINT_TRANSACTION_RECLAIM)
@@ -69,7 +69,7 @@ public class PointTransactionController {
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @RequestBody final PointReclaimRequest request
     ) {
-        return ApiResponse.of(pointTransactionReclaimUseCase.execute(userId, request));
+        return ApiResponse.of(pointTransactionReclaimUseCase.reclaim(userId, request));
     }
 
     @PostMapping(ApiPath.POINT_TRANSACTION_USAGE)
@@ -77,7 +77,7 @@ public class PointTransactionController {
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @RequestBody final PointUsageRequest request
     ) {
-        return ApiResponse.of(pointTransactionUsageUseCase.execute(userId, request));
+        return ApiResponse.of(pointTransactionUsageUseCase.use(userId, request));
     }
 
     @PostMapping(ApiPath.POINT_TRANSACTION_RECOVERY)
@@ -85,6 +85,6 @@ public class PointTransactionController {
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @RequestBody final PointRecoveryRequest request
     ) {
-        return ApiResponse.of(pointTransactionRecoveryUseCase.execute(userId, request));
+        return ApiResponse.of(pointTransactionRecoveryUseCase.recover(userId, request));
     }
 }

@@ -33,7 +33,7 @@ public class PointTransactionReclaimUseCase {
         this.pointBalanceMongoRepository = pointBalanceMongoRepository;
     }
 
-    public PointReclaimResponse execute(final String userId, final PointReclaimRequest request) {
+    public PointReclaimResponse reclaim(final String userId, final PointReclaimRequest request) {
         if (!StringUtils.hasText(request.idempotencyKey())) {
             throw ApiException.conditionNotSatisfied();
         }

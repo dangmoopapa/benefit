@@ -57,19 +57,19 @@ public class CouponPolicyController {
 
     @GetMapping(AdminApiPath.COUPON_POLICIES)
     AdminApiResponse<CouponPolicySearchResponse> search(@ModelAttribute final CouponPolicySearchRequest request) {
-        return AdminApiResponse.of(couponPolicySearchUseCase.execute(request));
+        return AdminApiResponse.of(couponPolicySearchUseCase.search(request));
     }
 
     @GetMapping(AdminApiPath.COUPON_VOUCHER_POLICIES)
     AdminApiResponse<VoucherCouponPolicySearchResponse> searchVouchers(
         @ModelAttribute final VoucherCouponPolicySearchRequest request
     ) {
-        return AdminApiResponse.of(voucherCouponPolicySearchUseCase.execute(request));
+        return AdminApiResponse.of(voucherCouponPolicySearchUseCase.search(request));
     }
 
     @GetMapping(AdminApiPath.COUPON_POLICY)
     AdminApiResponse<CouponPolicyDetailResponse> detail(@PathVariable final String id) {
-        return AdminApiResponse.of(couponPolicyDetailUseCase.execute(id));
+        return AdminApiResponse.of(couponPolicyDetailUseCase.detail(id));
     }
 
     @PostMapping(AdminApiPath.COUPON_POLICIES)
@@ -77,7 +77,7 @@ public class CouponPolicyController {
         @RequestHeader(AdminApiHeaders.ADMIN_ID) final String adminId,
         @RequestBody final CouponPolicyCreateRequest request
     ) {
-        return AdminApiResponse.of(couponPolicyCreateUseCase.execute(adminId, request));
+        return AdminApiResponse.of(couponPolicyCreateUseCase.create(adminId, request));
     }
 
     @PutMapping(AdminApiPath.COUPON_POLICY)
@@ -86,7 +86,7 @@ public class CouponPolicyController {
         @PathVariable final String id,
         @RequestBody final CouponPolicyUpdateRequest request
     ) {
-        return AdminApiResponse.of(couponPolicyUpdateUseCase.execute(adminId, id, request));
+        return AdminApiResponse.of(couponPolicyUpdateUseCase.update(adminId, id, request));
     }
 
     @PutMapping(AdminApiPath.COUPON_POLICY_STATUS)
@@ -95,6 +95,6 @@ public class CouponPolicyController {
         @PathVariable final String id,
         @RequestBody final CouponPolicyChangeStatusRequest request
     ) {
-        return AdminApiResponse.of(couponPolicyChangeStatusUseCase.execute(adminId, id, request));
+        return AdminApiResponse.of(couponPolicyChangeStatusUseCase.changeStatus(adminId, id, request));
     }
 }

@@ -1,8 +1,11 @@
 package im.dangmoo.benefit.infrastructure.data.membership.policy.benefit;
 
+import im.dangmoo.benefit.infrastructure.data.membership.history.MembershipBenefitApplied;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @TypeAlias("SEASON_1")
 public class Season1MembershipBenefit extends MembershipBenefit {
@@ -24,6 +27,22 @@ public class Season1MembershipBenefit extends MembershipBenefit {
         benefit.pointCashbackRate = pointCashbackRate;
         benefit.monthlyCouponPolicyKey = monthlyCouponPolicyKey;
         return benefit;
+    }
+
+    @Override
+    public MembershipBenefitApplied apply(final BigDecimal paymentAmount, final String categoryId) {
+        return MembershipBenefitApplied.of(
+            rateOf(paymentAmount, paymentDiscountRate),
+            rateOf(paymentAmount, pointCashbackRate),
+            false,
+            false
+        );
+    }
+
+    @Override
+    public Optional<String> monthlyCouponPolicyKey() {
+        return Optional.ofNullable(monthlyCouponPolicyKey)
+            .filter(StringUtils::hasText);
     }
 
     public BigDecimal getPaymentDiscountRate() {

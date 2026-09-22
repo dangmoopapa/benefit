@@ -45,15 +45,15 @@ public class CouponIssueUseCase {
         this.couponCodeMongoRepository = couponCodeMongoRepository;
     }
 
-    public CouponIssueResponse execute(final String userId, final CouponIssueRequest request) {
+    public CouponIssueResponse issue(final String userId, final CouponIssueRequest request) {
         final CachedCouponPolicy policy = couponPolicyCacheRepository.findByKey(request.policyKey());
         if (policy == null) {
             throw ApiException.notFound();
         }
-        return execute(userId, policy);
+        return issue(userId, policy);
     }
 
-    public CouponIssueResponse executeMarketing(final String userId, final MarketingCouponIssueRequest request) {
+    public CouponIssueResponse issueMarketing(final String userId, final MarketingCouponIssueRequest request) {
         final CouponCode code = couponCodeMongoRepository.findByCode(request.code())
             .orElseThrow(ApiException::notFound);
         final CachedCouponPolicy policy = couponPolicyCacheRepository.findByKey(code.getPolicyKey());
@@ -66,10 +66,10 @@ public class CouponIssueUseCase {
         } else if (!code.isAvailable()) {
             throw ApiException.stockExhaustedCoupon();
         }
-        return execute(userId, policy);
+        return issue(userId, policy);
     }
 
-    private CouponIssueResponse execute(final String userId, final CachedCouponPolicy policy) {
+    private CouponIssueResponse issue(final String userId, final CachedCouponPolicy policy) {
         if (policy.status().isNotActive()) {
             throw ApiException.policyIssueCoupon();
         }

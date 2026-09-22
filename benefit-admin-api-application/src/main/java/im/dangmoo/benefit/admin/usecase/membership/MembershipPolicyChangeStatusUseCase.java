@@ -17,14 +17,16 @@ public class MembershipPolicyChangeStatusUseCase {
         this.membershipPolicyMongoRepository = membershipPolicyMongoRepository;
     }
 
-    public MembershipPolicyChangeStatusResponse execute(
+    public MembershipPolicyChangeStatusResponse changeStatus(
         final String adminId,
         final String id,
         final MembershipPolicyChangeStatusRequest request
     ) {
         final var policy = membershipPolicyMongoRepository.findById(id)
             .orElseThrow(ApiException::notFound);
-        policy.changeStatus(request.status(), adminId);
-        return MembershipPolicyChangeStatusResponse.of(membershipPolicyMongoRepository.save(policy));
+        final var saved = membershipPolicyMongoRepository.save(
+            policy.changeStatus(request.status(), adminId)
+        );
+        return MembershipPolicyChangeStatusResponse.of(saved);
     }
 }

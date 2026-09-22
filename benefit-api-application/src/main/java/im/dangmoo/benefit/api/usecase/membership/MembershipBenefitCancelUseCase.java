@@ -18,7 +18,7 @@ public class MembershipBenefitCancelUseCase {
         this.membershipBenefitHistoryMongoRepository = membershipBenefitHistoryMongoRepository;
     }
 
-    public MembershipBenefitHistoryResponse execute(
+    public MembershipBenefitHistoryResponse cancel(
         final String userId,
         final MembershipBenefitCancelRequest request
     ) {
@@ -30,9 +30,7 @@ public class MembershipBenefitCancelUseCase {
         if (history.getStatus() == MembershipBenefitHistoryStatus.CANCELLED) {
             return MembershipBenefitHistoryResponse.of(history);
         }
-        history.cancel(userId);
-        return MembershipBenefitHistoryResponse.of(
-            membershipBenefitHistoryMongoRepository.save(history)
-        );
+        final var saved = membershipBenefitHistoryMongoRepository.save(history.cancel(userId));
+        return MembershipBenefitHistoryResponse.of(saved);
     }
 }

@@ -18,7 +18,7 @@ public class MembershipPolicyCreateUseCase {
         this.membershipPolicyMongoRepository = membershipPolicyMongoRepository;
     }
 
-    public MembershipPolicyCreateResponse execute(
+    public MembershipPolicyCreateResponse create(
         final String adminId,
         final MembershipPolicyCreateRequest request
     ) {

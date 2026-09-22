@@ -16,7 +16,7 @@ public class MembershipContractSearchUseCase {
         this.membershipContractMongoRepository = membershipContractMongoRepository;
     }
 
-    public MembershipContractSearchResponse execute(
+    public MembershipContractSearchResponse search(
         final MembershipContractSearchRequest request
     ) {
         return MembershipContractSearchResponse.of(

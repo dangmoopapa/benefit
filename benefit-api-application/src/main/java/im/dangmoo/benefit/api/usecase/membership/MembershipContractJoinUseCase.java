@@ -27,7 +27,7 @@ public class MembershipContractJoinUseCase {
         this.membershipContractMongoRepository = membershipContractMongoRepository;
     }
 
-    public MembershipContractResponse execute(
+    public MembershipContractResponse join(
         final String userId,
         final MembershipContractJoinRequest request
     ) {
@@ -51,26 +51,24 @@ public class MembershipContractJoinUseCase {
         final String idempotencyKey = MembershipContractDomain.idempotencyKey(policy.getId(), userId);
         final var existing = membershipContractMongoRepository.findByIdempotencyKey(idempotencyKey);
         if (existing.isPresent()) {
-            final MembershipContract contract = existing.get();
-            contract.reactivate(now, periodEnd, userId);
-            return MembershipContractResponse.of(
-                membershipContractMongoRepository.save(contract)
+            final var saved = membershipContractMongoRepository.save(
+                existing.get().reactivate(now, periodEnd, userId)
             );
+            return MembershipContractResponse.of(saved);
         }
 
-        return MembershipContractResponse.of(
-            membershipContractMongoRepository.save(
-                MembershipContract.join(
-                    userId,
-                    policy.getId(),
-                    policy.getKey(),
-                    policy.getSeason(),
-                    now,
-                    periodEnd,
-                    idempotencyKey,
-                    userId
-                )
+        final var saved = membershipContractMongoRepository.save(
+            MembershipContract.join(
+                userId,
+                policy.getId(),
+                policy.getKey(),
+                policy.getSeason(),
+                now,
+                periodEnd,
+                idempotencyKey,
+                userId
             )
         );
+        return MembershipContractResponse.of(saved);
     }
 }

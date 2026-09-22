@@ -25,6 +25,6 @@ public class MarketingCouponController {
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @RequestBody final MarketingCouponIssueRequest request
     ) {
-        return ApiResponse.of(couponIssueUseCase.executeMarketing(userId, request));
+        return ApiResponse.of(couponIssueUseCase.issueMarketing(userId, request));
     }
 }

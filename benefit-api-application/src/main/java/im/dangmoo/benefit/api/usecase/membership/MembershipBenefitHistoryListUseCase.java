@@ -16,7 +16,7 @@ public class MembershipBenefitHistoryListUseCase {
         this.membershipBenefitHistoryMongoRepository = membershipBenefitHistoryMongoRepository;
     }
 
-    public MembershipBenefitHistoryListResponse execute(
+    public MembershipBenefitHistoryListResponse list(
         final String userId,
         final MembershipBenefitHistoryPageRequest request
     ) {

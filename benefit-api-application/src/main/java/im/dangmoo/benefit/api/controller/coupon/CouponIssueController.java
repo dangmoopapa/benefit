@@ -33,7 +33,7 @@ public class CouponIssueController {
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @RequestBody final CouponIssuableRequest request
     ) {
-        return ApiResponse.of(couponIssuableUseCase.execute(userId, request, false));
+        return ApiResponse.of(couponIssuableUseCase.issuable(userId, request, false));
     }
 
     @PostMapping(ApiPath.COUPON_ISSUE)
@@ -41,6 +41,6 @@ public class CouponIssueController {
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @RequestBody final CouponIssueRequest request
     ) {
-        return ApiResponse.of(couponIssueUseCase.execute(userId, request));
+        return ApiResponse.of(couponIssueUseCase.issue(userId, request));
     }
 }

@@ -34,7 +34,7 @@ public class VoucherCouponBoxUseCase {
         this.couponIssueStockRedisRepository = couponIssueStockRedisRepository;
     }
 
-    public VoucherCouponBoxResponse execute(final String userId, final VoucherCouponBoxRequest request) {
+    public VoucherCouponBoxResponse box(final String userId, final VoucherCouponBoxRequest request) {
         final List<CouponPolicy> policies = couponPolicyMongoRepository.findActiveVouchers(
             request.productId(),
             request.brandId()

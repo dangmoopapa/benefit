@@ -134,30 +134,30 @@ class CouponIssueDomainTest {
     }
 
     @Nested
-    @DisplayName("isStockExhausted")
-    class IsStockExhausted {
+    @DisplayName("isSatisfied stock")
+    class IsSatisfiedStock {
 
         @Test
         @DisplayName("재고 제한이 없으면 소진되지 않는다")
         void unlimited_neverExhausted() {
             final CouponIssueDomain domain = domain(null, null, null, List.of(), List.of());
-            assertThat(domain.isStockExhausted(0)).isFalse();
-            assertThat(domain.isStockExhausted(Long.MAX_VALUE)).isFalse();
+            assertThat(domain.isSatisfied(Instant.now(), 0)).isTrue();
+            assertThat(domain.isSatisfied(Instant.now(), Long.MAX_VALUE)).isTrue();
         }
 
         @ParameterizedTest
         @CsvSource({
-            "100, 0, false",
-            "100, 99, false",
-            "100, 100, true",
-            "100, 101, true",
-            "1, 0, false",
-            "1, 1, true"
+            "100, 0, true",
+            "100, 99, true",
+            "100, 100, false",
+            "100, 101, false",
+            "1, 0, true",
+            "1, 1, false"
         })
         @DisplayName("issuedCount 와 stockQuantity 경계값을 검증한다")
-        void boundaries(final long stock, final long issued, final boolean exhausted) {
+        void boundaries(final long stock, final long issued, final boolean satisfied) {
             final CouponIssueDomain domain = domain(null, null, stock, List.of(), List.of());
-            assertThat(domain.isStockExhausted(issued)).isEqualTo(exhausted);
+            assertThat(domain.isSatisfied(Instant.now(), issued)).isEqualTo(satisfied);
         }
     }
 

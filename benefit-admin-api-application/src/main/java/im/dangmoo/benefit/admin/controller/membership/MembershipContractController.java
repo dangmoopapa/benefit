@@ -44,7 +44,7 @@ public class MembershipContractController {
     AdminApiResponse<MembershipContractSearchResponse> search(
         @ModelAttribute final MembershipContractSearchRequest request
     ) {
-        return AdminApiResponse.of(membershipContractSearchUseCase.execute(request));
+        return AdminApiResponse.of(membershipContractSearchUseCase.search(request));
     }
 
     @PostMapping(AdminApiPath.MEMBERSHIP_CONTRACT_JOIN)
@@ -52,7 +52,7 @@ public class MembershipContractController {
         @RequestHeader(AdminApiHeaders.ADMIN_ID) final String adminId,
         @RequestBody final MembershipContractJoinRequest request
     ) {
-        return AdminApiResponse.of(membershipContractJoinUseCase.execute(adminId, request));
+        return AdminApiResponse.of(membershipContractJoinUseCase.join(adminId, request));
     }
 
     @PostMapping(AdminApiPath.MEMBERSHIP_CONTRACT_LEAVE)
@@ -60,7 +60,7 @@ public class MembershipContractController {
         @RequestHeader(AdminApiHeaders.ADMIN_ID) final String adminId,
         @RequestBody final MembershipContractLeaveRequest request
     ) {
-        return AdminApiResponse.of(membershipContractLeaveUseCase.execute(adminId, request));
+        return AdminApiResponse.of(membershipContractLeaveUseCase.leave(adminId, request));
     }
 
     @PostMapping(AdminApiPath.MEMBERSHIP_CONTRACT_RENEW)
@@ -68,6 +68,6 @@ public class MembershipContractController {
         @RequestHeader(AdminApiHeaders.ADMIN_ID) final String adminId,
         @RequestBody final MembershipContractRenewRequest request
     ) {
-        return AdminApiResponse.of(membershipContractRenewUseCase.execute(adminId, request));
+        return AdminApiResponse.of(membershipContractRenewUseCase.renew(adminId, request));
     }
 }

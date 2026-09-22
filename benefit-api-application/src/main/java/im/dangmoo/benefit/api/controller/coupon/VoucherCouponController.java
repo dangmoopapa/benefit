@@ -25,6 +25,6 @@ public class VoucherCouponController {
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @RequestBody final VoucherCouponBoxRequest request
     ) {
-        return ApiResponse.of(voucherCouponBoxUseCase.execute(userId, request));
+        return ApiResponse.of(voucherCouponBoxUseCase.box(userId, request));
     }
 }

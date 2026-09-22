@@ -32,7 +32,7 @@ public class CouponUsageUseCase {
         this.couponUsageStockRedisRepository = couponUsageStockRedisRepository;
     }
 
-    public CouponUsageResponse execute(final String userId, final CouponUsageRequest request) {
+    public CouponUsageResponse use(final String userId, final CouponUsageRequest request) {
         final CouponWallet wallet = couponWalletMongoRepository.findById(request.walletId())
             .orElseThrow(ApiException::notFound);
         if (!userId.equals(wallet.getUserId())) {

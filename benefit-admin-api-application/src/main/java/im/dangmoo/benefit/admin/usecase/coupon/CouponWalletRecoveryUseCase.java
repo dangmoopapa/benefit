@@ -28,7 +28,7 @@ public class CouponWalletRecoveryUseCase {
         this.couponUsageStockRedisRepository = couponUsageStockRedisRepository;
     }
 
-    public CouponWalletRecoveryResponse execute(final String adminId, final String walletId) {
+    public CouponWalletRecoveryResponse recover(final String adminId, final String walletId) {
         final CouponWallet wallet = couponWalletMongoRepository.findById(walletId)
             .orElseThrow(ApiException::notFound);
 

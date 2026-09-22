@@ -18,7 +18,7 @@ public class PointPolicySearchUseCase {
         this.pointPolicyMongoRepository = pointPolicyMongoRepository;
     }
 
-    public PointPolicySearchResponse execute(final PointPolicySearchRequest request) {
+    public PointPolicySearchResponse search(final PointPolicySearchRequest request) {
         final String key = request.key();
         final String name = request.name();
         final PointPolicyStatus status = request.status();

@@ -20,7 +20,7 @@ public class MembershipContractRenewUseCase {
         this.membershipContractMongoRepository = membershipContractMongoRepository;
     }
 
-    public MembershipContractResponse execute(
+    public MembershipContractResponse renew(
         final String adminId,
         final MembershipContractRenewRequest request
     ) {
@@ -32,9 +32,7 @@ public class MembershipContractRenewUseCase {
             throw ApiException.invalidStatus();
         }
         final Instant periodEnd = MembershipContractDomain.nextPeriodEnd(contract.getPeriodEnd());
-        contract.renew(periodEnd, adminId);
-        return MembershipContractResponse.of(
-            membershipContractMongoRepository.save(contract)
-        );
+        final var saved = membershipContractMongoRepository.save(contract.renew(periodEnd, adminId));
+        return MembershipContractResponse.of(saved);
     }
 }

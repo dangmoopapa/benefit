@@ -90,7 +90,7 @@ public class MembershipPolicy {
         return policy;
     }
 
-    public void update(
+    public MembershipPolicy update(
         final String name,
         final String description,
         final MembershipSeason season,
@@ -105,12 +105,14 @@ public class MembershipPolicy {
         this.accountCondition = Objects.requireNonNull(accountCondition);
         this.updatedBy = updatedBy;
         this.updatedAt = Instant.now();
+        return this;
     }
 
-    public void changeStatus(final MembershipPolicyStatus status, final String updatedBy) {
+    public MembershipPolicy changeStatus(final MembershipPolicyStatus status, final String updatedBy) {
         this.status = Objects.requireNonNull(status);
         this.updatedBy = updatedBy;
         this.updatedAt = Instant.now();
+        return this;
     }
 
     public String getId() {

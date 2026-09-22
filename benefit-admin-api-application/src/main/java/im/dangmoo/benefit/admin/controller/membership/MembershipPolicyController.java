@@ -53,12 +53,12 @@ public class MembershipPolicyController {
     AdminApiResponse<MembershipPolicySearchResponse> search(
         @ModelAttribute final MembershipPolicySearchRequest request
     ) {
-        return AdminApiResponse.of(membershipPolicySearchUseCase.execute(request));
+        return AdminApiResponse.of(membershipPolicySearchUseCase.search(request));
     }
 
     @GetMapping(AdminApiPath.MEMBERSHIP_POLICY)
     AdminApiResponse<MembershipPolicyDetailResponse> detail(@PathVariable final String id) {
-        return AdminApiResponse.of(membershipPolicyDetailUseCase.execute(id));
+        return AdminApiResponse.of(membershipPolicyDetailUseCase.detail(id));
     }
 
     @PostMapping(AdminApiPath.MEMBERSHIP_POLICIES)
@@ -66,7 +66,7 @@ public class MembershipPolicyController {
         @RequestHeader(AdminApiHeaders.ADMIN_ID) final String adminId,
         @RequestBody final MembershipPolicyCreateRequest request
     ) {
-        return AdminApiResponse.of(membershipPolicyCreateUseCase.execute(adminId, request));
+        return AdminApiResponse.of(membershipPolicyCreateUseCase.create(adminId, request));
     }
 
     @PutMapping(AdminApiPath.MEMBERSHIP_POLICY)
@@ -75,7 +75,7 @@ public class MembershipPolicyController {
         @PathVariable final String id,
         @RequestBody final MembershipPolicyUpdateRequest request
     ) {
-        return AdminApiResponse.of(membershipPolicyUpdateUseCase.execute(adminId, id, request));
+        return AdminApiResponse.of(membershipPolicyUpdateUseCase.update(adminId, id, request));
     }
 
     @PutMapping(AdminApiPath.MEMBERSHIP_POLICY_STATUS)
@@ -84,6 +84,6 @@ public class MembershipPolicyController {
         @PathVariable final String id,
         @RequestBody final MembershipPolicyChangeStatusRequest request
     ) {
-        return AdminApiResponse.of(membershipPolicyChangeStatusUseCase.execute(adminId, id, request));
+        return AdminApiResponse.of(membershipPolicyChangeStatusUseCase.changeStatus(adminId, id, request));
     }
 }

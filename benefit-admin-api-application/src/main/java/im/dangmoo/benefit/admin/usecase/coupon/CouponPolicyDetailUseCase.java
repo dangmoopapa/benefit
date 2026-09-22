@@ -24,7 +24,7 @@ public class CouponPolicyDetailUseCase {
         this.couponCodeMongoRepository = couponCodeMongoRepository;
     }
 
-    public CouponPolicyDetailResponse execute(final String id) {
+    public CouponPolicyDetailResponse detail(final String id) {
         final CouponPolicy policy = couponPolicyMongoRepository.findById(id)
             .orElseThrow(ApiException::notFound);
         final List<CouponCode> codes = couponCodeMongoRepository.findByPolicyId(policy.getId());

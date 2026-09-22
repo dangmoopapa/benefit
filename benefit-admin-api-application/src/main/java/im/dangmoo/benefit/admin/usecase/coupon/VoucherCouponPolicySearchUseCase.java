@@ -17,7 +17,7 @@ public class VoucherCouponPolicySearchUseCase {
         this.couponPolicyMongoRepository = couponPolicyMongoRepository;
     }
 
-    public VoucherCouponPolicySearchResponse execute(final VoucherCouponPolicySearchRequest request) {
+    public VoucherCouponPolicySearchResponse search(final VoucherCouponPolicySearchRequest request) {
         final List<CouponPolicy> policies = couponPolicyMongoRepository.findVouchers(
             request.productId(),
             request.brandId(),

@@ -51,12 +51,12 @@ public class PointPolicyController {
 
     @GetMapping(AdminApiPath.POINT_POLICIES)
     AdminApiResponse<PointPolicySearchResponse> search(@ModelAttribute final PointPolicySearchRequest request) {
-        return AdminApiResponse.of(pointPolicySearchUseCase.execute(request));
+        return AdminApiResponse.of(pointPolicySearchUseCase.search(request));
     }
 
     @GetMapping(AdminApiPath.POINT_POLICY)
     AdminApiResponse<PointPolicyDetailResponse> detail(@PathVariable final String id) {
-        return AdminApiResponse.of(pointPolicyDetailUseCase.execute(id));
+        return AdminApiResponse.of(pointPolicyDetailUseCase.detail(id));
     }
 
     @PostMapping(AdminApiPath.POINT_POLICIES)
@@ -64,7 +64,7 @@ public class PointPolicyController {
         @RequestHeader(AdminApiHeaders.ADMIN_ID) final String adminId,
         @RequestBody final PointPolicyCreateRequest request
     ) {
-        return AdminApiResponse.of(pointPolicyCreateUseCase.execute(adminId, request));
+        return AdminApiResponse.of(pointPolicyCreateUseCase.create(adminId, request));
     }
 
     @PutMapping(AdminApiPath.POINT_POLICY)
@@ -73,7 +73,7 @@ public class PointPolicyController {
         @PathVariable final String id,
         @RequestBody final PointPolicyUpdateRequest request
     ) {
-        return AdminApiResponse.of(pointPolicyUpdateUseCase.execute(adminId, id, request));
+        return AdminApiResponse.of(pointPolicyUpdateUseCase.update(adminId, id, request));
     }
 
     @PutMapping(AdminApiPath.POINT_POLICY_STATUS)
@@ -82,6 +82,6 @@ public class PointPolicyController {
         @PathVariable final String id,
         @RequestBody final PointPolicyChangeStatusRequest request
     ) {
-        return AdminApiResponse.of(pointPolicyChangeStatusUseCase.execute(adminId, id, request));
+        return AdminApiResponse.of(pointPolicyChangeStatusUseCase.changeStatus(adminId, id, request));
     }
 }

@@ -18,7 +18,7 @@ public class MembershipContractDetailUseCase {
         this.membershipContractMongoRepository = membershipContractMongoRepository;
     }
 
-    public MembershipContractResponse execute(final String userId) {
+    public MembershipContractResponse detail(final String userId) {
         return membershipContractMongoRepository
             .findEffectiveByUserId(userId, Instant.now())
             .map(MembershipContractResponse::of)

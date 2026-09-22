@@ -27,15 +27,16 @@ public class CouponPolicyChangeStatusUseCase {
         this.couponPolicyChangedPublisher = couponPolicyChangedPublisher;
     }
 
-    public CouponPolicyChangeStatusResponse execute(
+    public CouponPolicyChangeStatusResponse changeStatus(
         final String adminId,
         final String id,
         final CouponPolicyChangeStatusRequest request
     ) {
         final CouponPolicy policy = couponPolicyMongoRepository.findById(id)
             .orElseThrow(ApiException::notFound);
-        final CouponPolicy changed = policy.changeStatus(request.status(), adminId);
-        final CouponPolicy saved = couponPolicyMongoRepository.save(changed);
+        final CouponPolicy saved = couponPolicyMongoRepository.save(
+            policy.changeStatus(request.status(), adminId)
+        );
         couponPolicyCacheRepository.put(saved);
         couponPolicyChangedPublisher.publish(CouponPolicyChangedEvent.ofStatusChanged(saved));
         return CouponPolicyChangeStatusResponse.of(saved);

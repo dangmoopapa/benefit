@@ -26,7 +26,7 @@ public class PointTransactionUsageUseCase {
         this.pointBalanceMongoRepository = pointBalanceMongoRepository;
     }
 
-    public PointUsageResponse execute(final String adminId, final PointUsageRequest request) {
+    public PointUsageResponse use(final String adminId, final PointUsageRequest request) {
         final Instant now = Instant.now();
         final PointBalance balance = pointBalanceMongoRepository.findByUserId(request.userId())
             .orElseThrow(ApiException::insufficientPoint);

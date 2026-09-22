@@ -20,14 +20,6 @@ public class PointBalanceDomain {
         return new PointBalanceDomain(balance.getTotalAmount(), balance.getAmountsByExpiresAt());
     }
 
-    public static PointBalanceDomain of(final Map<Instant, Long> amountsByExpiresAt) {
-        long total = 0L;
-        for (final long amount : amountsByExpiresAt.values()) {
-            total += amount;
-        }
-        return new PointBalanceDomain(total, amountsByExpiresAt);
-    }
-
     public long totalAmount() {
         return totalAmount;
     }

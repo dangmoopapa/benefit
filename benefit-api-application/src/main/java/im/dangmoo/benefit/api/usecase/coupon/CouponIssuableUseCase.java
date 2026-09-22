@@ -35,7 +35,7 @@ public class CouponIssuableUseCase {
         this.couponTimeAttackIssueScript = couponTimeAttackIssueScript;
     }
 
-    public CouponIssuableResponse execute(
+    public CouponIssuableResponse issuable(
         final String userId,
         final CouponIssuableRequest request,
         final boolean isTimeAttack

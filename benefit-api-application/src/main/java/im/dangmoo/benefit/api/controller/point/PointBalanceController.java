@@ -20,6 +20,6 @@ public class PointBalanceController {
 
     @GetMapping(ApiPath.POINT_BALANCES)
     ApiResponse<PointBalanceResponse> balance(@RequestHeader(ApiHeaders.USER_ID) final String userId) {
-        return ApiResponse.of(pointBalanceUseCase.execute(userId));
+        return ApiResponse.of(pointBalanceUseCase.balance(userId));
     }
 }

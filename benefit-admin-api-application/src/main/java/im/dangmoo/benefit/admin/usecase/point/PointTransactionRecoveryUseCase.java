@@ -24,7 +24,7 @@ public class PointTransactionRecoveryUseCase {
         this.pointBalanceMongoRepository = pointBalanceMongoRepository;
     }
 
-    public PointRecoveryResponse execute(final String adminId, final PointRecoveryRequest request) {
+    public PointRecoveryResponse recover(final String adminId, final PointRecoveryRequest request) {
         final PointTransaction use = pointTransactionMongoRepository
             .findByIdempotencyKey(PointTransactionDomain.useKey(request.orderId()))
             .orElseThrow(ApiException::notFound);

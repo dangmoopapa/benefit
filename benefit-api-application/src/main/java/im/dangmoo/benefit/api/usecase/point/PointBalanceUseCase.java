@@ -15,7 +15,7 @@ public class PointBalanceUseCase {
         this.pointBalanceMongoRepository = pointBalanceMongoRepository;
     }
 
-    public PointBalanceResponse execute(final String userId) {
+    public PointBalanceResponse balance(final String userId) {
         return pointBalanceMongoRepository.findByUserId(userId)
             .map(balance -> PointBalanceResponse.of(balance, Instant.now()))
             .orElseGet(PointBalanceResponse::empty);

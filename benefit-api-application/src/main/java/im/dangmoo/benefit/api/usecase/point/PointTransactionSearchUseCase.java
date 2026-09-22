@@ -22,7 +22,7 @@ public class PointTransactionSearchUseCase {
         this.pointTransactionMongoRepository = pointTransactionMongoRepository;
     }
 
-    public PointTransactionListResponse execute(
+    public PointTransactionListResponse search(
         final String userId,
         final PointTransactionPageRequest request
     ) {

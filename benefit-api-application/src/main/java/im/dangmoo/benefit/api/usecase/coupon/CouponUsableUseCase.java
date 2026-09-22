@@ -34,7 +34,7 @@ public class CouponUsableUseCase {
         this.couponUsageStockRedisRepository = couponUsageStockRedisRepository;
     }
 
-    public CouponUsableResponse execute(final String userId, final CouponUsableRequest request) {
+    public CouponUsableResponse usable(final String userId, final CouponUsableRequest request) {
         final List<CouponWallet> wallets = couponWalletMongoRepository.findByUserIdAndStatus(
             userId,
             CouponWalletStatus.AVAILABLE

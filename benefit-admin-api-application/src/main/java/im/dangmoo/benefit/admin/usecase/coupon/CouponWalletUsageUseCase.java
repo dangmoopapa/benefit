@@ -32,7 +32,7 @@ public class CouponWalletUsageUseCase {
         this.couponUsageStockRedisRepository = couponUsageStockRedisRepository;
     }
 
-    public CouponWalletUsageResponse execute(
+    public CouponWalletUsageResponse use(
         final String adminId,
         final String walletId,
         final CouponWalletUsageRequest request

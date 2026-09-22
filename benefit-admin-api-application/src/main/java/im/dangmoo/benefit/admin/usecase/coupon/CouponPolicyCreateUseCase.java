@@ -38,7 +38,7 @@ public class CouponPolicyCreateUseCase {
         this.couponCodeMongoRepository = couponCodeMongoRepository;
     }
 
-    public CouponPolicyCreateResponse execute(final String adminId, final CouponPolicyCreateRequest request) {
+    public CouponPolicyCreateResponse create(final String adminId, final CouponPolicyCreateRequest request) {
         final String key = request.key();
         final boolean exists = couponPolicyMongoRepository.existsByKey(key);
         if (exists) {

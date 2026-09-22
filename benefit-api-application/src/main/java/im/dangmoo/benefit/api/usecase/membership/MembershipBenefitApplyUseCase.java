@@ -4,8 +4,6 @@ import im.dangmoo.benefit.api.model.membership.MembershipBenefitApplyRequest;
 import im.dangmoo.benefit.api.model.membership.MembershipBenefitHistoryResponse;
 import im.dangmoo.benefit.api.usecase.ApiException;
 import im.dangmoo.benefit.domain.membership.MembershipBenefitDomain;
-import im.dangmoo.benefit.domain.membership.MembershipContractDomain;
-import im.dangmoo.benefit.infrastructure.data.membership.history.MembershipBenefitApplied;
 import im.dangmoo.benefit.infrastructure.data.membership.history.MembershipBenefitHistory;
 import im.dangmoo.benefit.infrastructure.data.membership.history.MembershipBenefitHistoryMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.membership.policy.MembershipPolicyMongoRepository;
@@ -37,7 +35,7 @@ public class MembershipBenefitApplyUseCase {
         this.pointBalanceMongoRepository = pointBalanceMongoRepository;
     }
 
-    public MembershipBenefitHistoryResponse execute(
+    public MembershipBenefitHistoryResponse apply(
         final String userId,
         final MembershipBenefitApplyRequest request
     ) {
@@ -50,25 +48,16 @@ public class MembershipBenefitApplyUseCase {
         final var contract = membershipContractMongoRepository
             .findEffectiveByUserId(userId, now)
             .orElseThrow(ApiException::notFound);
-        if (!MembershipContractDomain.isEffective(contract, now)) {
-            throw ApiException.invalidStatus();
-        }
 
         final var policy = membershipPolicyMongoRepository.findById(contract.getPolicyId())
             .orElseThrow(ApiException::notFound);
-
-        final MembershipBenefitApplied applied;
         try {
-            applied = MembershipBenefitDomain.apply(
-                policy.getSeason(),
-                policy.getBenefit(),
-                request.paymentAmount(),
-                request.categoryId()
-            );
+            MembershipBenefitDomain.requireReady(policy.getSeason(), policy.getBenefit());
         } catch (final MembershipBenefitDomain.PreparingException ex) {
             throw ApiException.preparingMembership();
         }
 
+        final var applied = policy.getBenefit().apply(request.paymentAmount(), request.categoryId());
         if (applied.getCashbackAmount() != null && applied.getCashbackAmount().signum() > 0) {
             pointBalanceMongoRepository.increase(
                 userId,

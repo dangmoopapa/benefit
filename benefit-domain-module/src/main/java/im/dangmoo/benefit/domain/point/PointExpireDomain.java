@@ -9,8 +9,6 @@ import java.time.temporal.ChronoUnit;
 
 public class PointExpireDomain {
 
-    public static final Instant NEVER_EXPIRES_AT = PointBalance.NEVER_EXPIRES_AT;
-
     private final PointExpireType type;
     private final Instant expiresAt;
     private final Integer daysAfterGrant;
@@ -35,7 +33,7 @@ public class PointExpireDomain {
 
     public Instant resolveExpiresAt(final Instant grantedAt) {
         return switch (type) {
-            case NEVER -> NEVER_EXPIRES_AT;
+            case NEVER -> PointBalance.NEVER_EXPIRES_AT;
             case FIXED_AT -> PointBalance.toExpiresKey(expiresAt);
             case DAYS_AFTER_GRANT -> PointBalance.toExpiresKey(grantedAt).plus(daysAfterGrant, ChronoUnit.DAYS);
         };

@@ -24,6 +24,6 @@ public class MembershipBenefitController {
     AdminApiResponse<MembershipBenefitHistorySearchResponse> histories(
         @ModelAttribute final MembershipBenefitHistorySearchRequest request
     ) {
-        return AdminApiResponse.of(membershipBenefitHistorySearchUseCase.execute(request));
+        return AdminApiResponse.of(membershipBenefitHistorySearchUseCase.search(request));
     }
 }

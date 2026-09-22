@@ -44,7 +44,7 @@ public class CouponWalletController {
 
     @GetMapping(AdminApiPath.COUPON_WALLETS)
     AdminApiResponse<CouponWalletSearchResponse> search(@ModelAttribute final CouponWalletSearchRequest request) {
-        return AdminApiResponse.of(couponWalletSearchUseCase.execute(request));
+        return AdminApiResponse.of(couponWalletSearchUseCase.search(request));
     }
 
     @PostMapping(AdminApiPath.COUPON_WALLETS)
@@ -52,7 +52,7 @@ public class CouponWalletController {
         @RequestHeader(AdminApiHeaders.ADMIN_ID) final String adminId,
         @RequestBody final CouponWalletIssueRequest request
     ) {
-        return AdminApiResponse.of(couponWalletIssueUseCase.execute(adminId, request));
+        return AdminApiResponse.of(couponWalletIssueUseCase.issue(adminId, request));
     }
 
     @PostMapping(AdminApiPath.COUPON_WALLET_USAGE)
@@ -61,7 +61,7 @@ public class CouponWalletController {
         @PathVariable final String id,
         @RequestBody final CouponWalletUsageRequest request
     ) {
-        return AdminApiResponse.of(couponWalletUsageUseCase.execute(adminId, id, request));
+        return AdminApiResponse.of(couponWalletUsageUseCase.use(adminId, id, request));
     }
 
     @PostMapping(AdminApiPath.COUPON_WALLET_RECOVERY)
@@ -69,6 +69,6 @@ public class CouponWalletController {
         @RequestHeader(AdminApiHeaders.ADMIN_ID) final String adminId,
         @PathVariable final String id
     ) {
-        return AdminApiResponse.of(couponWalletRecoveryUseCase.execute(adminId, id));
+        return AdminApiResponse.of(couponWalletRecoveryUseCase.recover(adminId, id));
     }
 }

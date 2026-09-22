@@ -17,7 +17,7 @@ public class PointPolicyCreateUseCase {
         this.pointPolicyMongoRepository = pointPolicyMongoRepository;
     }
 
-    public PointPolicyCreateResponse execute(final String adminId, final PointPolicyCreateRequest request) {
+    public PointPolicyCreateResponse create(final String adminId, final PointPolicyCreateRequest request) {
         if (request.benefitCondition().amount() <= 0) {
             throw ApiException.conditionNotSatisfied();
         }

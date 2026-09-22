@@ -25,7 +25,7 @@ public class CouponBoxUseCase {
         this.couponPolicyCacheRepository = couponPolicyCacheRepository;
     }
 
-    public CouponBoxResponse execute(final String userId) {
+    public CouponBoxResponse box(final String userId) {
         final List<CouponWallet> wallets = couponWalletMongoRepository.findByUserId(userId);
         final Instant now = Instant.now();
         final List<CouponBoxResponse.Item> available = new ArrayList<>();

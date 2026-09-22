@@ -18,7 +18,7 @@ public class MembershipPolicyUpdateUseCase {
         this.membershipPolicyMongoRepository = membershipPolicyMongoRepository;
     }
 
-    public MembershipPolicyUpdateResponse execute(
+    public MembershipPolicyUpdateResponse update(
         final String adminId,
         final String id,
         final MembershipPolicyUpdateRequest request
@@ -30,14 +30,16 @@ public class MembershipPolicyUpdateUseCase {
         } catch (final MembershipBenefitDomain.PreparingException ex) {
             throw ApiException.preparingMembership();
         }
-        policy.update(
-            request.name(),
-            request.description(),
-            request.season(),
-            request.benefit(),
-            request.accountCondition().toDocument(),
-            adminId
+        final var saved = membershipPolicyMongoRepository.save(
+            policy.update(
+                request.name(),
+                request.description(),
+                request.season(),
+                request.benefit(),
+                request.accountCondition().toDocument(),
+                adminId
+            )
         );
-        return MembershipPolicyUpdateResponse.of(membershipPolicyMongoRepository.save(policy));
+        return MembershipPolicyUpdateResponse.of(saved);
     }
 }

@@ -21,7 +21,7 @@ public class PointTransactionSearchUseCase {
         this.pointTransactionMongoRepository = pointTransactionMongoRepository;
     }
 
-    public PointTransactionSearchResponse execute(final PointTransactionSearchRequest request) {
+    public PointTransactionSearchResponse search(final PointTransactionSearchRequest request) {
         final String userId = request.userId();
         final String policyId = request.policyId();
         if (!StringUtils.hasText(userId) && !StringUtils.hasText(policyId)) {

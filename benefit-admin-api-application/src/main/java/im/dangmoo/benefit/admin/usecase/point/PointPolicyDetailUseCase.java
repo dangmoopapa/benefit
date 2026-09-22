@@ -15,7 +15,7 @@ public class PointPolicyDetailUseCase {
         this.pointPolicyMongoRepository = pointPolicyMongoRepository;
     }
 
-    public PointPolicyDetailResponse execute(final String id) {
+    public PointPolicyDetailResponse detail(final String id) {
         final PointPolicy policy = pointPolicyMongoRepository.findById(id)
             .orElseThrow(ApiException::notFound);
         return PointPolicyDetailResponse.of(policy);

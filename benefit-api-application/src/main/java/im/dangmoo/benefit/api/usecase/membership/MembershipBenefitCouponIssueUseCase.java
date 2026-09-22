@@ -7,7 +7,6 @@ import im.dangmoo.benefit.domain.coupon.CouponIssueDomain;
 import im.dangmoo.benefit.domain.coupon.CouponUsageDomain;
 import im.dangmoo.benefit.domain.coupon.CouponWalletDomain;
 import im.dangmoo.benefit.domain.membership.MembershipBenefitDomain;
-import im.dangmoo.benefit.domain.membership.MembershipContractDomain;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CachedCouponPolicy;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCacheRepository;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyChangedEvent;
@@ -47,27 +46,22 @@ public class MembershipBenefitCouponIssueUseCase {
         this.couponPolicyChangedPublisher = couponPolicyChangedPublisher;
     }
 
-    public CouponIssueResponse execute(final String userId) {
+    public CouponIssueResponse issue(final String userId) {
         final Instant now = Instant.now();
         final var contract = membershipContractMongoRepository
             .findEffectiveByUserId(userId, now)
             .orElseThrow(ApiException::notFound);
-        if (!MembershipContractDomain.isEffective(contract, now)) {
-            throw ApiException.invalidStatus();
-        }
 
         final var policy = membershipPolicyMongoRepository.findById(contract.getPolicyId())
             .orElseThrow(ApiException::notFound);
-
-        final String couponPolicyKey;
         try {
-            couponPolicyKey = MembershipBenefitDomain.monthlyCouponPolicyKey(
-                policy.getSeason(),
-                policy.getBenefit()
-            ).orElseThrow(ApiException::conditionNotSatisfied);
+            MembershipBenefitDomain.requireReady(policy.getSeason(), policy.getBenefit());
         } catch (final MembershipBenefitDomain.PreparingException ex) {
             throw ApiException.preparingMembership();
         }
+
+        final String couponPolicyKey = policy.getBenefit().monthlyCouponPolicyKey()
+            .orElseThrow(ApiException::conditionNotSatisfied);
 
         final CachedCouponPolicy couponPolicy = couponPolicyCacheRepository.findByKey(couponPolicyKey);
         if (couponPolicy == null) {

@@ -102,7 +102,7 @@ public class MembershipContract {
         return contract;
     }
 
-    public void reactivate(
+    public MembershipContract reactivate(
         final Instant periodStart,
         final Instant periodEnd,
         final String updatedBy
@@ -114,22 +114,25 @@ public class MembershipContract {
         this.autoRenew = true;
         this.updatedBy = updatedBy;
         this.updatedAt = Instant.now();
+        return this;
     }
 
-    public void scheduleCancel(final String updatedBy) {
+    public MembershipContract scheduleCancel(final String updatedBy) {
         this.cancelAtPeriodEnd = true;
         this.autoRenew = false;
         this.updatedBy = updatedBy;
         this.updatedAt = Instant.now();
+        return this;
     }
 
-    public void renew(final Instant periodEnd, final String updatedBy) {
+    public MembershipContract renew(final Instant periodEnd, final String updatedBy) {
         this.periodEnd = Objects.requireNonNull(periodEnd);
         this.cancelAtPeriodEnd = false;
         this.autoRenew = true;
         this.status = MembershipContractStatus.ACTIVE;
         this.updatedBy = updatedBy;
         this.updatedAt = Instant.now();
+        return this;
     }
 
     public String getId() {

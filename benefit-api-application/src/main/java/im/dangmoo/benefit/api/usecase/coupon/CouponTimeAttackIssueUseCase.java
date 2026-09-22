@@ -40,7 +40,7 @@ public class CouponTimeAttackIssueUseCase {
         this.couponPolicyChangedPublisher = couponPolicyChangedPublisher;
     }
 
-    public CouponIssueResponse execute(final String userId, final CouponIssueRequest request) {
+    public CouponIssueResponse issue(final String userId, final CouponIssueRequest request) {
         final CachedCouponPolicy policy = couponPolicyCacheRepository.findByKey(request.policyKey());
         if (policy == null) {
             throw ApiException.notFound();

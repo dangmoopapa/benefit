@@ -52,7 +52,7 @@ public class PointTransactionController {
     AdminApiResponse<PointTransactionSearchResponse> search(
         @ModelAttribute final PointTransactionSearchRequest request
     ) {
-        return AdminApiResponse.of(pointTransactionSearchUseCase.execute(request));
+        return AdminApiResponse.of(pointTransactionSearchUseCase.search(request));
     }
 
     @PostMapping(AdminApiPath.POINT_TRANSACTION_GRANT)
@@ -60,7 +60,7 @@ public class PointTransactionController {
         @RequestHeader(AdminApiHeaders.ADMIN_ID) final String adminId,
         @RequestBody final PointGrantRequest request
     ) {
-        return AdminApiResponse.of(pointTransactionGrantUseCase.execute(adminId, request));
+        return AdminApiResponse.of(pointTransactionGrantUseCase.grant(adminId, request));
     }
 
     @PostMapping(AdminApiPath.POINT_TRANSACTION_RECLAIM)
@@ -68,7 +68,7 @@ public class PointTransactionController {
         @RequestHeader(AdminApiHeaders.ADMIN_ID) final String adminId,
         @RequestBody final PointReclaimRequest request
     ) {
-        return AdminApiResponse.of(pointTransactionReclaimUseCase.execute(adminId, request));
+        return AdminApiResponse.of(pointTransactionReclaimUseCase.reclaim(adminId, request));
     }
 
     @PostMapping(AdminApiPath.POINT_TRANSACTION_USAGE)
@@ -76,7 +76,7 @@ public class PointTransactionController {
         @RequestHeader(AdminApiHeaders.ADMIN_ID) final String adminId,
         @RequestBody final PointUsageRequest request
     ) {
-        return AdminApiResponse.of(pointTransactionUsageUseCase.execute(adminId, request));
+        return AdminApiResponse.of(pointTransactionUsageUseCase.use(adminId, request));
     }
 
     @PostMapping(AdminApiPath.POINT_TRANSACTION_RECOVERY)
@@ -84,6 +84,6 @@ public class PointTransactionController {
         @RequestHeader(AdminApiHeaders.ADMIN_ID) final String adminId,
         @RequestBody final PointRecoveryRequest request
     ) {
-        return AdminApiResponse.of(pointTransactionRecoveryUseCase.execute(adminId, request));
+        return AdminApiResponse.of(pointTransactionRecoveryUseCase.recover(adminId, request));
     }
 }

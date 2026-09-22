@@ -16,7 +16,7 @@ public class MembershipPolicyDetailUseCase {
         this.membershipPolicyMongoRepository = membershipPolicyMongoRepository;
     }
 
-    public MembershipPolicyDetailResponse execute(final String id) {
+    public MembershipPolicyDetailResponse detail(final String id) {
         return membershipPolicyMongoRepository.findById(id)
             .map(MembershipPolicyDetailResponse::of)
             .orElseThrow(ApiException::notFound);

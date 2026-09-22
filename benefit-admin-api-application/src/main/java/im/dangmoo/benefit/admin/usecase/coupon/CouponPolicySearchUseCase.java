@@ -19,7 +19,7 @@ public class CouponPolicySearchUseCase {
         this.couponPolicyMongoRepository = couponPolicyMongoRepository;
     }
 
-    public CouponPolicySearchResponse execute(final CouponPolicySearchRequest request) {
+    public CouponPolicySearchResponse search(final CouponPolicySearchRequest request) {
         final String key = request.key();
         final String name = request.name();
         final CouponPolicyType type = request.type();

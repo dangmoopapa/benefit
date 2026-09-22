@@ -39,7 +39,7 @@ public class CouponWalletIssueUseCase {
         this.couponPolicyChangedPublisher = couponPolicyChangedPublisher;
     }
 
-    public CouponWalletIssueResponse execute(final String adminId, final CouponWalletIssueRequest request) {
+    public CouponWalletIssueResponse issue(final String adminId, final CouponWalletIssueRequest request) {
         final String policyKey = request.policyKey();
         final String userId = request.userId();
         final CouponPolicy policy = couponPolicyMongoRepository.findByKey(policyKey)

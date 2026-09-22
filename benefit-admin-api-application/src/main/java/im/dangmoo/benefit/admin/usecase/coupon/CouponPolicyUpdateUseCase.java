@@ -22,7 +22,7 @@ public class CouponPolicyUpdateUseCase {
         this.couponPolicyCacheRepository = couponPolicyCacheRepository;
     }
 
-    public CouponPolicyUpdateResponse execute(
+    public CouponPolicyUpdateResponse update(
         final String adminId,
         final String id,
         final CouponPolicyUpdateRequest request
@@ -38,20 +38,21 @@ public class CouponPolicyUpdateUseCase {
             throw ApiException.duplicateKey();
         }
 
-        final CouponPolicy updated = policy.update(
-            request.name(),
-            request.description(),
-            requestPolicyKey,
-            request.type(),
-            request.benefitCondition().toDocument(),
-            request.issueCondition().toDocument(),
-            request.usageCondition().toDocument(),
-            request.applyCondition().toDocument(),
-            request.lifecycleCondition().toDocument(),
-            request.accountCondition().toDocument(),
-            adminId
+        final CouponPolicy saved = couponPolicyMongoRepository.save(
+            policy.update(
+                request.name(),
+                request.description(),
+                requestPolicyKey,
+                request.type(),
+                request.benefitCondition().toDocument(),
+                request.issueCondition().toDocument(),
+                request.usageCondition().toDocument(),
+                request.applyCondition().toDocument(),
+                request.lifecycleCondition().toDocument(),
+                request.accountCondition().toDocument(),
+                adminId
+            )
         );
-        final CouponPolicy saved = couponPolicyMongoRepository.save(updated);
         couponPolicyCacheRepository.put(saved);
         return CouponPolicyUpdateResponse.of(saved);
     }

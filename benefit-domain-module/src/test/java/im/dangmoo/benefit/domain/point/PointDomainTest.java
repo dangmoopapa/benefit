@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,19 +27,20 @@ class PointDomainTest {
     @Test
     @DisplayName("NEVER 만료는 클라이언트에 null 로 내려준다")
     void expire_neverClientNull() {
-        assertThat(PointExpireDomain.isNever(PointExpireDomain.NEVER_EXPIRES_AT)).isTrue();
-        assertThat(PointExpireDomain.toClientExpiresAt(PointExpireDomain.NEVER_EXPIRES_AT)).isNull();
+        assertThat(PointExpireDomain.isNever(PointBalance.NEVER_EXPIRES_AT)).isTrue();
+        assertThat(PointExpireDomain.toClientExpiresAt(PointBalance.NEVER_EXPIRES_AT)).isNull();
     }
 
     @Test
     @DisplayName("만료된 버킷은 가용 포인트에서 제외한다")
     void balance_excludesExpired() {
         final Instant now = Instant.parse("2026-01-10T00:00:00Z");
-        final PointBalanceDomain domain = PointBalanceDomain.of(Map.of(
-            Instant.parse("2026-01-01T00:00:00Z"), 100L,
-            Instant.parse("2026-02-01T00:00:00Z"), 50L,
-            PointExpireDomain.NEVER_EXPIRES_AT, 30L
-        ));
+        final PointBalance balance = PointBalance.create("u1");
+        balance.increase(Instant.parse("2026-01-01T00:00:00Z"), 100L);
+        balance.increase(Instant.parse("2026-02-01T00:00:00Z"), 50L);
+        balance.increase(PointBalance.NEVER_EXPIRES_AT, 30L);
+
+        final PointBalanceDomain domain = PointBalanceDomain.of(balance);
         assertThat(domain.totalAmount()).isEqualTo(180L);
         assertThat(domain.availableAmount(now)).isEqualTo(80L);
         assertThat(domain.expiringAmount(now)).isEqualTo(100L);

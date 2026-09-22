@@ -36,7 +36,7 @@ public class PointTransactionGrantUseCase {
         this.pointGrantStockRedisRepository = pointGrantStockRedisRepository;
     }
 
-    public PointGrantResponse execute(final String userId, final PointGrantRequest request) {
+    public PointGrantResponse grant(final String userId, final PointGrantRequest request) {
         final PointPolicy policy = pointPolicyMongoRepository.findByKey(request.policyKey())
             .orElseThrow(ApiException::notFound);
         if (policy.getStatus().isNotActive()) {

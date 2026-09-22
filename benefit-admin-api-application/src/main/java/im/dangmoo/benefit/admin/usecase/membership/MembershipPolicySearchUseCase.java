@@ -16,7 +16,7 @@ public class MembershipPolicySearchUseCase {
         this.membershipPolicyMongoRepository = membershipPolicyMongoRepository;
     }
 
-    public MembershipPolicySearchResponse execute(final MembershipPolicySearchRequest request) {
+    public MembershipPolicySearchResponse search(final MembershipPolicySearchRequest request) {
         return MembershipPolicySearchResponse.of(
             membershipPolicyMongoRepository.search(
                 request.key(),

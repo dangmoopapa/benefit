@@ -20,6 +20,6 @@ public class CouponBoxController {
 
     @GetMapping(ApiPath.COUPON_BOX)
     ApiResponse<CouponBoxResponse> box(@RequestHeader(ApiHeaders.USER_ID) final String userId) {
-        return ApiResponse.of(couponBoxUseCase.execute(userId));
+        return ApiResponse.of(couponBoxUseCase.box(userId));
     }
 }

@@ -35,7 +35,7 @@ public class MembershipContractController {
     ApiResponse<MembershipContractResponse> me(
         @RequestHeader(ApiHeaders.USER_ID) final String userId
     ) {
-        return ApiResponse.of(membershipContractDetailUseCase.execute(userId));
+        return ApiResponse.of(membershipContractDetailUseCase.detail(userId));
     }
 
     @PostMapping(ApiPath.MEMBERSHIP_CONTRACT_JOIN)
@@ -43,13 +43,13 @@ public class MembershipContractController {
         @RequestHeader(ApiHeaders.USER_ID) final String userId,
         @RequestBody final MembershipContractJoinRequest request
     ) {
-        return ApiResponse.of(membershipContractJoinUseCase.execute(userId, request));
+        return ApiResponse.of(membershipContractJoinUseCase.join(userId, request));
     }
 
     @PostMapping(ApiPath.MEMBERSHIP_CONTRACT_LEAVE)
     ApiResponse<MembershipContractResponse> leave(
         @RequestHeader(ApiHeaders.USER_ID) final String userId
     ) {
-        return ApiResponse.of(membershipContractLeaveUseCase.execute(userId));
+        return ApiResponse.of(membershipContractLeaveUseCase.leave(userId));
     }
 }

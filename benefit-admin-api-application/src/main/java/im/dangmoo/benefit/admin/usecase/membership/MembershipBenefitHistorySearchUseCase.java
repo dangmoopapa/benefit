@@ -16,7 +16,7 @@ public class MembershipBenefitHistorySearchUseCase {
         this.membershipBenefitHistoryMongoRepository = membershipBenefitHistoryMongoRepository;
     }
 
-    public MembershipBenefitHistorySearchResponse execute(
+    public MembershipBenefitHistorySearchResponse search(
         final MembershipBenefitHistorySearchRequest request
     ) {
         final int page = request.pageOrDefault();
