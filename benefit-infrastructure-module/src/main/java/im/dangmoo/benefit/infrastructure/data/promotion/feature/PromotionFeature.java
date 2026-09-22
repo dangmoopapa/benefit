@@ -16,6 +16,26 @@ public class PromotionFeature {
     private PromotionFeature() {
     }
 
+    public static PromotionFeature create(
+        final PromotionFeatureType type,
+        final List<PromotionProduct> products,
+        final PromotionLanding landing,
+        final PromotionEntry entry,
+        final String buttonLabel,
+        final String couponPolicyKey,
+        final String pointPolicyKey
+    ) {
+        final PromotionFeature feature = new PromotionFeature();
+        feature.type = type;
+        feature.products = products == null ? new ArrayList<>() : new ArrayList<>(products);
+        feature.landing = landing;
+        feature.entry = entry;
+        feature.buttonLabel = buttonLabel;
+        feature.couponPolicyKey = couponPolicyKey;
+        feature.pointPolicyKey = pointPolicyKey;
+        return feature;
+    }
+
     public PromotionFeatureType getType() {
         return type;
     }

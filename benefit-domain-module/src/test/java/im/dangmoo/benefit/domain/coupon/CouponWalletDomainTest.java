@@ -61,4 +61,15 @@ class CouponWalletDomainTest {
         assertThat(CouponWalletDomain.monthlyIdempotencyKey("p", "u", first))
             .isEqualTo(CouponWalletDomain.monthlyIdempotencyKey("p", "u", last));
     }
+
+    @Test
+    @DisplayName("monthlyIdempotencyKey 는 월이 바뀌면 달라진다")
+    void monthlyIdempotencyKey_adjacentMonths() {
+        final Instant sep = LocalDateTime.of(2026, 9, 30, 23, 0).atZone(SEOUL).toInstant();
+        final Instant oct = LocalDateTime.of(2026, 10, 1, 0, 0).atZone(SEOUL).toInstant();
+        assertThat(CouponWalletDomain.monthlyIdempotencyKey("p", "u", sep))
+            .isEqualTo("p:u:2026-09");
+        assertThat(CouponWalletDomain.monthlyIdempotencyKey("p", "u", oct))
+            .isEqualTo("p:u:2026-10");
+    }
 }

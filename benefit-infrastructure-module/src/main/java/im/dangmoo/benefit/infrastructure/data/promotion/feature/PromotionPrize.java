@@ -10,6 +10,20 @@ public class PromotionPrize {
     private PromotionPrize() {
     }
 
+    public static PromotionPrize create(
+        final PromotionPrizeType type,
+        final String couponPolicyKey,
+        final String pointPolicyKey,
+        final String text
+    ) {
+        final PromotionPrize prize = new PromotionPrize();
+        prize.type = type;
+        prize.couponPolicyKey = couponPolicyKey;
+        prize.pointPolicyKey = pointPolicyKey;
+        prize.text = text;
+        return prize;
+    }
+
     public PromotionPrizeType getType() {
         return type;
     }

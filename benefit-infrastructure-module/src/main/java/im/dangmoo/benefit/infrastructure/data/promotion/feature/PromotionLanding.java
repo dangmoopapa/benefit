@@ -9,6 +9,18 @@ public class PromotionLanding {
     private PromotionLanding() {
     }
 
+    public static PromotionLanding create(
+        final String buttonLabel,
+        final String url,
+        final PromotionLandingTarget target
+    ) {
+        final PromotionLanding landing = new PromotionLanding();
+        landing.buttonLabel = buttonLabel;
+        landing.url = url;
+        landing.target = target;
+        return landing;
+    }
+
     public String getButtonLabel() {
         return buttonLabel;
     }

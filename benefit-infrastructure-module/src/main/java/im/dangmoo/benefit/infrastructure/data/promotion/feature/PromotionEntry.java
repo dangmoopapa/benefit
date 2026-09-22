@@ -13,6 +13,20 @@ public class PromotionEntry {
     private PromotionEntry() {
     }
 
+    public static PromotionEntry create(
+        final String buttonLabel,
+        final PromotionLotteryType lotteryType,
+        final Integer winnerCount,
+        final List<PromotionPrize> prizes
+    ) {
+        final PromotionEntry entry = new PromotionEntry();
+        entry.buttonLabel = buttonLabel;
+        entry.lotteryType = lotteryType;
+        entry.winnerCount = winnerCount;
+        entry.prizes = prizes == null ? new ArrayList<>() : new ArrayList<>(prizes);
+        return entry;
+    }
+
     public String getButtonLabel() {
         return buttonLabel;
     }

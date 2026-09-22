@@ -10,6 +10,20 @@ public class PromotionProduct {
     private PromotionProduct() {
     }
 
+    public static PromotionProduct create(
+        final String productId,
+        final String name,
+        final String imageUrl,
+        final Integer sortOrder
+    ) {
+        final PromotionProduct product = new PromotionProduct();
+        product.productId = productId;
+        product.name = name;
+        product.imageUrl = imageUrl;
+        product.sortOrder = sortOrder;
+        return product;
+    }
+
     public String getProductId() {
         return productId;
     }
