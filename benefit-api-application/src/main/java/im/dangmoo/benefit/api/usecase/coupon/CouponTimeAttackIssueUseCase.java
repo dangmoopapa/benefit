@@ -56,7 +56,12 @@ public class CouponTimeAttackIssueUseCase {
             throw ApiException.policyIssueCoupon();
         }
 
-        final String idempotencyKey = CouponWalletDomain.idempotencyKey(policy.id(), userId);
+        final String idempotencyKey = CouponWalletDomain.idempotencyKey(
+            policy.id(),
+            userId,
+            policy.issueCondition().getFrequency(),
+            now
+        );
         final CouponTimeAttackIssueResult result = couponTimeAttackIssueScript.execute(
             policy.id(),
             idempotencyKey,

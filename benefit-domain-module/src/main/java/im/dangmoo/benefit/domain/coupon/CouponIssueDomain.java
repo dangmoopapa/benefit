@@ -5,11 +5,12 @@ import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponIssu
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 
 public class CouponIssueDomain {
 
-    private static final ZoneId ZONE = ZoneId.of("Asia/Seoul");
+    private static final ZoneId ZONE = ZoneOffset.UTC;
 
     private final Instant startAt;
     private final Instant endAt;

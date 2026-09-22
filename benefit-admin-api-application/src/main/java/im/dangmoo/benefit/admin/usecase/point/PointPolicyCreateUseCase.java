@@ -3,6 +3,7 @@ package im.dangmoo.benefit.admin.usecase.point;
 import im.dangmoo.benefit.admin.model.point.policy.PointPolicyCreateRequest;
 import im.dangmoo.benefit.admin.model.point.policy.PointPolicyCreateResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
+import im.dangmoo.benefit.domain.point.PointBenefitDomain;
 import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicy;
 import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointExpireType;
@@ -18,7 +19,7 @@ public class PointPolicyCreateUseCase {
     }
 
     public PointPolicyCreateResponse create(final String adminId, final PointPolicyCreateRequest request) {
-        if (request.benefitCondition().amount() <= 0) {
+        if (!PointBenefitDomain.of(request.benefitCondition().toDocument()).isValid()) {
             throw ApiException.conditionNotSatisfied();
         }
         final var expire = request.expireCondition();

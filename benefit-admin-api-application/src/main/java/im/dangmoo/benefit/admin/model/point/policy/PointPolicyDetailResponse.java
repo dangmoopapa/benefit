@@ -4,9 +4,12 @@ import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicy;
 import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyStatus;
 import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointAccountCondition;
 import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointBenefitCondition;
+import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointBenefitType;
+import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointBenefitWeightOption;
 import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointExpireCondition;
 import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointExpireType;
 import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointIssueCondition;
+import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointIssueFrequency;
 import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointLifecycleCondition;
 
 import java.time.DayOfWeek;
@@ -49,10 +52,31 @@ public record PointPolicyDetailResponse(
         );
     }
 
-    public record BenefitCondition(long amount) {
+    public record BenefitCondition(
+        PointBenefitType type,
+        Long amount,
+        Long minAmount,
+        Long maxAmount,
+        List<Long> amounts,
+        List<WeightOption> options
+    ) {
 
         public static BenefitCondition of(final PointBenefitCondition condition) {
-            return new BenefitCondition(condition.getAmount());
+            return new BenefitCondition(
+                condition.getType(),
+                condition.getAmount(),
+                condition.getMinAmount(),
+                condition.getMaxAmount(),
+                condition.getAmounts(),
+                condition.getOptions().stream().map(WeightOption::of).toList()
+            );
+        }
+    }
+
+    public record WeightOption(long amount, long weight) {
+
+        public static WeightOption of(final PointBenefitWeightOption option) {
+            return new WeightOption(option.getAmount(), option.getWeight());
         }
     }
 
@@ -61,7 +85,8 @@ public record PointPolicyDetailResponse(
         Instant endAt,
         Long stockQuantity,
         List<DayOfWeek> availableDaysOfWeek,
-        List<Integer> hours
+        List<Integer> hours,
+        PointIssueFrequency frequency
     ) {
 
         public static IssueCondition of(final PointIssueCondition condition) {
@@ -70,7 +95,8 @@ public record PointPolicyDetailResponse(
                 condition.getEndAt(),
                 condition.getStockQuantity(),
                 condition.getAvailableDaysOfWeek(),
-                condition.getHours()
+                condition.getHours(),
+                condition.getFrequency()
             );
         }
     }

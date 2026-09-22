@@ -2,11 +2,12 @@ package im.dangmoo.benefit.domain.membership;
 
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 public final class MembershipContractDomain {
 
-    private static final ZoneId ZONE = ZoneId.of("Asia/Seoul");
+    private static final ZoneId ZONE = ZoneOffset.UTC;
 
     private MembershipContractDomain() {
     }

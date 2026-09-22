@@ -76,13 +76,18 @@ public class CouponIssueUseCase {
 
         final CouponIssueDomain issueDomain = CouponIssueDomain.of(policy.issueCondition());
         final CouponExhaustionDomain exhaustionDomain = CouponExhaustionDomain.of(policy.issueCondition());
-        final String idempotencyKey = CouponWalletDomain.idempotencyKey(policy.id(), userId);
+        final Instant now = Instant.now();
+        final String idempotencyKey = CouponWalletDomain.idempotencyKey(
+            policy.id(),
+            userId,
+            policy.issueCondition().getFrequency(),
+            now
+        );
         final boolean alreadyIssued = couponWalletMongoRepository.findByIdempotencyKey(idempotencyKey).isPresent();
         if (alreadyIssued) {
             throw ApiException.alreadyIssuedCoupon();
         }
 
-        final Instant now = Instant.now();
         final long issuedCount = couponIssueStockRedisRepository.get(policy.id());
         if (exhaustionDomain.isExhausted(issuedCount)) {
             throw ApiException.stockExhaustedCoupon();

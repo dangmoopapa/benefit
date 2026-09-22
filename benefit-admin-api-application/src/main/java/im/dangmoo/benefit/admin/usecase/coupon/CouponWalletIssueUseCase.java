@@ -58,7 +58,12 @@ public class CouponWalletIssueUseCase {
             throw ApiException.conditionNotSatisfied();
         }
 
-        final String idempotencyKey = CouponWalletDomain.idempotencyKey(policy.getId(), userId);
+        final String idempotencyKey = CouponWalletDomain.idempotencyKey(
+            policy.getId(),
+            userId,
+            policy.getIssueCondition().getFrequency(),
+            now
+        );
         final boolean exists = couponWalletMongoRepository.findByIdempotencyKey(idempotencyKey).isPresent();
         if (exists) {
             throw ApiException.duplicateKey();

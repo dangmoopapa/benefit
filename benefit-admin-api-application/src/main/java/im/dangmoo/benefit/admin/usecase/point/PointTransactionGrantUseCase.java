@@ -3,6 +3,7 @@ package im.dangmoo.benefit.admin.usecase.point;
 import im.dangmoo.benefit.admin.model.point.grant.PointGrantRequest;
 import im.dangmoo.benefit.admin.model.point.grant.PointGrantResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
+import im.dangmoo.benefit.domain.point.PointBenefitDomain;
 import im.dangmoo.benefit.domain.point.PointExpireDomain;
 import im.dangmoo.benefit.domain.point.PointIssueDomain;
 import im.dangmoo.benefit.domain.point.PointTransactionDomain;
@@ -48,9 +49,13 @@ public class PointTransactionGrantUseCase {
             throw ApiException.conditionNotSatisfied();
         }
 
-        final var existing = pointTransactionMongoRepository.findByIdempotencyKey(
-            PointTransactionDomain.grantKey(policy.getId(), request.userId())
+        final String grantKey = PointTransactionDomain.grantKey(
+            policy.getId(),
+            request.userId(),
+            policy.getIssueCondition().getFrequency(),
+            now
         );
+        final var existing = pointTransactionMongoRepository.findByIdempotencyKey(grantKey);
         if (existing.isPresent()) {
             return PointGrantResponse.of(existing.get());
         }
@@ -67,7 +72,7 @@ public class PointTransactionGrantUseCase {
             throw ApiException.stockExhausted();
         }
 
-        final long amount = policy.getBenefitCondition().getAmount();
+        final long amount = PointBenefitDomain.of(policy.getBenefitCondition()).resolveAmount();
         final var appended = pointTransactionMongoRepository.append(
             PointTransaction.grant(
                 request.userId(),
@@ -75,6 +80,7 @@ public class PointTransactionGrantUseCase {
                 policy.getKey(),
                 amount,
                 expiresAt,
+                grantKey,
                 adminId
             )
         );

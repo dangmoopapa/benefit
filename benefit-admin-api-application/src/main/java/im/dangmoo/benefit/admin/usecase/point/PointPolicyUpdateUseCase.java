@@ -3,6 +3,7 @@ package im.dangmoo.benefit.admin.usecase.point;
 import im.dangmoo.benefit.admin.model.point.policy.PointPolicyUpdateRequest;
 import im.dangmoo.benefit.admin.model.point.policy.PointPolicyUpdateResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
+import im.dangmoo.benefit.domain.point.PointBenefitDomain;
 import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicy;
 import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyMongoRepository;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ public class PointPolicyUpdateUseCase {
         final PointPolicy policy = pointPolicyMongoRepository.findById(id)
             .orElseThrow(ApiException::notFound);
 
+        if (!PointBenefitDomain.of(request.benefitCondition().toDocument()).isValid()) {
+            throw ApiException.conditionNotSatisfied();
+        }
         if (!policy.getKey().equals(request.key())
             && pointPolicyMongoRepository.existsByKey(request.key())) {
             throw ApiException.duplicateKey();

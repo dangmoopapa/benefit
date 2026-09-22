@@ -41,10 +41,6 @@ public class PointTransaction {
     private PointTransaction() {
     }
 
-    private static String grantKey(final String policyId, final String userId) {
-        return PointTransactionType.GRANT.name() + ":" + policyId + ":" + userId;
-    }
-
     private static String reclaimKey(final String idempotencyKey) {
         return PointTransactionType.RECLAIM.name() + ":" + idempotencyKey;
     }
@@ -91,9 +87,10 @@ public class PointTransaction {
         final String policyKey,
         final long amount,
         final Instant expiresAt,
+        final String idempotencyKey,
         final String createdBy
     ) {
-        return base(userId, PointTransactionType.GRANT, amount, createdBy, grantKey(policyId, userId))
+        return base(userId, PointTransactionType.GRANT, amount, createdBy, idempotencyKey)
             .policy(policyId, policyKey)
             .expires(expiresAt);
     }

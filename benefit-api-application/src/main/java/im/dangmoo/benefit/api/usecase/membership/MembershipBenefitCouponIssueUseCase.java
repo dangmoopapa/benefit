@@ -71,9 +71,10 @@ public class MembershipBenefitCouponIssueUseCase {
             throw ApiException.policyIssueCoupon();
         }
 
-        final String idempotencyKey = CouponWalletDomain.monthlyIdempotencyKey(
+        final String idempotencyKey = CouponWalletDomain.idempotencyKey(
             couponPolicy.id(),
             userId,
+            couponPolicy.issueCondition().getFrequency(),
             now
         );
         if (couponWalletMongoRepository.findByIdempotencyKey(idempotencyKey).isPresent()) {

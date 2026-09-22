@@ -36,12 +36,18 @@ public class PointIssuableUseCase {
             return PointIssuableResponse.ofNotIssuable(ApiMessage.POLICY_ISSUE_POINT);
         }
 
-        if (!PointIssueDomain.of(policy.getIssueCondition()).isSatisfiedAt(Instant.now())) {
+        final Instant now = Instant.now();
+        if (!PointIssueDomain.of(policy.getIssueCondition()).isSatisfiedAt(now)) {
             return PointIssuableResponse.ofNotIssuable(ApiMessage.POLICY_ISSUE_POINT);
         }
 
         if (pointTransactionMongoRepository.findByIdempotencyKey(
-            PointTransactionDomain.grantKey(policy.getId(), userId)
+            PointTransactionDomain.grantKey(
+                policy.getId(),
+                userId,
+                policy.getIssueCondition().getFrequency(),
+                now
+            )
         ).isPresent()) {
             return PointIssuableResponse.ofNotIssuable(ApiMessage.ALREADY_GRANTED_POINT);
         }

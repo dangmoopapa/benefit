@@ -43,8 +43,14 @@ public class VoucherCouponBoxUseCase {
             return VoucherCouponBoxResponse.of(List.of());
         }
 
+        final Instant now = Instant.now();
         final List<String> idempotencyKeys = policies.stream()
-            .map(policy -> CouponWalletDomain.idempotencyKey(policy.getId(), userId))
+            .map(policy -> CouponWalletDomain.idempotencyKey(
+                policy.getId(),
+                userId,
+                policy.getIssueCondition().getFrequency(),
+                now
+            ))
             .toList();
         final Set<String> issuedKeys = couponWalletMongoRepository.findExistingIdempotencyKeys(idempotencyKeys);
 
@@ -53,14 +59,18 @@ public class VoucherCouponBoxUseCase {
             .toList();
         final Map<String, Long> issuedCounts = couponIssueStockRedisRepository.get(policyIds);
 
-        final Instant now = Instant.now();
         final List<VoucherCouponBoxResponse.Item> items = new ArrayList<>();
 
         for (final CouponPolicy policy : policies) {
             if (!CouponApplyDomain.of(policy.getApplyCondition()).belongsTo(request.productId(), request.brandId())) {
                 continue;
             }
-            if (issuedKeys.contains(CouponWalletDomain.idempotencyKey(policy.getId(), userId))) {
+            if (issuedKeys.contains(CouponWalletDomain.idempotencyKey(
+                policy.getId(),
+                userId,
+                policy.getIssueCondition().getFrequency(),
+                now
+            ))) {
                 continue;
             }
 

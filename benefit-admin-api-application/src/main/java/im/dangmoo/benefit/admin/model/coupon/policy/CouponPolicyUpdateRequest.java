@@ -4,6 +4,7 @@ import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponAcco
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponApplyCondition;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponBenefitCondition;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponIssueCondition;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponIssueFrequency;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponLifecycleCondition;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyType;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponUsageCondition;
@@ -43,7 +44,8 @@ public record CouponPolicyUpdateRequest(
         Instant endAt,
         Long stockQuantity,
         List<DayOfWeek> availableDaysOfWeek,
-        List<Integer> hours
+        List<Integer> hours,
+        CouponIssueFrequency frequency
     ) {
 
         public CouponIssueCondition toDocument() {
@@ -52,7 +54,8 @@ public record CouponPolicyUpdateRequest(
                 endAt,
                 stockQuantity,
                 availableDaysOfWeek,
-                hours
+                hours,
+                frequency
             );
         }
     }

@@ -8,13 +8,14 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MembershipContractDomainTest {
 
-    private static final ZoneId SEOUL = ZoneId.of("Asia/Seoul");
+    private static final ZoneId UTC = ZoneOffset.UTC;
 
     @ParameterizedTest
     @CsvSource({
@@ -27,18 +28,18 @@ class MembershipContractDomainTest {
     }
 
     @Test
-    @DisplayName("nextPeriodEnd 는 Asia/Seoul 기준 1개월을 더한다")
+    @DisplayName("nextPeriodEnd 는 UTC 기준 1개월을 더한다")
     void nextPeriodEnd_plusOneMonth() {
-        final Instant from = LocalDateTime.of(2026, 1, 15, 12, 0).atZone(SEOUL).toInstant();
+        final Instant from = LocalDateTime.of(2026, 1, 15, 12, 0).atZone(UTC).toInstant();
         assertThat(MembershipContractDomain.nextPeriodEnd(from))
-            .isEqualTo(ZonedDateTime.ofInstant(from, SEOUL).plusMonths(1).toInstant());
+            .isEqualTo(ZonedDateTime.ofInstant(from, UTC).plusMonths(1).toInstant());
     }
 
     @Test
     @DisplayName("nextPeriodEnd 는 말일에서도 1개월을 더한다")
     void nextPeriodEnd_endOfMonth() {
-        final Instant from = LocalDateTime.of(2026, 1, 31, 0, 0).atZone(SEOUL).toInstant();
+        final Instant from = LocalDateTime.of(2026, 1, 31, 0, 0).atZone(UTC).toInstant();
         assertThat(MembershipContractDomain.nextPeriodEnd(from))
-            .isEqualTo(ZonedDateTime.ofInstant(from, SEOUL).plusMonths(1).toInstant());
+            .isEqualTo(ZonedDateTime.ofInstant(from, UTC).plusMonths(1).toInstant());
     }
 }

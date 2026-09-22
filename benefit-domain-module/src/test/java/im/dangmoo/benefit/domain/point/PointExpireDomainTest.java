@@ -22,7 +22,7 @@ class PointExpireDomainTest {
     }
 
     @Test
-    @DisplayName("FIXED_AT 은 Asia/Seoul 00시 키로 정규화한다")
+    @DisplayName("FIXED_AT 은 UTC 00시 키로 정규화한다")
     void resolveExpiresAt_fixedAt() {
         final Instant fixed = Instant.parse("2026-03-15T15:30:00Z");
         final Instant expiresAt = PointExpireDomain.of(
@@ -38,7 +38,7 @@ class PointExpireDomainTest {
         final Instant expiresAt = PointExpireDomain.of(
             PointExpireCondition.create(PointExpireType.DAYS_AFTER_GRANT, null, 10)
         ).resolveExpiresAt(grantedAt);
-        assertThat(expiresAt).isEqualTo(Instant.parse("2026-01-11T15:00:00Z"));
+        assertThat(expiresAt).isEqualTo(Instant.parse("2026-01-11T00:00:00Z"));
     }
 
     @Test

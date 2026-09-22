@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -23,7 +24,7 @@ import org.springframework.data.domain.Sort;
 @Document(collection = MongoDocuments.POINT_BALANCES)
 public class PointBalance {
 
-    public static final ZoneId ZONE = ZoneId.of("Asia/Seoul");
+    public static final ZoneId ZONE = ZoneOffset.UTC;
     public static final Instant NEVER_EXPIRES_AT = Instant.parse("9999-12-31T00:00:00Z");
     public static final String USER_ID = "userId";
     public static final String NEXT_EXPIRES_AT = "nextExpiresAt";
