@@ -5,6 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({BenefitDomainModule.class, BenefitInfrastructureModule.class})
+@Import(BenefitInfrastructureModule.class)
 public class BenefitDomainModule {
 }
