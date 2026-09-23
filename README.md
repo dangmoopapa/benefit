@@ -1,4 +1,4 @@
-# Benefit
+# Benefit Server
 
 A commerce benefit platform designed to make core benefit capabilities easy to use — coupons, points, memberships, and promotions — behind clear APIs and domain boundaries.
 

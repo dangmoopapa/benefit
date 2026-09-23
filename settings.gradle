@@ -1,4 +1,4 @@
-rootProject.name = 'benefit'
+rootProject.name = 'benefit-server'
 
 include 'benefit-api-application'
 include 'benefit-admin-api-application'
