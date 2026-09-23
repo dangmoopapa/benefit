@@ -3,17 +3,13 @@ package im.dangmoo.benefit.admin.usecase.coupon;
 import im.dangmoo.benefit.admin.model.coupon.wallet.CouponWalletIssueRequest;
 import im.dangmoo.benefit.admin.model.coupon.wallet.CouponWalletIssueResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
-import im.dangmoo.benefit.domain.coupon.CouponExhaustionDomain;
 import im.dangmoo.benefit.domain.coupon.CouponIssueDomain;
-import im.dangmoo.benefit.domain.coupon.CouponUsageDomain;
-import im.dangmoo.benefit.domain.coupon.CouponWalletDomain;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicy;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyChangedEvent;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyChangedPublisher;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.changed.CouponPolicyChangedPublication;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.changed.CouponPolicyChangedPublisher;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyStatus;
 import im.dangmoo.benefit.infrastructure.data.coupon.stock.CouponIssueStockRedisRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWallet;
+import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletMongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -40,52 +36,36 @@ public class CouponWalletIssueUseCase {
     }
 
     public CouponWalletIssueResponse issue(final String adminId, final CouponWalletIssueRequest request) {
-        final String policyKey = request.policyKey();
-        final String userId = request.userId();
-        final CouponPolicy policy = couponPolicyMongoRepository.findByKey(policyKey)
+        final CouponPolicyDocument policy = couponPolicyMongoRepository.findByKey(request.policyKey())
             .orElseThrow(ApiException::notFound);
 
-        final CouponPolicyStatus status = policy.getStatus();
-        if (status.isNotActive()) {
-            throw ApiException.invalidStatus();
-        }
-
         final Instant now = Instant.now();
-        final CouponIssueDomain issueDomain = CouponIssueDomain.of(policy.getIssueCondition());
-        final CouponExhaustionDomain exhaustionDomain = CouponExhaustionDomain.of(policy.getIssueCondition());
+        final CouponIssueDomain couponIssue = CouponIssueDomain.of(policy);
+        final String issueKey = couponIssue.issueKeyFor(policy.getId(), request.userId(), now);
+        final boolean alreadyIssued = couponWalletMongoRepository.findByIdempotencyKey(issueKey).isPresent();
         final long issuedCount = couponIssueStockRedisRepository.get(policy.getId());
-        if (!issueDomain.isSatisfied(now, issuedCount)) {
-            throw ApiException.conditionNotSatisfied();
+
+        switch (couponIssue.issuabilityAt(now, alreadyIssued, issuedCount)) {
+            case ALREADY_ISSUED -> throw ApiException.duplicateKey();
+            case STOCK_EXHAUSTED, OUT_OF_PERIOD -> throw ApiException.conditionNotSatisfied();
+            case POLICY_INACTIVE -> throw ApiException.invalidStatus();
+            case ISSUABLE -> {
+            }
         }
 
-        final String idempotencyKey = CouponWalletDomain.idempotencyKey(
-            policy.getId(),
-            userId,
-            policy.getIssueCondition().getFrequency(),
-            now
+        final CouponWalletDocument saved = couponWalletMongoRepository.save(
+            CouponWalletDocument.create(
+                request.userId(),
+                policy.getId(),
+                policy.getKey(),
+                issueKey,
+                couponIssue.expiresAtFrom(now),
+                adminId
+            )
         );
-        final boolean exists = couponWalletMongoRepository.findByIdempotencyKey(idempotencyKey).isPresent();
-        if (exists) {
-            throw ApiException.duplicateKey();
-        }
-
-        final Instant expiresAt = CouponUsageDomain.of(
-            policy.getUsageCondition(),
-            policy.getApplyCondition()
-        ).resolveExpiresAt(now);
-
-        final CouponWallet wallet = CouponWallet.create(
-            userId,
-            policy.getId(),
-            policy.getKey(),
-            idempotencyKey,
-            expiresAt,
-            adminId
-        );
-        final CouponWallet saved = couponWalletMongoRepository.save(wallet);
         final long issuedCountAfter = couponIssueStockRedisRepository.increment(policy.getId());
-        if (exhaustionDomain.isJustExhausted(issuedCountAfter)) {
-            couponPolicyChangedPublisher.publish(CouponPolicyChangedEvent.ofExhausted(policy));
+        if (couponIssue.isLastIssue(issuedCountAfter)) {
+            couponPolicyChangedPublisher.publish(CouponPolicyChangedPublication.ofExhausted(policy));
         }
         return CouponWalletIssueResponse.of(saved);
     }

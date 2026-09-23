@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.api.model.promotion;
 
-import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicy;
+import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyDocument;
 
 import java.time.Instant;
 import java.util.List;
@@ -9,7 +9,7 @@ public record PromotionPolicyListResponse(
     List<Item> items
 ) {
 
-    public static PromotionPolicyListResponse of(final List<PromotionPolicy> policies) {
+    public static PromotionPolicyListResponse of(final List<PromotionPolicyDocument> policies) {
         return new PromotionPolicyListResponse(
             policies.stream().map(Item::of).toList()
         );
@@ -25,7 +25,7 @@ public record PromotionPolicyListResponse(
         Integer sortOrder
     ) {
 
-        public static Item of(final PromotionPolicy policy) {
+        public static Item of(final PromotionPolicyDocument policy) {
             return new Item(
                 policy.getKey(),
                 policy.getThumbnailImageUrl(),

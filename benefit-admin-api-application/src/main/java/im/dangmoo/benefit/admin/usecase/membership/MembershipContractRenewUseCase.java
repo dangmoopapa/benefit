@@ -31,7 +31,7 @@ public class MembershipContractRenewUseCase {
         if (contract.isCancelAtPeriodEnd() || !contract.isAutoRenew()) {
             throw ApiException.invalidStatus();
         }
-        final Instant periodEnd = MembershipContractDomain.nextPeriodEnd(contract.getPeriodEnd());
+        final Instant periodEnd = MembershipContractDomain.renewing(contract).periodEnd();
         final var saved = membershipContractMongoRepository.save(contract.renew(periodEnd, adminId));
         return MembershipContractResponse.of(saved);
     }

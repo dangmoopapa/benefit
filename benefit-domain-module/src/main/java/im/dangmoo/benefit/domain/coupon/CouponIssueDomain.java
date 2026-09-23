@@ -1,79 +1,147 @@
 package im.dangmoo.benefit.domain.coupon;
 
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCache;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyStatus;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponIssueCondition;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponLifecycleCondition;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponUsageCondition;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponUsageValidityType;
 
 import java.time.DayOfWeek;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-public class CouponIssueDomain {
+public final class CouponIssueDomain {
+
+    public enum Issuability {
+        ISSUABLE,
+        POLICY_INACTIVE,
+        ALREADY_ISSUED,
+        STOCK_EXHAUSTED,
+        OUT_OF_PERIOD
+    }
 
     private static final ZoneId ZONE = ZoneOffset.UTC;
 
-    private final Instant startAt;
-    private final Instant endAt;
-    private final Long stockQuantity;
-    private final List<DayOfWeek> availableDaysOfWeek;
-    private final List<Integer> hours;
+    private final CouponPolicyStatus status;
+    private final CouponIssueCondition issueCondition;
+    private final CouponUsageCondition usageCondition;
+    private final CouponLifecycleCondition lifecycleCondition;
 
     private CouponIssueDomain(
-        final Instant startAt,
-        final Instant endAt,
-        final Long stockQuantity,
-        final List<DayOfWeek> availableDaysOfWeek,
-        final List<Integer> hours
+        final CouponPolicyStatus status,
+        final CouponIssueCondition issueCondition,
+        final CouponUsageCondition usageCondition,
+        final CouponLifecycleCondition lifecycleCondition
     ) {
-        this.startAt = startAt;
-        this.endAt = endAt;
-        this.stockQuantity = stockQuantity;
-        this.availableDaysOfWeek = availableDaysOfWeek;
-        this.hours = hours;
+        this.status = status;
+        this.issueCondition = issueCondition;
+        this.usageCondition = usageCondition;
+        this.lifecycleCondition = lifecycleCondition;
     }
 
-    public static CouponIssueDomain of(final CouponIssueCondition condition) {
+    public static CouponIssueDomain of(final CouponPolicyDocument policy) {
         return new CouponIssueDomain(
-            condition.getStartAt(),
-            condition.getEndAt(),
-            condition.getStockQuantity(),
-            condition.getAvailableDaysOfWeek(),
-            condition.getHours()
+            policy.getStatus(),
+            policy.getIssueCondition(),
+            policy.getUsageCondition(),
+            policy.getLifecycleCondition()
         );
     }
 
-    public boolean isSatisfied(final Instant now, final long issuedCount) {
-        if (!isSatisfiedAt(now)) {
-            return false;
+    public static CouponIssueDomain of(final CouponPolicyCache policy) {
+        return new CouponIssueDomain(
+            policy.status(),
+            policy.issueCondition(),
+            policy.usageCondition(),
+            policy.lifecycleCondition()
+        );
+    }
+
+    public Issuability issuabilityAt(
+        final Instant now,
+        final boolean alreadyIssued,
+        final long issuedCount
+    ) {
+        if (status == null || status.isNotActive()) {
+            return Issuability.POLICY_INACTIVE;
         }
-        return !isStockExhausted(issuedCount);
+        if (alreadyIssued) {
+            return Issuability.ALREADY_ISSUED;
+        }
+        if (hasNoStockLeftFor(issuedCount)) {
+            return Issuability.STOCK_EXHAUSTED;
+        }
+        if (!isOpenAt(now)) {
+            return Issuability.OUT_OF_PERIOD;
+        }
+        return Issuability.ISSUABLE;
     }
 
-    private boolean isStockExhausted(final long issuedCount) {
-        return stockQuantity != null && issuedCount >= stockQuantity;
-    }
-
-    public Long getStockQuantity() {
-        return stockQuantity;
-    }
-
-    public boolean isSatisfiedAt(final Instant now) {
+    public boolean isOpenAt(final Instant now) {
+        final Instant startAt = issueCondition.getStartAt();
+        final Instant endAt = issueCondition.getEndAt();
         if (startAt != null && now.isBefore(startAt)) {
             return false;
         }
         if (endAt != null && now.isAfter(endAt)) {
             return false;
         }
-        if (!availableDaysOfWeek.isEmpty()) {
-            final DayOfWeek dayOfWeek = now.atZone(ZONE).getDayOfWeek();
-            if (!availableDaysOfWeek.contains(dayOfWeek)) {
-                return false;
-            }
+        final List<DayOfWeek> openDaysOfWeek = issueCondition.getAvailableDaysOfWeek();
+        if (!openDaysOfWeek.isEmpty() && !openDaysOfWeek.contains(now.atZone(ZONE).getDayOfWeek())) {
+            return false;
         }
-        if (!hours.isEmpty()) {
-            final int hour = now.atZone(ZONE).getHour();
-            return hours.contains(hour);
+        final List<Integer> openHours = issueCondition.getHours();
+        return openHours.isEmpty() || openHours.contains(now.atZone(ZONE).getHour());
+    }
+
+    public String issueKeyFor(final String policyId, final String userId, final Instant issuedAt) {
+        final String perUser = policyId + ":" + userId;
+        return switch (issueCondition.getFrequency()) {
+            case ONCE_PER_USER -> perUser;
+            case ONCE_PER_DAY -> perUser + ":" + LocalDate.from(issuedAt.atZone(ZONE));
+            case ONCE_PER_MONTH -> perUser + ":" + YearMonth.from(issuedAt.atZone(ZONE));
+            case ONCE_PER_YEAR -> perUser + ":" + issuedAt.atZone(ZONE).getYear();
+        };
+    }
+
+    public Instant expiresAtFrom(final Instant issuedAt) {
+        final CouponUsageValidityType validityType = usageCondition.getValidityType();
+        if (validityType == null) {
+            return null;
         }
-        return true;
+        if (validityType == CouponUsageValidityType.FIXED_PERIOD) {
+            return usageCondition.getEndAt();
+        }
+        final Integer daysAfterIssue = usageCondition.getDaysAfterIssue();
+        if (daysAfterIssue == null) {
+            return null;
+        }
+        return issuedAt.plus(daysAfterIssue, ChronoUnit.DAYS);
+    }
+
+    public boolean isRecoverableAfterUse() {
+        return lifecycleCondition != null
+            && (lifecycleCondition.isReclaimable() || lifecycleCondition.isReclaimableOnPaymentCancel());
+    }
+
+    public boolean isLastIssue(final long issuedCount) {
+        final Long stockQuantity = issueCondition.getStockQuantity();
+        return stockQuantity != null && issuedCount == stockQuantity;
+    }
+
+    public Long stockQuantity() {
+        return issueCondition.getStockQuantity();
+    }
+
+    private boolean hasNoStockLeftFor(final long issuedCount) {
+        final Long stockQuantity = issueCondition.getStockQuantity();
+        return stockQuantity != null && issuedCount >= stockQuantity;
     }
 }

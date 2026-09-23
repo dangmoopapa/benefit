@@ -2,12 +2,13 @@ package im.dangmoo.benefit.api.usecase.coupon;
 
 import im.dangmoo.benefit.api.model.coupon.CouponUsableRequest;
 import im.dangmoo.benefit.api.model.coupon.CouponUsableResponse;
+import im.dangmoo.benefit.domain.coupon.CouponApplyDomain;
 import im.dangmoo.benefit.domain.coupon.CouponIssueDomain;
 import im.dangmoo.benefit.domain.coupon.CouponUsageDomain;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CachedCouponPolicy;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCache;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCacheRepository;
 import im.dangmoo.benefit.infrastructure.data.coupon.stock.CouponUsageStockRedisRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWallet;
+import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletStatus;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class CouponUsableUseCase {
     }
 
     public CouponUsableResponse usable(final String userId, final CouponUsableRequest request) {
-        final List<CouponWallet> wallets = couponWalletMongoRepository.findByUserIdAndStatus(
+        final List<CouponWalletDocument> wallets = couponWalletMongoRepository.findByUserIdAndStatus(
             userId,
             CouponWalletStatus.AVAILABLE
         );
@@ -44,7 +45,7 @@ public class CouponUsableUseCase {
         }
 
         final List<String> policyIds = wallets.stream()
-            .map(CouponWallet::getPolicyId)
+            .map(CouponWalletDocument::getPolicyId)
             .distinct()
             .toList();
         final Map<String, Long> usedCounts = couponUsageStockRedisRepository.get(policyIds);
@@ -52,32 +53,30 @@ public class CouponUsableUseCase {
         final Instant now = Instant.now();
         final List<CouponUsableResponse.Item> items = new ArrayList<>();
 
-        for (final CouponWallet wallet : wallets) {
-            final CachedCouponPolicy policy = couponPolicyCacheRepository.findByKey(wallet.getPolicyKey());
+        for (final CouponWalletDocument wallet : wallets) {
+            final CouponPolicyCache policy = couponPolicyCacheRepository.findByKey(wallet.getPolicyKey());
             if (policy == null) {
                 continue;
             }
-            final boolean issueSatisfied = CouponIssueDomain.of(policy.issueCondition()).isSatisfiedAt(now);
-            if (!issueSatisfied) {
+            if (!CouponIssueDomain.of(policy).isOpenAt(now)) {
                 continue;
             }
 
             final long usedCount = usedCounts.getOrDefault(wallet.getPolicyId(), 0L);
-            final boolean usageSatisfied = CouponUsageDomain.of(
-                policy.usageCondition(),
-                policy.applyCondition()
-            ).isSatisfied(
+            final boolean usable = CouponUsageDomain.of(policy).isUsableAt(
+                now,
                 wallet.getIssuedAt(),
                 wallet.getExpiresAt(),
-                now,
                 usedCount,
-                request.paymentAmount(),
+                request.paymentAmount()
+            );
+            final boolean applicable = CouponApplyDomain.of(policy).isApplicableTo(
                 request.productId(),
                 request.categoryId(),
                 request.brandId(),
                 request.segmentId()
             );
-            if (!usageSatisfied) {
+            if (!usable || !applicable) {
                 continue;
             }
             items.add(new CouponUsableResponse.Item(

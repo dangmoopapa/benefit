@@ -2,9 +2,9 @@ package im.dangmoo.benefit.admin.usecase.coupon;
 
 import im.dangmoo.benefit.admin.model.coupon.policy.CouponPolicyDetailResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
-import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCode;
+import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicy;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyMongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +25,9 @@ public class CouponPolicyDetailUseCase {
     }
 
     public CouponPolicyDetailResponse detail(final String id) {
-        final CouponPolicy policy = couponPolicyMongoRepository.findById(id)
+        final CouponPolicyDocument policy = couponPolicyMongoRepository.findById(id)
             .orElseThrow(ApiException::notFound);
-        final List<CouponCode> codes = couponCodeMongoRepository.findByPolicyId(policy.getId());
+        final List<CouponCodeDocument> codes = couponCodeMongoRepository.findByPolicyId(policy.getId());
         return CouponPolicyDetailResponse.of(policy, codes);
     }
 }

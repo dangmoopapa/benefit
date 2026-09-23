@@ -1,5 +1,6 @@
 package im.dangmoo.benefit.domain.membership;
 
+import im.dangmoo.benefit.infrastructure.data.membership.policy.MembershipPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.membership.policy.MembershipSeason;
 import im.dangmoo.benefit.infrastructure.data.membership.policy.benefit.MembershipBenefit;
 import im.dangmoo.benefit.infrastructure.data.membership.policy.benefit.Season1MembershipBenefit;
@@ -7,19 +8,32 @@ import im.dangmoo.benefit.infrastructure.data.membership.policy.benefit.Season2M
 
 public final class MembershipBenefitDomain {
 
-    public static final class PreparingException extends RuntimeException {
+    private final MembershipSeason season;
+    private final MembershipBenefit benefit;
+
+    private MembershipBenefitDomain(final MembershipSeason season, final MembershipBenefit benefit) {
+        this.season = season;
+        this.benefit = benefit;
     }
 
-    private MembershipBenefitDomain() {
+    public static MembershipBenefitDomain of(final MembershipPolicyDocument policy) {
+        return of(policy.getSeason(), policy.getBenefit());
     }
 
-    public static void requireReady(final MembershipSeason season, final MembershipBenefit benefit) {
-        final boolean ready = switch (season) {
+    public static MembershipBenefitDomain of(
+        final MembershipSeason season,
+        final MembershipBenefit benefit
+    ) {
+        return new MembershipBenefitDomain(season, benefit);
+    }
+
+    public boolean isServiceable() {
+        if (season == null || benefit == null) {
+            return false;
+        }
+        return switch (season) {
             case SEASON_1 -> benefit instanceof Season1MembershipBenefit;
             case SEASON_2 -> benefit instanceof Season2MembershipBenefit;
         };
-        if (!ready) {
-            throw new PreparingException();
-        }
     }
 }

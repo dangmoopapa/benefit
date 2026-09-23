@@ -3,12 +3,13 @@ package im.dangmoo.benefit.admin.usecase.coupon;
 import im.dangmoo.benefit.admin.model.coupon.wallet.CouponWalletUsageRequest;
 import im.dangmoo.benefit.admin.model.coupon.wallet.CouponWalletUsageResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
+import im.dangmoo.benefit.domain.coupon.CouponApplyDomain;
 import im.dangmoo.benefit.domain.coupon.CouponIssueDomain;
 import im.dangmoo.benefit.domain.coupon.CouponUsageDomain;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicy;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.coupon.stock.CouponUsageStockRedisRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWallet;
+import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletStatus;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,7 @@ public class CouponWalletUsageUseCase {
         final String walletId,
         final CouponWalletUsageRequest request
     ) {
-        final CouponWallet wallet = couponWalletMongoRepository.findById(walletId)
+        final CouponWalletDocument wallet = couponWalletMongoRepository.findById(walletId)
             .orElseThrow(ApiException::notFound);
 
         final CouponWalletStatus status = wallet.getStatus();
@@ -45,35 +46,33 @@ public class CouponWalletUsageUseCase {
             throw ApiException.invalidStatus();
         }
 
-        final CouponPolicy policy = couponPolicyMongoRepository.findByKey(wallet.getPolicyKey())
+        final CouponPolicyDocument policy = couponPolicyMongoRepository.findByKey(wallet.getPolicyKey())
             .orElseThrow(ApiException::notFound);
 
         final Instant now = Instant.now();
-        final boolean issueSatisfied = CouponIssueDomain.of(policy.getIssueCondition()).isSatisfiedAt(now);
-        if (!issueSatisfied) {
+        if (!CouponIssueDomain.of(policy).isOpenAt(now)) {
             throw ApiException.conditionNotSatisfied();
         }
 
         final long usedCount = couponUsageStockRedisRepository.get(wallet.getPolicyId());
-        final boolean usageSatisfied = CouponUsageDomain.of(
-            policy.getUsageCondition(),
-            policy.getApplyCondition()
-        ).isSatisfied(
+        final boolean usable = CouponUsageDomain.of(policy).isUsableAt(
+            now,
             wallet.getIssuedAt(),
             wallet.getExpiresAt(),
-            now,
             usedCount,
-            request.paymentAmount(),
+            request.paymentAmount()
+        );
+        final boolean applicable = CouponApplyDomain.of(policy).isApplicableTo(
             request.productId(),
             request.categoryId(),
             request.brandId(),
             request.segmentId()
         );
-        if (!usageSatisfied) {
+        if (!usable || !applicable) {
             throw ApiException.conditionNotSatisfied();
         }
 
-        final CouponWallet saved = couponWalletMongoRepository.save(
+        final CouponWalletDocument saved = couponWalletMongoRepository.save(
             wallet.use(request.orderId(), request.usedAmount(), adminId)
         );
         couponUsageStockRedisRepository.increment(wallet.getPolicyId());

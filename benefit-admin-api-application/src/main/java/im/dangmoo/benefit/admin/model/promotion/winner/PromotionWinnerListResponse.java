@@ -2,14 +2,14 @@ package im.dangmoo.benefit.admin.model.promotion.winner;
 
 import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionLotteryType;
 import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionPrize;
-import im.dangmoo.benefit.infrastructure.data.promotion.winner.PromotionWinner;
+import im.dangmoo.benefit.infrastructure.data.promotion.winner.PromotionWinnerDocument;
 
 import java.time.Instant;
 import java.util.List;
 
 public record PromotionWinnerListResponse(List<Item> items) {
 
-    public static PromotionWinnerListResponse of(final List<PromotionWinner> winners) {
+    public static PromotionWinnerListResponse of(final List<PromotionWinnerDocument> winners) {
         return new PromotionWinnerListResponse(
             winners.stream().map(Item::of).toList()
         );
@@ -23,7 +23,7 @@ public record PromotionWinnerListResponse(List<Item> items) {
         String drawnBy,
         Instant drawnAt
     ) {
-        public static Item of(final PromotionWinner winner) {
+        public static Item of(final PromotionWinnerDocument winner) {
             return new Item(
                 winner.getId(),
                 winner.getUserId(),

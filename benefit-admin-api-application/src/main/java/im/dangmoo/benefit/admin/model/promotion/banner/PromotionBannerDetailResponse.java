@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.admin.model.promotion.banner;
 
-import im.dangmoo.benefit.infrastructure.data.promotion.banner.PromotionBanner;
+import im.dangmoo.benefit.infrastructure.data.promotion.banner.PromotionBannerDocument;
 import im.dangmoo.benefit.infrastructure.data.promotion.banner.PromotionBannerItem;
 import im.dangmoo.benefit.infrastructure.data.promotion.banner.PromotionBannerStatus;
 
@@ -19,7 +19,7 @@ public record PromotionBannerDetailResponse(
     Instant updatedAt
 ) {
 
-    public static PromotionBannerDetailResponse of(final PromotionBanner banner) {
+    public static PromotionBannerDetailResponse of(final PromotionBannerDocument banner) {
         return new PromotionBannerDetailResponse(
             banner.getId(),
             banner.getKey(),

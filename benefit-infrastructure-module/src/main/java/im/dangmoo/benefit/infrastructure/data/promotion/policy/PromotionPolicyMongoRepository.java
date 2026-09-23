@@ -17,46 +17,46 @@ public class PromotionPolicyMongoRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public PromotionPolicy save(final PromotionPolicy policy) {
+    public PromotionPolicyDocument save(final PromotionPolicyDocument policy) {
         return mongoTemplate.save(policy);
     }
 
-    public Optional<PromotionPolicy> findById(final String id) {
-        return Optional.ofNullable(mongoTemplate.findById(id, PromotionPolicy.class));
+    public Optional<PromotionPolicyDocument> findById(final String id) {
+        return Optional.ofNullable(mongoTemplate.findById(id, PromotionPolicyDocument.class));
     }
 
-    public Optional<PromotionPolicy> findByKey(final String key) {
+    public Optional<PromotionPolicyDocument> findByKey(final String key) {
         return Optional.ofNullable(
-            mongoTemplate.findOne(PromotionPolicy.queryByKey(key), PromotionPolicy.class)
+            mongoTemplate.findOne(PromotionPolicyDocument.queryByKey(key), PromotionPolicyDocument.class)
         );
     }
 
     public boolean existsByKey(final String key) {
-        return mongoTemplate.exists(PromotionPolicy.queryByKey(key), PromotionPolicy.class);
+        return mongoTemplate.exists(PromotionPolicyDocument.queryByKey(key), PromotionPolicyDocument.class);
     }
 
-    public List<PromotionPolicy> search(
+    public List<PromotionPolicyDocument> search(
         final String key,
         final String title,
         final im.dangmoo.benefit.infrastructure.data.promotion.PromotionPolicyStatus status
     ) {
         return mongoTemplate.find(
-            PromotionPolicy.query(key, title, status),
-            PromotionPolicy.class
+            PromotionPolicyDocument.query(key, title, status),
+            PromotionPolicyDocument.class
         );
     }
 
-    public List<PromotionPolicy> findActiveList(final Instant now) {
+    public List<PromotionPolicyDocument> findActiveList(final Instant now) {
         return mongoTemplate.find(
-            PromotionPolicy.queryActiveList(now).with(Sort.by(Sort.Direction.ASC, PromotionPolicy.SORT_ORDER)),
-            PromotionPolicy.class
+            PromotionPolicyDocument.queryActiveList(now).with(Sort.by(Sort.Direction.ASC, PromotionPolicyDocument.SORT_ORDER)),
+            PromotionPolicyDocument.class
         );
     }
 
-    public List<PromotionPolicy> findEndedForAutoLottery(final Instant now) {
+    public List<PromotionPolicyDocument> findEndedForAutoLottery(final Instant now) {
         return mongoTemplate.find(
-            PromotionPolicy.queryEndedForAutoLottery(now),
-            PromotionPolicy.class
+            PromotionPolicyDocument.queryEndedForAutoLottery(now),
+            PromotionPolicyDocument.class
         );
     }
 }

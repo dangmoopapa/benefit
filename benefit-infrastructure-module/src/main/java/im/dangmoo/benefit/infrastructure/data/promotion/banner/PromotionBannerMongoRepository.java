@@ -15,32 +15,32 @@ public class PromotionBannerMongoRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public PromotionBanner save(final PromotionBanner banner) {
+    public PromotionBannerDocument save(final PromotionBannerDocument banner) {
         return mongoTemplate.save(banner);
     }
 
-    public Optional<PromotionBanner> findById(final String id) {
-        return Optional.ofNullable(mongoTemplate.findById(id, PromotionBanner.class));
+    public Optional<PromotionBannerDocument> findById(final String id) {
+        return Optional.ofNullable(mongoTemplate.findById(id, PromotionBannerDocument.class));
     }
 
-    public Optional<PromotionBanner> findByKey(final String key) {
+    public Optional<PromotionBannerDocument> findByKey(final String key) {
         return Optional.ofNullable(
-            mongoTemplate.findOne(PromotionBanner.queryByKey(key), PromotionBanner.class)
+            mongoTemplate.findOne(PromotionBannerDocument.queryByKey(key), PromotionBannerDocument.class)
         );
     }
 
     public boolean existsByKey(final String key) {
-        return mongoTemplate.exists(PromotionBanner.queryByKey(key), PromotionBanner.class);
+        return mongoTemplate.exists(PromotionBannerDocument.queryByKey(key), PromotionBannerDocument.class);
     }
 
-    public List<PromotionBanner> search(
+    public List<PromotionBannerDocument> search(
         final String key,
         final String name,
         final PromotionBannerStatus status
     ) {
         return mongoTemplate.find(
-            PromotionBanner.query(key, name, status),
-            PromotionBanner.class
+            PromotionBannerDocument.query(key, name, status),
+            PromotionBannerDocument.class
         );
     }
 }

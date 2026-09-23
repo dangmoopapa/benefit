@@ -1,9 +1,9 @@
 package im.dangmoo.benefit.api.usecase.coupon;
 
 import im.dangmoo.benefit.api.model.coupon.CouponBoxResponse;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CachedCouponPolicy;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCache;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCacheRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWallet;
+import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletMongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +26,13 @@ public class CouponBoxUseCase {
     }
 
     public CouponBoxResponse box(final String userId) {
-        final List<CouponWallet> wallets = couponWalletMongoRepository.findByUserId(userId);
+        final List<CouponWalletDocument> wallets = couponWalletMongoRepository.findByUserId(userId);
         final Instant now = Instant.now();
         final List<CouponBoxResponse.Item> available = new ArrayList<>();
         final List<CouponBoxResponse.Item> unavailable = new ArrayList<>();
 
-        for (final CouponWallet wallet : wallets) {
-            final CachedCouponPolicy policy = couponPolicyCacheRepository.findByKey(wallet.getPolicyKey());
+        for (final CouponWalletDocument wallet : wallets) {
+            final CouponPolicyCache policy = couponPolicyCacheRepository.findByKey(wallet.getPolicyKey());
             final String policyName = policy == null ? null : policy.name();
             final CouponBoxResponse.Item item = CouponBoxResponse.Item.of(wallet, policyName);
             if (wallet.isAvailable(now)) {

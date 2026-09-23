@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.admin.model.point.policy;
 
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicy;
+import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointAccountCondition;
 import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointBenefitCondition;
 import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointBenefitType;
@@ -26,8 +26,8 @@ public record PointPolicyCreateRequest(
     AccountCondition accountCondition
 ) {
 
-    public PointPolicy toDocument(final String createdBy) {
-        return PointPolicy.create(
+    public PointPolicyDocument toDocument(final String createdBy) {
+        return PointPolicyDocument.create(
             name,
             description,
             key,

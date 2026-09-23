@@ -4,8 +4,7 @@ import im.dangmoo.benefit.api.model.coupon.VoucherCouponBoxRequest;
 import im.dangmoo.benefit.api.model.coupon.VoucherCouponBoxResponse;
 import im.dangmoo.benefit.domain.coupon.CouponApplyDomain;
 import im.dangmoo.benefit.domain.coupon.CouponIssueDomain;
-import im.dangmoo.benefit.domain.coupon.CouponWalletDomain;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicy;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.coupon.stock.CouponIssueStockRedisRepository;
 import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletMongoRepository;
@@ -35,7 +34,7 @@ public class VoucherCouponBoxUseCase {
     }
 
     public VoucherCouponBoxResponse box(final String userId, final VoucherCouponBoxRequest request) {
-        final List<CouponPolicy> policies = couponPolicyMongoRepository.findActiveVouchers(
+        final List<CouponPolicyDocument> policies = couponPolicyMongoRepository.findActiveVouchers(
             request.productId(),
             request.brandId()
         );
@@ -44,40 +43,32 @@ public class VoucherCouponBoxUseCase {
         }
 
         final Instant now = Instant.now();
-        final List<String> idempotencyKeys = policies.stream()
-            .map(policy -> CouponWalletDomain.idempotencyKey(
-                policy.getId(),
-                userId,
-                policy.getIssueCondition().getFrequency(),
-                now
-            ))
+        final List<String> issueKeys = policies.stream()
+            .map(policy -> CouponIssueDomain.of(policy).issueKeyFor(policy.getId(), userId, now))
             .toList();
-        final Set<String> issuedKeys = couponWalletMongoRepository.findExistingIdempotencyKeys(idempotencyKeys);
+        final Set<String> issuedKeys = couponWalletMongoRepository.findExistingIdempotencyKeys(issueKeys);
 
         final List<String> policyIds = policies.stream()
-            .map(CouponPolicy::getId)
+            .map(CouponPolicyDocument::getId)
             .toList();
         final Map<String, Long> issuedCounts = couponIssueStockRedisRepository.get(policyIds);
 
         final List<VoucherCouponBoxResponse.Item> items = new ArrayList<>();
 
-        for (final CouponPolicy policy : policies) {
-            if (!CouponApplyDomain.of(policy.getApplyCondition()).belongsTo(request.productId(), request.brandId())) {
+        for (final CouponPolicyDocument policy : policies) {
+            if (!CouponApplyDomain.of(policy).covers(request.productId(), request.brandId())) {
                 continue;
             }
-            if (issuedKeys.contains(CouponWalletDomain.idempotencyKey(
-                policy.getId(),
-                userId,
-                policy.getIssueCondition().getFrequency(),
-                now
-            ))) {
+
+            final CouponIssueDomain couponIssue = CouponIssueDomain.of(policy);
+            final String issueKey = couponIssue.issueKeyFor(policy.getId(), userId, now);
+            if (issuedKeys.contains(issueKey)) {
                 continue;
             }
 
             final long issuedCount = issuedCounts.getOrDefault(policy.getId(), 0L);
-            final boolean issueSatisfied = CouponIssueDomain.of(policy.getIssueCondition())
-                .isSatisfied(now, issuedCount);
-            if (!issueSatisfied) {
+            final var issuability = couponIssue.issuabilityAt(now, false, issuedCount);
+            if (issuability != CouponIssueDomain.Issuability.ISSUABLE) {
                 continue;
             }
 

@@ -6,12 +6,11 @@ import im.dangmoo.benefit.admin.usecase.ApiException;
 import im.dangmoo.benefit.domain.point.PointBenefitDomain;
 import im.dangmoo.benefit.domain.point.PointExpireDomain;
 import im.dangmoo.benefit.domain.point.PointIssueDomain;
-import im.dangmoo.benefit.domain.point.PointTransactionDomain;
 import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicy;
+import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.point.stock.PointGrantStockRedisRepository;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransaction;
+import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionDocument;
 import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionMongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -38,43 +37,39 @@ public class PointTransactionGrantUseCase {
     }
 
     public PointGrantResponse grant(final String adminId, final PointGrantRequest request) {
-        final PointPolicy policy = pointPolicyMongoRepository.findByKey(request.policyKey())
+        final PointPolicyDocument policy = pointPolicyMongoRepository.findByKey(request.policyKey())
             .orElseThrow(ApiException::notFound);
-        if (policy.getStatus().isNotActive()) {
-            throw ApiException.invalidStatus();
-        }
 
         final Instant now = Instant.now();
-        if (!PointIssueDomain.of(policy.getIssueCondition()).isSatisfiedAt(now)) {
-            throw ApiException.conditionNotSatisfied();
-        }
-
-        final String grantKey = PointTransactionDomain.grantKey(
-            policy.getId(),
-            request.userId(),
-            policy.getIssueCondition().getFrequency(),
-            now
-        );
+        final PointIssueDomain pointIssue = PointIssueDomain.of(policy);
+        final String grantKey = pointIssue.grantKeyFor(policy.getId(), request.userId(), now);
         final var existing = pointTransactionMongoRepository.findByIdempotencyKey(grantKey);
         if (existing.isPresent()) {
             return PointGrantResponse.of(existing.get());
         }
 
-        final Instant expiresAt = PointExpireDomain.of(policy.getExpireCondition()).resolveExpiresAt(now);
-        if (!PointExpireDomain.isNever(expiresAt) && !expiresAt.isAfter(now)) {
+        final PointExpireDomain pointExpire = PointExpireDomain.of(policy, now);
+        if (pointExpire.isExpiredAt(now)) {
             throw ApiException.conditionNotSatisfied();
         }
 
-        if (!pointGrantStockRedisRepository.tryReserve(
-            policy.getId(),
-            policy.getIssueCondition().getStockQuantity()
-        )) {
+        final long grantedCount = pointGrantStockRedisRepository.get(policy.getId());
+        switch (pointIssue.issuabilityAt(now, false, grantedCount)) {
+            case POLICY_INACTIVE -> throw ApiException.invalidStatus();
+            case OUT_OF_PERIOD -> throw ApiException.conditionNotSatisfied();
+            case STOCK_EXHAUSTED -> throw ApiException.stockExhausted();
+            case ALREADY_GRANTED, ISSUABLE -> {
+            }
+        }
+
+        if (!pointGrantStockRedisRepository.tryReserve(policy.getId(), pointIssue.stockQuantity())) {
             throw ApiException.stockExhausted();
         }
 
-        final long amount = PointBenefitDomain.of(policy.getBenefitCondition()).resolveAmount();
+        final Instant expiresAt = pointExpire.expiresAt();
+        final long amount = PointBenefitDomain.of(policy).grantAmount();
         final var appended = pointTransactionMongoRepository.append(
-            PointTransaction.grant(
+            PointTransactionDocument.grant(
                 request.userId(),
                 policy.getId(),
                 policy.getKey(),

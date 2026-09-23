@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.admin.model.membership.history;
 
 import im.dangmoo.benefit.infrastructure.data.membership.history.MembershipBenefitApplied;
-import im.dangmoo.benefit.infrastructure.data.membership.history.MembershipBenefitHistory;
+import im.dangmoo.benefit.infrastructure.data.membership.history.MembershipBenefitHistoryDocument;
 import im.dangmoo.benefit.infrastructure.data.membership.history.MembershipBenefitHistoryStatus;
 import im.dangmoo.benefit.infrastructure.data.membership.policy.MembershipSeason;
 
@@ -16,7 +16,7 @@ public record MembershipBenefitHistorySearchResponse(
 ) {
 
     public static MembershipBenefitHistorySearchResponse of(
-        final List<MembershipBenefitHistory> histories,
+        final List<MembershipBenefitHistoryDocument> histories,
         final long totalElements,
         final int page,
         final int size
@@ -40,7 +40,7 @@ public record MembershipBenefitHistorySearchResponse(
         MembershipBenefitHistoryStatus status,
         Instant transactionAt
     ) {
-        public static Item of(final MembershipBenefitHistory history) {
+        public static Item of(final MembershipBenefitHistoryDocument history) {
             return new Item(
                 history.getId(),
                 history.getUserId(),

@@ -2,7 +2,7 @@ package im.dangmoo.benefit.admin.model.promotion.policy;
 
 import im.dangmoo.benefit.infrastructure.data.promotion.PromotionPolicyStatus;
 import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionFeature;
-import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicy;
+import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyDocument;
 
 import java.time.Instant;
 import java.util.List;
@@ -26,7 +26,7 @@ public record PromotionPolicyDetailResponse(
     Instant updatedAt
 ) {
 
-    public static PromotionPolicyDetailResponse of(final PromotionPolicy policy) {
+    public static PromotionPolicyDetailResponse of(final PromotionPolicyDocument policy) {
         return new PromotionPolicyDetailResponse(
             policy.getId(),
             policy.getKey(),

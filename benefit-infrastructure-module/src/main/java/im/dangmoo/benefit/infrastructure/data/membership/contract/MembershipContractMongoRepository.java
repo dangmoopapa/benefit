@@ -16,40 +16,40 @@ public class MembershipContractMongoRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public MembershipContract save(final MembershipContract contract) {
+    public MembershipContractDocument save(final MembershipContractDocument contract) {
         return mongoTemplate.save(contract);
     }
 
-    public Optional<MembershipContract> findById(final String id) {
-        return Optional.ofNullable(mongoTemplate.findById(id, MembershipContract.class));
+    public Optional<MembershipContractDocument> findById(final String id) {
+        return Optional.ofNullable(mongoTemplate.findById(id, MembershipContractDocument.class));
     }
 
-    public Optional<MembershipContract> findByIdempotencyKey(final String idempotencyKey) {
+    public Optional<MembershipContractDocument> findByIdempotencyKey(final String idempotencyKey) {
         return Optional.ofNullable(
             mongoTemplate.findOne(
-                MembershipContract.queryByIdempotencyKey(idempotencyKey),
-                MembershipContract.class
+                MembershipContractDocument.queryByIdempotencyKey(idempotencyKey),
+                MembershipContractDocument.class
             )
         );
     }
 
-    public Optional<MembershipContract> findEffectiveByUserId(final String userId, final Instant now) {
+    public Optional<MembershipContractDocument> findEffectiveByUserId(final String userId, final Instant now) {
         return Optional.ofNullable(
             mongoTemplate.findOne(
-                MembershipContract.queryEffectiveByUserId(userId, now),
-                MembershipContract.class
+                MembershipContractDocument.queryEffectiveByUserId(userId, now),
+                MembershipContractDocument.class
             )
         );
     }
 
-    public List<MembershipContract> search(
+    public List<MembershipContractDocument> search(
         final String userId,
         final String policyId,
         final MembershipContractStatus status
     ) {
         return mongoTemplate.find(
-            MembershipContract.query(userId, policyId, status),
-            MembershipContract.class
+            MembershipContractDocument.query(userId, policyId, status),
+            MembershipContractDocument.class
         );
     }
 }

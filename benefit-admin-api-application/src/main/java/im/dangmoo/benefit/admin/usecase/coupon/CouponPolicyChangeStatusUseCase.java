@@ -3,10 +3,10 @@ package im.dangmoo.benefit.admin.usecase.coupon;
 import im.dangmoo.benefit.admin.model.coupon.policy.CouponPolicyChangeStatusRequest;
 import im.dangmoo.benefit.admin.model.coupon.policy.CouponPolicyChangeStatusResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicy;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCacheRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyChangedEvent;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyChangedPublisher;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.changed.CouponPolicyChangedPublication;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.changed.CouponPolicyChangedPublisher;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyMongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -32,13 +32,13 @@ public class CouponPolicyChangeStatusUseCase {
         final String id,
         final CouponPolicyChangeStatusRequest request
     ) {
-        final CouponPolicy policy = couponPolicyMongoRepository.findById(id)
+        final CouponPolicyDocument policy = couponPolicyMongoRepository.findById(id)
             .orElseThrow(ApiException::notFound);
-        final CouponPolicy saved = couponPolicyMongoRepository.save(
+        final CouponPolicyDocument saved = couponPolicyMongoRepository.save(
             policy.changeStatus(request.status(), adminId)
         );
         couponPolicyCacheRepository.put(saved);
-        couponPolicyChangedPublisher.publish(CouponPolicyChangedEvent.ofStatusChanged(saved));
+        couponPolicyChangedPublisher.publish(CouponPolicyChangedPublication.ofStatusChanged(saved));
         return CouponPolicyChangeStatusResponse.of(saved);
     }
 }

@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.api.model.coupon;
 
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWallet;
+import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletStatus;
 
 import java.time.Instant;
@@ -14,7 +14,7 @@ public record CouponIssueResponse(
     Instant expiresAt
 ) {
 
-    public static CouponIssueResponse of(final CouponWallet wallet) {
+    public static CouponIssueResponse of(final CouponWalletDocument wallet) {
         return new CouponIssueResponse(
             wallet.getId(),
             wallet.getPolicyId(),

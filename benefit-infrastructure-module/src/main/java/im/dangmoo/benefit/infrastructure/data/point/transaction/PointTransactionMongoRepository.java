@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public class PointTransactionMongoRepository {
 
-    public record Appended(PointTransaction tx, boolean created) {
+    public record Appended(PointTransactionDocument tx, boolean created) {
     }
 
     private final MongoTemplate mongoTemplate;
@@ -21,7 +21,7 @@ public class PointTransactionMongoRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public Appended append(final PointTransaction transaction) {
+    public Appended append(final PointTransactionDocument transaction) {
         try {
             return new Appended(mongoTemplate.insert(transaction), true);
         } catch (final DuplicateKeyException ignored) {
@@ -32,37 +32,37 @@ public class PointTransactionMongoRepository {
         }
     }
 
-    public Optional<PointTransaction> findByIdempotencyKey(final String idempotencyKey) {
+    public Optional<PointTransactionDocument> findByIdempotencyKey(final String idempotencyKey) {
         return Optional.ofNullable(
-            mongoTemplate.findOne(PointTransaction.queryByIdempotencyKey(idempotencyKey), PointTransaction.class)
+            mongoTemplate.findOne(PointTransactionDocument.queryByIdempotencyKey(idempotencyKey), PointTransactionDocument.class)
         );
     }
 
-    public List<PointTransaction> search(final String userId, final String policyId, final int page, final int size) {
-        final Query query = PointTransaction.query(userId, policyId);
+    public List<PointTransactionDocument> search(final String userId, final String policyId, final int page, final int size) {
+        final Query query = PointTransactionDocument.query(userId, policyId);
         query.skip((long) page * size).limit(size);
-        return mongoTemplate.find(query, PointTransaction.class);
+        return mongoTemplate.find(query, PointTransactionDocument.class);
     }
 
     public long count(final String userId, final String policyId) {
-        return mongoTemplate.count(PointTransaction.query(userId, policyId), PointTransaction.class);
+        return mongoTemplate.count(PointTransactionDocument.query(userId, policyId), PointTransactionDocument.class);
     }
 
-    public List<PointTransaction> findByUserIdAndTypes(
+    public List<PointTransactionDocument> findByUserIdAndTypes(
         final String userId,
         final Collection<PointTransactionType> types,
         final int page,
         final int size
     ) {
-        final Query query = PointTransaction.queryByUserIdAndTypes(userId, types);
+        final Query query = PointTransactionDocument.queryByUserIdAndTypes(userId, types);
         query.skip((long) page * size).limit(size);
-        return mongoTemplate.find(query, PointTransaction.class);
+        return mongoTemplate.find(query, PointTransactionDocument.class);
     }
 
     public long countByUserIdAndTypes(
         final String userId,
         final Collection<PointTransactionType> types
     ) {
-        return mongoTemplate.count(PointTransaction.queryByUserIdAndTypes(userId, types), PointTransaction.class);
+        return mongoTemplate.count(PointTransactionDocument.queryByUserIdAndTypes(userId, types), PointTransactionDocument.class);
     }
 }

@@ -2,7 +2,7 @@ package im.dangmoo.benefit.admin.usecase.coupon;
 
 import im.dangmoo.benefit.admin.model.coupon.policy.VoucherCouponPolicySearchRequest;
 import im.dangmoo.benefit.admin.model.coupon.policy.VoucherCouponPolicySearchResponse;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicy;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyMongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ public class VoucherCouponPolicySearchUseCase {
     }
 
     public VoucherCouponPolicySearchResponse search(final VoucherCouponPolicySearchRequest request) {
-        final List<CouponPolicy> policies = couponPolicyMongoRepository.findVouchers(
+        final List<CouponPolicyDocument> policies = couponPolicyMongoRepository.findVouchers(
             request.productId(),
             request.brandId(),
             request.status()

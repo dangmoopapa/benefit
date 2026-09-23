@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.admin.model.promotion.policy;
 
 import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionFeature;
-import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicy;
+import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyDocument;
 
 import java.time.Instant;
 import java.util.List;
@@ -18,7 +18,7 @@ public record PromotionPolicyUpdateRequest(
     Integer sortOrder
 ) {
 
-    public PromotionPolicy toUpdate(final PromotionPolicy policy, final String updatedBy) {
+    public PromotionPolicyDocument toUpdate(final PromotionPolicyDocument policy, final String updatedBy) {
         return policy.update(
             thumbnailImageUrl,
             title,

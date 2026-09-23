@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.api.model.coupon;
 
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWallet;
+import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletStatus;
 
 import java.time.Instant;
@@ -22,7 +22,7 @@ public record CouponBoxResponse(
         Instant usedAt
     ) {
 
-        public static Item of(final CouponWallet wallet, final String policyName) {
+        public static Item of(final CouponWalletDocument wallet, final String policyName) {
             return new Item(
                 wallet.getId(),
                 wallet.getPolicyId(),

@@ -25,9 +25,7 @@ public class PromotionPolicyCreateUseCase {
         if (promotionPolicyMongoRepository.existsByKey(request.key())) {
             throw ApiException.duplicateKey();
         }
-        try {
-            PromotionFeatureDomain.of(request.features()).requireReady();
-        } catch (final PromotionFeatureDomain.InvalidFeatureException ex) {
+        if (!PromotionFeatureDomain.of(request.features()).isConfigured()) {
             throw ApiException.invalidPromotionFeature();
         }
         final var saved = promotionPolicyMongoRepository.save(request.toDocument(adminId));

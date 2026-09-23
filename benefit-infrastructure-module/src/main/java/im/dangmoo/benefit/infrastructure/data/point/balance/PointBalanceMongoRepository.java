@@ -18,25 +18,25 @@ public class PointBalanceMongoRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public PointBalance save(final PointBalance balance) {
+    public PointBalanceDocument save(final PointBalanceDocument balance) {
         return mongoTemplate.save(balance);
     }
 
-    public Optional<PointBalance> findByUserId(final String userId) {
+    public Optional<PointBalanceDocument> findByUserId(final String userId) {
         return Optional.ofNullable(
-            mongoTemplate.findOne(PointBalance.queryByUserId(userId), PointBalance.class)
+            mongoTemplate.findOne(PointBalanceDocument.queryByUserId(userId), PointBalanceDocument.class)
         );
     }
 
-    public List<PointBalance> findDueForExpire(final Instant asOf, final int limit) {
-        final Query query = PointBalance.queryDueForExpire(asOf);
+    public List<PointBalanceDocument> findDueForExpire(final Instant asOf, final int limit) {
+        final Query query = PointBalanceDocument.queryDueForExpire(asOf);
         query.limit(limit);
-        return mongoTemplate.find(query, PointBalance.class);
+        return mongoTemplate.find(query, PointBalanceDocument.class);
     }
 
     public void increase(final String userId, final Instant expiresAt, final long amount) {
         for (int attempt = 0; true; attempt++) {
-            final PointBalance balance = findByUserId(userId).orElseGet(() -> PointBalance.create(userId));
+            final PointBalanceDocument balance = findByUserId(userId).orElseGet(() -> PointBalanceDocument.create(userId));
             try {
                 save(balance.increase(expiresAt, amount));
                 return;
@@ -50,7 +50,7 @@ public class PointBalanceMongoRepository {
 
     public void consume(final String userId, final long amount, final Instant now) {
         for (int attempt = 0; true; attempt++) {
-            final PointBalance balance = findByUserId(userId)
+            final PointBalanceDocument balance = findByUserId(userId)
                 .orElseThrow(() -> new IllegalStateException("insufficient point"));
             try {
                 balance.decreaseByExpiresAt(amount, now);

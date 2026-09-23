@@ -4,9 +4,9 @@ import im.dangmoo.benefit.api.model.promotion.PromotionApplyResponse;
 import im.dangmoo.benefit.api.usecase.ApiException;
 import im.dangmoo.benefit.domain.promotion.PromotionEntryDomain;
 import im.dangmoo.benefit.domain.promotion.PromotionPolicyDomain;
-import im.dangmoo.benefit.infrastructure.data.promotion.applier.PromotionApplier;
+import im.dangmoo.benefit.infrastructure.data.promotion.applier.PromotionApplierDocument;
 import im.dangmoo.benefit.infrastructure.data.promotion.applier.PromotionApplierMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicy;
+import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyMongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +27,12 @@ public class PromotionApplyUseCase {
     }
 
     public PromotionApplyResponse apply(final String userId, final String key) {
-        final PromotionPolicy policy = promotionPolicyMongoRepository.findByKey(key)
+        final PromotionPolicyDocument policy = promotionPolicyMongoRepository.findByKey(key)
             .orElseThrow(ApiException::notFound);
+
+        if (PromotionEntryDomain.findIn(policy).isEmpty()) {
+            throw ApiException.invalidPromotion();
+        }
 
         final Instant now = Instant.now();
         final boolean alreadyApplied = promotionApplierMongoRepository.existsByPolicyIdAndUserId(
@@ -36,16 +40,15 @@ public class PromotionApplyUseCase {
             userId
         );
 
-        try {
-            PromotionPolicyDomain.of(policy).requireApplicable(now, alreadyApplied);
-        } catch (final PromotionEntryDomain.AlreadyAppliedException ex) {
-            throw ApiException.alreadyAppliedPromotion();
-        } catch (final PromotionPolicyDomain.NotApplicableException ex) {
-            throw ApiException.invalidPromotion();
+        switch (PromotionPolicyDomain.of(policy).applicabilityAt(now, alreadyApplied)) {
+            case ALREADY_APPLIED -> throw ApiException.alreadyAppliedPromotion();
+            case NOT_OPEN -> throw ApiException.invalidPromotion();
+            case APPLICABLE -> {
+            }
         }
 
-        final PromotionApplier applier = promotionApplierMongoRepository.save(
-            PromotionApplier.apply(policy.getId(), policy.getKey(), userId)
+        final PromotionApplierDocument applier = promotionApplierMongoRepository.save(
+            PromotionApplierDocument.apply(policy.getId(), policy.getKey(), userId)
         );
         return PromotionApplyResponse.of(applier);
     }

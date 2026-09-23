@@ -17,35 +17,35 @@ public class MembershipBenefitHistoryMongoRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public MembershipBenefitHistory save(final MembershipBenefitHistory history) {
+    public MembershipBenefitHistoryDocument save(final MembershipBenefitHistoryDocument history) {
         return mongoTemplate.save(history);
     }
 
-    public Optional<MembershipBenefitHistory> findByOrderId(final String orderId) {
+    public Optional<MembershipBenefitHistoryDocument> findByOrderId(final String orderId) {
         return Optional.ofNullable(
             mongoTemplate.findOne(
-                MembershipBenefitHistory.queryByOrderId(orderId),
-                MembershipBenefitHistory.class
+                MembershipBenefitHistoryDocument.queryByOrderId(orderId),
+                MembershipBenefitHistoryDocument.class
             )
         );
     }
 
-    public List<MembershipBenefitHistory> search(
+    public List<MembershipBenefitHistoryDocument> search(
         final String userId,
         final String contractId,
         final int page,
         final int size
     ) {
-        final Query query = MembershipBenefitHistory.query(userId, contractId)
-            .with(Sort.by(Sort.Direction.DESC, MembershipBenefitHistory.TRANSACTION_AT));
+        final Query query = MembershipBenefitHistoryDocument.query(userId, contractId)
+            .with(Sort.by(Sort.Direction.DESC, MembershipBenefitHistoryDocument.TRANSACTION_AT));
         query.skip((long) page * size).limit(size);
-        return mongoTemplate.find(query, MembershipBenefitHistory.class);
+        return mongoTemplate.find(query, MembershipBenefitHistoryDocument.class);
     }
 
     public long count(final String userId, final String contractId) {
         return mongoTemplate.count(
-            MembershipBenefitHistory.query(userId, contractId),
-            MembershipBenefitHistory.class
+            MembershipBenefitHistoryDocument.query(userId, contractId),
+            MembershipBenefitHistoryDocument.class
         );
     }
 }

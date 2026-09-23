@@ -1,10 +1,12 @@
 package im.dangmoo.benefit.domain.coupon;
 
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCache;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponApplyCondition;
 
 import java.util.List;
 
-public class CouponApplyDomain {
+public final class CouponApplyDomain {
 
     private final List<String> productIds;
     private final List<String> categoryIds;
@@ -23,24 +25,32 @@ public class CouponApplyDomain {
         this.segmentId = segmentId;
     }
 
-    public static CouponApplyDomain of(final CouponApplyCondition condition) {
+    public static CouponApplyDomain of(final CouponPolicyDocument policy) {
+        return of(policy.getApplyCondition());
+    }
+
+    public static CouponApplyDomain of(final CouponPolicyCache policy) {
+        return of(policy.applyCondition());
+    }
+
+    static CouponApplyDomain of(final CouponApplyCondition applyCondition) {
         return new CouponApplyDomain(
-            condition.getProductIds(),
-            condition.getCategoryIds(),
-            condition.getBrandIds(),
-            condition.getSegmentId()
+            applyCondition.getProductIds(),
+            applyCondition.getCategoryIds(),
+            applyCondition.getBrandIds(),
+            applyCondition.getSegmentId()
         );
     }
 
-    public boolean belongsTo(final String productId, final String brandId) {
+    public boolean covers(final String productId, final String brandId) {
         return contains(productIds, productId) || contains(brandIds, brandId);
     }
 
-    public boolean isSatisfied(
+    public boolean isApplicableTo(
         final String productId,
         final String categoryId,
         final String brandId,
-        final String requestSegmentId
+        final String segmentId
     ) {
         if (excludes(productIds, productId)) {
             return false;
@@ -51,15 +61,15 @@ public class CouponApplyDomain {
         if (excludes(brandIds, brandId)) {
             return false;
         }
-        return !hasText(segmentId) || segmentId.equals(requestSegmentId);
+        return !hasText(this.segmentId) || this.segmentId.equals(segmentId);
     }
 
-    private boolean excludes(final List<String> values, final String target) {
-        return !values.isEmpty() && !contains(values, target);
+    private boolean excludes(final List<String> allowedIds, final String target) {
+        return !allowedIds.isEmpty() && !contains(allowedIds, target);
     }
 
-    private boolean contains(final List<String> values, final String target) {
-        return hasText(target) && values.contains(target);
+    private boolean contains(final List<String> allowedIds, final String target) {
+        return hasText(target) && allowedIds.contains(target);
     }
 
     private boolean hasText(final String value) {

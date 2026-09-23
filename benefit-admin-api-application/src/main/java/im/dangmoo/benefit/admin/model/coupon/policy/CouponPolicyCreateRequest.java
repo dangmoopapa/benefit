@@ -6,7 +6,7 @@ import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponBene
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponIssueCondition;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponIssueFrequency;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponLifecycleCondition;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicy;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyType;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponUsageCondition;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponUsageValidityType;
@@ -30,8 +30,8 @@ public record CouponPolicyCreateRequest(
     AccountCondition accountCondition
 ) {
 
-    public CouponPolicy toDocument(final String createdBy) {
-        return CouponPolicy.create(
+    public CouponPolicyDocument toDocument(final String createdBy) {
+        return CouponPolicyDocument.create(
             name,
             description,
             key,

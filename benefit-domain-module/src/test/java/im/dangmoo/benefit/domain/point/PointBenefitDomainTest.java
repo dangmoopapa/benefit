@@ -13,75 +13,41 @@ import static org.assertj.core.api.Assertions.assertThat;
 class PointBenefitDomainTest {
 
     @Test
-    @DisplayName("FIXED 는 amount 를 그대로 반환한다")
-    void fixed_resolveAmount() {
-        final PointBenefitDomain domain = PointBenefitDomain.of(
-            PointBenefitCondition.create(PointBenefitType.FIXED, 100L, null, null, null, null)
-        );
-        assertThat(domain.isValid()).isTrue();
-        assertThat(domain.resolveAmount(0L)).isEqualTo(100L);
+    @DisplayName("FIXED 는 설정 금액을 그대로 지급한다")
+    void grantAmount_fixed() {
+        final PointBenefitDomain pointBenefit = PointBenefitDomain.of(fixedAmount(100L));
+        assertThat(pointBenefit.grantAmount(0L)).isEqualTo(100L);
     }
 
     @Test
-    @DisplayName("FIXED amount 가 0 이하면 유효하지 않다")
-    void fixed_invalid() {
-        assertThat(PointBenefitDomain.of(
-            PointBenefitCondition.create(PointBenefitType.FIXED, 0L, null, null, null, null)
-        ).isValid()).isFalse();
-    }
-
-    @Test
-    @DisplayName("RANDOM_RANGE 는 min~max inclusive 에서 고른다")
-    void randomRange_resolveAmount() {
-        final PointBenefitDomain domain = PointBenefitDomain.of(
+    @DisplayName("RANDOM_RANGE 는 min~max 안에서 지급한다")
+    void grantAmount_randomRange() {
+        final PointBenefitDomain pointBenefit = PointBenefitDomain.of(
             PointBenefitCondition.create(PointBenefitType.RANDOM_RANGE, null, 1L, 10L, null, null)
         );
-        assertThat(domain.isValid()).isTrue();
-        assertThat(domain.resolveAmount(0L)).isEqualTo(1L);
-        assertThat(domain.resolveAmount(9L)).isEqualTo(10L);
-        assertThat(domain.resolveAmount(10L)).isEqualTo(1L);
+        assertThat(pointBenefit.grantAmount(0L)).isEqualTo(1L);
+        assertThat(pointBenefit.grantAmount(9L)).isEqualTo(10L);
+        assertThat(pointBenefit.grantAmount(10L)).isEqualTo(1L);
     }
 
     @Test
-    @DisplayName("RANDOM_RANGE min>max 이면 유효하지 않다")
-    void randomRange_invalid() {
-        assertThat(PointBenefitDomain.of(
-            PointBenefitCondition.create(PointBenefitType.RANDOM_RANGE, null, 10L, 1L, null, null)
-        ).isValid()).isFalse();
-    }
-
-    @Test
-    @DisplayName("RANDOM_AMOUNTS 는 목록에서 고른다")
-    void randomAmounts_resolveAmount() {
-        final PointBenefitDomain domain = PointBenefitDomain.of(
+    @DisplayName("RANDOM_AMOUNTS 는 목록에서 하나를 지급한다")
+    void grantAmount_randomAmounts() {
+        final PointBenefitDomain pointBenefit = PointBenefitDomain.of(
             PointBenefitCondition.create(
-                PointBenefitType.RANDOM_AMOUNTS,
-                null,
-                null,
-                null,
-                List.of(1L, 2L, 5L),
-                null
+                PointBenefitType.RANDOM_AMOUNTS, null, null, null, List.of(1L, 2L, 5L), null
             )
         );
-        assertThat(domain.isValid()).isTrue();
-        assertThat(domain.resolveAmount(0L)).isEqualTo(1L);
-        assertThat(domain.resolveAmount(1L)).isEqualTo(2L);
-        assertThat(domain.resolveAmount(2L)).isEqualTo(5L);
-        assertThat(domain.resolveAmount(3L)).isEqualTo(1L);
+        assertThat(pointBenefit.grantAmount(0L)).isEqualTo(1L);
+        assertThat(pointBenefit.grantAmount(1L)).isEqualTo(2L);
+        assertThat(pointBenefit.grantAmount(2L)).isEqualTo(5L);
+        assertThat(pointBenefit.grantAmount(3L)).isEqualTo(1L);
     }
 
     @Test
-    @DisplayName("RANDOM_AMOUNTS 가 비어 있으면 유효하지 않다")
-    void randomAmounts_invalid() {
-        assertThat(PointBenefitDomain.of(
-            PointBenefitCondition.create(PointBenefitType.RANDOM_AMOUNTS, null, null, null, List.of(), null)
-        ).isValid()).isFalse();
-    }
-
-    @Test
-    @DisplayName("RANDOM_WEIGHTED 는 weight 비율로 고른다")
-    void randomWeighted_resolveAmount() {
-        final PointBenefitDomain domain = PointBenefitDomain.of(
+    @DisplayName("RANDOM_WEIGHTED 는 가중치 비율로 지급한다")
+    void grantAmount_randomWeighted() {
+        final PointBenefitDomain pointBenefit = PointBenefitDomain.of(
             PointBenefitCondition.create(
                 PointBenefitType.RANDOM_WEIGHTED,
                 null,
@@ -94,17 +60,32 @@ class PointBenefitDomainTest {
                 )
             )
         );
-        assertThat(domain.isValid()).isTrue();
-        assertThat(domain.resolveAmount(0L)).isEqualTo(1L);
-        assertThat(domain.resolveAmount(1L)).isEqualTo(10L);
-        assertThat(domain.resolveAmount(2L)).isEqualTo(10L);
-        assertThat(domain.resolveAmount(3L)).isEqualTo(10L);
-        assertThat(domain.resolveAmount(4L)).isEqualTo(1L);
+        assertThat(pointBenefit.grantAmount(0L)).isEqualTo(1L);
+        assertThat(pointBenefit.grantAmount(1L)).isEqualTo(10L);
+        assertThat(pointBenefit.grantAmount(2L)).isEqualTo(10L);
+        assertThat(pointBenefit.grantAmount(3L)).isEqualTo(10L);
+        assertThat(pointBenefit.grantAmount(4L)).isEqualTo(1L);
     }
 
     @Test
-    @DisplayName("RANDOM_WEIGHTED weight 가 0 이면 유효하지 않다")
-    void randomWeighted_invalid() {
+    @DisplayName("지급 방식이 없는 문서는 FIXED 로 취급한다")
+    void grantAmount_nullTypeDefaultsToFixed() {
+        final PointBenefitDomain pointBenefit = PointBenefitDomain.of(
+            PointBenefitCondition.create(null, 50L, null, null, null, null)
+        );
+        assertThat(pointBenefit.grantAmount(0L)).isEqualTo(50L);
+    }
+
+    @Test
+    @DisplayName("지급 금액이 0 이하이거나 비어 있으면 유효하지 않다")
+    void isGrantAmountValid_invalid() {
+        assertThat(PointBenefitDomain.of(fixedAmount(0L)).isGrantAmountValid()).isFalse();
+        assertThat(PointBenefitDomain.of(
+            PointBenefitCondition.create(PointBenefitType.RANDOM_RANGE, null, 10L, 1L, null, null)
+        ).isGrantAmountValid()).isFalse();
+        assertThat(PointBenefitDomain.of(
+            PointBenefitCondition.create(PointBenefitType.RANDOM_AMOUNTS, null, null, null, List.of(), null)
+        ).isGrantAmountValid()).isFalse();
         assertThat(PointBenefitDomain.of(
             PointBenefitCondition.create(
                 PointBenefitType.RANDOM_WEIGHTED,
@@ -114,16 +95,32 @@ class PointBenefitDomainTest {
                 null,
                 List.of(PointBenefitWeightOption.create(1L, 0L))
             )
-        ).isValid()).isFalse();
+        ).isGrantAmountValid()).isFalse();
     }
 
     @Test
-    @DisplayName("type 이 null 인 문서는 FIXED 로 취급한다")
-    void nullType_defaultsToFixed() {
-        final PointBenefitDomain domain = PointBenefitDomain.of(
-            PointBenefitCondition.create(null, 50L, null, null, null, null)
-        );
-        assertThat(domain.isValid()).isTrue();
-        assertThat(domain.resolveAmount(0L)).isEqualTo(50L);
+    @DisplayName("지급 금액이 모두 양수면 유효하다")
+    void isGrantAmountValid_valid() {
+        assertThat(PointBenefitDomain.of(fixedAmount(100L)).isGrantAmountValid()).isTrue();
+        assertThat(PointBenefitDomain.of(
+            PointBenefitCondition.create(PointBenefitType.RANDOM_RANGE, null, 1L, 10L, null, null)
+        ).isGrantAmountValid()).isTrue();
+        assertThat(PointBenefitDomain.of(
+            PointBenefitCondition.create(PointBenefitType.RANDOM_AMOUNTS, null, null, null, List.of(1L, 2L), null)
+        ).isGrantAmountValid()).isTrue();
+        assertThat(PointBenefitDomain.of(
+            PointBenefitCondition.create(
+                PointBenefitType.RANDOM_WEIGHTED,
+                null,
+                null,
+                null,
+                null,
+                List.of(PointBenefitWeightOption.create(1L, 1L))
+            )
+        ).isGrantAmountValid()).isTrue();
+    }
+
+    private static PointBenefitCondition fixedAmount(final long amount) {
+        return PointBenefitCondition.create(PointBenefitType.FIXED, amount, null, null, null, null);
     }
 }

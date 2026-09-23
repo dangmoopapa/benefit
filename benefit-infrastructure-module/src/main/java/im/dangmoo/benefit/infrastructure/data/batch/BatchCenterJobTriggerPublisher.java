@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.infrastructure.data.batch;
 
-import im.dangmoo.benefit.infrastructure.collection.kafka.KafkaTopics;
+import im.dangmoo.benefit.infrastructure.support.kafka.KafkaProducerTopics;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,7 @@ public class BatchCenterJobTriggerPublisher {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void publish(final BatchCenterJobTriggerEvent event) {
-        kafkaTemplate.send(KafkaTopics.BATCH_CENTER_JOB_TRIGGER, event.jobName(), event);
+    public void publish(final BatchCenterJobTriggerProduction event) {
+        kafkaTemplate.send(KafkaProducerTopics.BATCH_CENTER_JOB_TRIGGER, event.jobName(), event);
     }
 }

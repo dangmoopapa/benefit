@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.api.model.membership;
 
-import im.dangmoo.benefit.infrastructure.data.membership.history.MembershipBenefitHistory;
+import im.dangmoo.benefit.infrastructure.data.membership.history.MembershipBenefitHistoryDocument;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public record MembershipBenefitHistoryListResponse(
 ) {
 
     public static MembershipBenefitHistoryListResponse of(
-        final List<MembershipBenefitHistory> histories,
+        final List<MembershipBenefitHistoryDocument> histories,
         final long totalElements,
         final int page,
         final int size

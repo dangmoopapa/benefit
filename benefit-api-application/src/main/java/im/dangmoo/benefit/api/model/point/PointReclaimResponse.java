@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.api.model.point;
 
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransaction;
+import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionDocument;
 
 public record PointReclaimResponse(
     String transactionId,
@@ -9,7 +9,7 @@ public record PointReclaimResponse(
     long amount
 ) {
 
-    public static PointReclaimResponse of(final PointTransaction tx) {
+    public static PointReclaimResponse of(final PointTransactionDocument tx) {
         return new PointReclaimResponse(
             tx.getId(),
             tx.getPolicyId(),

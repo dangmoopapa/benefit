@@ -4,11 +4,11 @@ import im.dangmoo.benefit.api.model.membership.MembershipBenefitApplyRequest;
 import im.dangmoo.benefit.api.model.membership.MembershipBenefitHistoryResponse;
 import im.dangmoo.benefit.api.usecase.ApiException;
 import im.dangmoo.benefit.domain.membership.MembershipBenefitDomain;
-import im.dangmoo.benefit.infrastructure.data.membership.history.MembershipBenefitHistory;
+import im.dangmoo.benefit.infrastructure.data.membership.history.MembershipBenefitHistoryDocument;
 import im.dangmoo.benefit.infrastructure.data.membership.history.MembershipBenefitHistoryMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.membership.policy.MembershipPolicyMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.membership.contract.MembershipContractMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalance;
+import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceDocument;
 import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceMongoRepository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -51,9 +51,7 @@ public class MembershipBenefitApplyUseCase {
 
         final var policy = membershipPolicyMongoRepository.findById(contract.getPolicyId())
             .orElseThrow(ApiException::notFound);
-        try {
-            MembershipBenefitDomain.requireReady(policy.getSeason(), policy.getBenefit());
-        } catch (final MembershipBenefitDomain.PreparingException ex) {
+        if (!MembershipBenefitDomain.of(policy).isServiceable()) {
             throw ApiException.preparingMembership();
         }
 
@@ -61,12 +59,12 @@ public class MembershipBenefitApplyUseCase {
         if (applied.getCashbackAmount() != null && applied.getCashbackAmount().signum() > 0) {
             pointBalanceMongoRepository.increase(
                 userId,
-                PointBalance.NEVER_EXPIRES_AT,
+                PointBalanceDocument.NEVER_EXPIRES_AT,
                 applied.getCashbackAmount().longValue()
             );
         }
 
-        final MembershipBenefitHistory history = MembershipBenefitHistory.apply(
+        final MembershipBenefitHistoryDocument history = MembershipBenefitHistoryDocument.apply(
             userId,
             request.orderId(),
             contract.getId(),

@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.admin.model.point.usage;
 
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransaction;
+import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionDocument;
 
 import java.time.Instant;
 
@@ -12,7 +12,7 @@ public record PointUsageResponse(
     Instant transactionAt
 ) {
 
-    public static PointUsageResponse of(final PointTransaction transaction) {
+    public static PointUsageResponse of(final PointTransactionDocument transaction) {
         return new PointUsageResponse(
             transaction.getId(),
             transaction.getUserId(),

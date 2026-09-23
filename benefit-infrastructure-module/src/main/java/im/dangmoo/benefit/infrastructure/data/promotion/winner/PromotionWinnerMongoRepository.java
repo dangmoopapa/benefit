@@ -15,30 +15,30 @@ public class PromotionWinnerMongoRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public PromotionWinner save(final PromotionWinner winner) {
+    public PromotionWinnerDocument save(final PromotionWinnerDocument winner) {
         return mongoTemplate.save(winner);
     }
 
-    public Optional<PromotionWinner> findByPolicyIdAndUserId(final String policyId, final String userId) {
+    public Optional<PromotionWinnerDocument> findByPolicyIdAndUserId(final String policyId, final String userId) {
         return Optional.ofNullable(
             mongoTemplate.findOne(
-                PromotionWinner.queryByPolicyIdAndUserId(policyId, userId),
-                PromotionWinner.class
+                PromotionWinnerDocument.queryByPolicyIdAndUserId(policyId, userId),
+                PromotionWinnerDocument.class
             )
         );
     }
 
-    public List<PromotionWinner> findByPolicyId(final String policyId) {
+    public List<PromotionWinnerDocument> findByPolicyId(final String policyId) {
         return mongoTemplate.find(
-            PromotionWinner.queryByPolicyId(policyId),
-            PromotionWinner.class
+            PromotionWinnerDocument.queryByPolicyId(policyId),
+            PromotionWinnerDocument.class
         );
     }
 
     public boolean existsByPolicyId(final String policyId) {
         return mongoTemplate.exists(
-            PromotionWinner.queryByPolicyId(policyId),
-            PromotionWinner.class
+            PromotionWinnerDocument.queryByPolicyId(policyId),
+            PromotionWinnerDocument.class
         );
     }
 }

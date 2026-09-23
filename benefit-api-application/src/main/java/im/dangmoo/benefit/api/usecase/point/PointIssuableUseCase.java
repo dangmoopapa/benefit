@@ -3,9 +3,9 @@ package im.dangmoo.benefit.api.usecase.point;
 import im.dangmoo.benefit.api.model.point.PointIssuableRequest;
 import im.dangmoo.benefit.api.model.point.PointIssuableResponse;
 import im.dangmoo.benefit.api.usecase.ApiMessage;
+import im.dangmoo.benefit.domain.point.PointExpireDomain;
 import im.dangmoo.benefit.domain.point.PointIssueDomain;
-import im.dangmoo.benefit.domain.point.PointTransactionDomain;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicy;
+import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.point.stock.PointGrantStockRedisRepository;
 import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionMongoRepository;
@@ -31,32 +31,26 @@ public class PointIssuableUseCase {
     }
 
     public PointIssuableResponse issuable(final String userId, final PointIssuableRequest request) {
-        final PointPolicy policy = pointPolicyMongoRepository.findByKey(request.policyKey()).orElse(null);
-        if (policy == null || policy.getStatus().isNotActive()) {
+        final PointPolicyDocument policy = pointPolicyMongoRepository.findByKey(request.policyKey()).orElse(null);
+        if (policy == null) {
             return PointIssuableResponse.ofNotIssuable(ApiMessage.POLICY_ISSUE_POINT);
         }
 
         final Instant now = Instant.now();
-        if (!PointIssueDomain.of(policy.getIssueCondition()).isSatisfiedAt(now)) {
+        final PointIssueDomain pointIssue = PointIssueDomain.of(policy);
+        final String grantKey = pointIssue.grantKeyFor(policy.getId(), userId, now);
+        final boolean alreadyGranted = pointTransactionMongoRepository.findByIdempotencyKey(grantKey).isPresent();
+        if (PointExpireDomain.of(policy, now).isExpiredAt(now)) {
             return PointIssuableResponse.ofNotIssuable(ApiMessage.POLICY_ISSUE_POINT);
         }
 
-        if (pointTransactionMongoRepository.findByIdempotencyKey(
-            PointTransactionDomain.grantKey(
-                policy.getId(),
-                userId,
-                policy.getIssueCondition().getFrequency(),
-                now
-            )
-        ).isPresent()) {
-            return PointIssuableResponse.ofNotIssuable(ApiMessage.ALREADY_GRANTED_POINT);
-        }
-
-        final Long stockQuantity = policy.getIssueCondition().getStockQuantity();
-        if (stockQuantity != null && pointGrantStockRedisRepository.get(policy.getId()) >= stockQuantity) {
-            return PointIssuableResponse.ofNotIssuable(ApiMessage.STOCK_EXHAUSTED_POINT);
-        }
-
-        return PointIssuableResponse.ofIssuable();
+        final long grantedCount = pointGrantStockRedisRepository.get(policy.getId());
+        return switch (pointIssue.issuabilityAt(now, alreadyGranted, grantedCount)) {
+            case ALREADY_GRANTED -> PointIssuableResponse.ofNotIssuable(ApiMessage.ALREADY_GRANTED_POINT);
+            case STOCK_EXHAUSTED -> PointIssuableResponse.ofNotIssuable(ApiMessage.STOCK_EXHAUSTED_POINT);
+            case POLICY_INACTIVE, OUT_OF_PERIOD ->
+                PointIssuableResponse.ofNotIssuable(ApiMessage.POLICY_ISSUE_POINT);
+            case ISSUABLE -> PointIssuableResponse.ofIssuable();
+        };
     }
 }

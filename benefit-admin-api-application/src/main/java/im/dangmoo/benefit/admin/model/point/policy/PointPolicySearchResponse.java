@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.admin.model.point.policy;
 
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicy;
+import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyStatus;
 
 import java.time.Instant;
@@ -8,7 +8,7 @@ import java.util.List;
 
 public record PointPolicySearchResponse(List<Item> items) {
 
-    public static PointPolicySearchResponse of(final List<PointPolicy> policies) {
+    public static PointPolicySearchResponse of(final List<PointPolicyDocument> policies) {
         return new PointPolicySearchResponse(policies.stream().map(Item::of).toList());
     }
 
@@ -21,7 +21,7 @@ public record PointPolicySearchResponse(List<Item> items) {
         Instant updatedAt
     ) {
 
-        public static Item of(final PointPolicy policy) {
+        public static Item of(final PointPolicyDocument policy) {
             return new Item(
                 policy.getId(),
                 policy.getKey(),

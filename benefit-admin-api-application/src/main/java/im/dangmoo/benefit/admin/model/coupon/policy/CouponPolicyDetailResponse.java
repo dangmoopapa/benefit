@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.admin.model.coupon.policy;
 
-import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCode;
+import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeStatus;
 import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeType;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponAccountCondition;
@@ -9,7 +9,7 @@ import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponBene
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponIssueCondition;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponIssueFrequency;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponLifecycleCondition;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicy;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyStatus;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyType;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponUsageCondition;
@@ -41,8 +41,8 @@ public record CouponPolicyDetailResponse(
 ) {
 
     public static CouponPolicyDetailResponse of(
-        final CouponPolicy policy,
-        final List<CouponCode> codes
+        final CouponPolicyDocument policy,
+        final List<CouponCodeDocument> codes
     ) {
         return new CouponPolicyDetailResponse(
             policy.getId(),
@@ -76,7 +76,7 @@ public record CouponPolicyDetailResponse(
         Instant updatedAt
     ) {
 
-        public static Code of(final CouponCode code) {
+        public static Code of(final CouponCodeDocument code) {
             return new Code(
                 code.getId(),
                 code.getCode(),

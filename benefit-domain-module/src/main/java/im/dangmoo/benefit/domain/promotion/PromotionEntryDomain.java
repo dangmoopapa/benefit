@@ -1,16 +1,28 @@
 package im.dangmoo.benefit.domain.promotion;
 
 import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionEntry;
+import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionFeature;
+import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionFeatureType;
 import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionLotteryType;
 import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionPrize;
+import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyDocument;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
-public class PromotionEntryDomain {
+public final class PromotionEntryDomain {
+
+    public enum Drawability {
+        DRAWABLE,
+        LOTTERY_TYPE_MISMATCH,
+        ALREADY_DRAWN
+    }
 
     private final PromotionLotteryType lotteryType;
     private final Integer winnerCount;
@@ -26,6 +38,19 @@ public class PromotionEntryDomain {
         this.prizes = prizes;
     }
 
+    public static Optional<PromotionEntryDomain> findIn(final PromotionPolicyDocument policy) {
+        final List<PromotionFeature> features = policy.getFeatures();
+        if (features == null) {
+            return Optional.empty();
+        }
+        return features.stream()
+            .filter(feature -> feature.getType() == PromotionFeatureType.ENTRY)
+            .map(PromotionFeature::getEntry)
+            .filter(Objects::nonNull)
+            .map(PromotionEntryDomain::of)
+            .findFirst();
+    }
+
     public static PromotionEntryDomain of(final PromotionEntry entry) {
         return new PromotionEntryDomain(
             entry.getLotteryType(),
@@ -34,49 +59,29 @@ public class PromotionEntryDomain {
         );
     }
 
-    public PromotionLotteryType lotteryType() {
-        return lotteryType;
-    }
-
     public List<PromotionPrize> prizes() {
         return prizes;
     }
 
-    public void requireNotAlreadyApplied(final boolean alreadyApplied) {
-        if (alreadyApplied) {
-            throw new AlreadyAppliedException();
-        }
+    public Drawability manualDrawability(final boolean alreadyDrawn) {
+        return drawabilityBy(PromotionLotteryType.MANUAL, alreadyDrawn);
     }
 
-    public void requireManualLotteryReady(final boolean alreadyDrawn) {
-        if (lotteryType != PromotionLotteryType.MANUAL) {
-            throw new LotteryNotReadyException();
-        }
-        if (alreadyDrawn) {
-            throw new AlreadyDrawnException();
-        }
+    public Drawability autoDrawability(final boolean alreadyDrawn) {
+        return drawabilityBy(PromotionLotteryType.AUTO_COUNT, alreadyDrawn);
     }
 
-    public void requireAutoLotteryReady(final boolean alreadyDrawn) {
-        if (lotteryType != PromotionLotteryType.AUTO_COUNT) {
-            throw new LotteryNotReadyException();
-        }
-        if (alreadyDrawn) {
-            throw new AlreadyDrawnException();
-        }
-    }
-
-    public List<String> selectWinners(
+    public List<String> drawWinnersFrom(
         final List<String> candidateUserIds,
         final Set<String> alreadyWonUserIds
     ) {
-        final List<String> candidates = candidateUserIds.stream()
-            .filter(userId -> !alreadyWonUserIds.contains(userId))
-            .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
-        if (candidates.isEmpty()) {
+        if (winnerCount == null || winnerCount <= 0) {
             return List.of();
         }
-        if (winnerCount == null || winnerCount <= 0) {
+        final List<String> candidates = candidateUserIds.stream()
+            .filter(candidateUserId -> !alreadyWonUserIds.contains(candidateUserId))
+            .collect(Collectors.toCollection(ArrayList::new));
+        if (candidates.isEmpty()) {
             return List.of();
         }
 
@@ -84,12 +89,13 @@ public class PromotionEntryDomain {
         return candidates.subList(0, Math.min(winnerCount, candidates.size()));
     }
 
-    public static class AlreadyAppliedException extends RuntimeException {
-    }
-
-    public static class LotteryNotReadyException extends RuntimeException {
-    }
-
-    public static class AlreadyDrawnException extends RuntimeException {
+    private Drawability drawabilityBy(final PromotionLotteryType drawnBy, final boolean alreadyDrawn) {
+        if (lotteryType != drawnBy) {
+            return Drawability.LOTTERY_TYPE_MISMATCH;
+        }
+        if (alreadyDrawn) {
+            return Drawability.ALREADY_DRAWN;
+        }
+        return Drawability.DRAWABLE;
     }
 }

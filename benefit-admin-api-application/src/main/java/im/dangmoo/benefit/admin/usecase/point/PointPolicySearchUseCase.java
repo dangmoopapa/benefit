@@ -2,7 +2,7 @@ package im.dangmoo.benefit.admin.usecase.point;
 
 import im.dangmoo.benefit.admin.model.point.policy.PointPolicySearchRequest;
 import im.dangmoo.benefit.admin.model.point.policy.PointPolicySearchResponse;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicy;
+import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyStatus;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class PointPolicySearchUseCase {
         final String key = request.key();
         final String name = request.name();
         final PointPolicyStatus status = request.status();
-        final List<PointPolicy> policies = pointPolicyMongoRepository.search(key, name, status);
+        final List<PointPolicyDocument> policies = pointPolicyMongoRepository.search(key, name, status);
         return PointPolicySearchResponse.of(policies);
     }
 }

@@ -25,9 +25,7 @@ public class PromotionPolicyUpdateUseCase {
     ) {
         final var policy = promotionPolicyMongoRepository.findById(id)
             .orElseThrow(ApiException::notFound);
-        try {
-            PromotionFeatureDomain.of(request.features()).requireReady();
-        } catch (final PromotionFeatureDomain.InvalidFeatureException ex) {
+        if (!PromotionFeatureDomain.of(request.features()).isConfigured()) {
             throw ApiException.invalidPromotionFeature();
         }
         final var saved = promotionPolicyMongoRepository.save(request.toUpdate(policy, adminId));

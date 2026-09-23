@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.admin.model.coupon.policy;
 
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicy;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyStatus;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponApplyCondition;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 public record VoucherCouponPolicySearchResponse(List<Item> items) {
 
-    public static VoucherCouponPolicySearchResponse of(final List<CouponPolicy> policies) {
+    public static VoucherCouponPolicySearchResponse of(final List<CouponPolicyDocument> policies) {
         return new VoucherCouponPolicySearchResponse(policies.stream().map(Item::of).toList());
     }
 
@@ -24,7 +24,7 @@ public record VoucherCouponPolicySearchResponse(List<Item> items) {
         Instant updatedAt
     ) {
 
-        public static Item of(final CouponPolicy policy) {
+        public static Item of(final CouponPolicyDocument policy) {
             final CouponApplyCondition apply = policy.getApplyCondition();
             return new Item(
                 policy.getId(),

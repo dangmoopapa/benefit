@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.infrastructure.data.coupon.stock;
 
-import im.dangmoo.benefit.infrastructure.collection.redis.RedisKey;
-import im.dangmoo.benefit.infrastructure.collection.redis.RedisKeyName;
+import im.dangmoo.benefit.infrastructure.support.redis.RedisKey;
+import im.dangmoo.benefit.infrastructure.support.redis.RedisKeyName;
 
 public class CouponUsageStockKey extends RedisKey {
 

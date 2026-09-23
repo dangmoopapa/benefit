@@ -4,7 +4,7 @@ import im.dangmoo.benefit.admin.model.coupon.policy.CouponPolicyUpdateRequest;
 import im.dangmoo.benefit.admin.model.coupon.policy.CouponPolicyUpdateResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCacheRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicy;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyMongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class CouponPolicyUpdateUseCase {
         final String id,
         final CouponPolicyUpdateRequest request
     ) {
-        final CouponPolicy policy = couponPolicyMongoRepository.findById(id)
+        final CouponPolicyDocument policy = couponPolicyMongoRepository.findById(id)
             .orElseThrow(ApiException::notFound);
 
         final String policyKey = policy.getKey();
@@ -38,7 +38,7 @@ public class CouponPolicyUpdateUseCase {
             throw ApiException.duplicateKey();
         }
 
-        final CouponPolicy saved = couponPolicyMongoRepository.save(
+        final CouponPolicyDocument saved = couponPolicyMongoRepository.save(
             policy.update(
                 request.name(),
                 request.description(),

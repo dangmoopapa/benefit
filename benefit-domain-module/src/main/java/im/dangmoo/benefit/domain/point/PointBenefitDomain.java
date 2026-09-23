@@ -1,5 +1,6 @@
 package im.dangmoo.benefit.domain.point;
 
+import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointBenefitCondition;
 import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointBenefitType;
 import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointBenefitWeightOption;
@@ -7,7 +8,7 @@ import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointBenefi
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class PointBenefitDomain {
+public final class PointBenefitDomain {
 
     private final PointBenefitType type;
     private final Long amount;
@@ -32,18 +33,35 @@ public class PointBenefitDomain {
         this.options = options;
     }
 
-    public static PointBenefitDomain of(final PointBenefitCondition condition) {
+    public static PointBenefitDomain of(final PointPolicyDocument policy) {
+        return of(policy.getBenefitCondition());
+    }
+
+    public static PointBenefitDomain of(final PointBenefitCondition benefitCondition) {
         return new PointBenefitDomain(
-            condition.getType(),
-            condition.getAmount(),
-            condition.getMinAmount(),
-            condition.getMaxAmount(),
-            condition.getAmounts(),
-            condition.getOptions()
+            benefitCondition.getType(),
+            benefitCondition.getAmount(),
+            benefitCondition.getMinAmount(),
+            benefitCondition.getMaxAmount(),
+            benefitCondition.getAmounts(),
+            benefitCondition.getOptions()
         );
     }
 
-    public boolean isValid() {
+    public long grantAmount() {
+        return grantAmount(ThreadLocalRandom.current().nextLong(Long.MAX_VALUE));
+    }
+
+    public long grantAmount(final long randomSeed) {
+        return switch (type) {
+            case FIXED -> amount;
+            case RANDOM_RANGE -> minAmount + Math.floorMod(randomSeed, maxAmount - minAmount + 1);
+            case RANDOM_AMOUNTS -> amounts.get(Math.floorMod(randomSeed, amounts.size()));
+            case RANDOM_WEIGHTED -> weightedAmountBy(randomSeed);
+        };
+    }
+
+    public boolean isGrantAmountValid() {
         return switch (type) {
             case FIXED -> amount != null && amount > 0;
             case RANDOM_RANGE -> minAmount != null
@@ -52,39 +70,25 @@ public class PointBenefitDomain {
                 && maxAmount >= minAmount;
             case RANDOM_AMOUNTS -> amounts != null
                 && !amounts.isEmpty()
-                && amounts.stream().allMatch(value -> value != null && value > 0);
+                && amounts.stream().allMatch(candidate -> candidate != null && candidate > 0);
             case RANDOM_WEIGHTED -> options != null
                 && !options.isEmpty()
                 && options.stream().allMatch(option -> option.getAmount() > 0 && option.getWeight() > 0);
         };
     }
 
-    public long resolveAmount() {
-        return resolveAmount(ThreadLocalRandom.current().nextLong(Long.MAX_VALUE));
-    }
-
-    public long resolveAmount(final long randomSeed) {
-        return switch (type) {
-            case FIXED -> amount;
-            case RANDOM_RANGE -> {
-                final long span = maxAmount - minAmount + 1;
-                yield minAmount + Math.floorMod(randomSeed, span);
+    private long weightedAmountBy(final long randomSeed) {
+        long totalWeight = 0L;
+        for (final PointBenefitWeightOption option : options) {
+            totalWeight += option.getWeight();
+        }
+        long cursor = Math.floorMod(randomSeed, totalWeight);
+        for (final PointBenefitWeightOption option : options) {
+            cursor -= option.getWeight();
+            if (cursor < 0) {
+                return option.getAmount();
             }
-            case RANDOM_AMOUNTS -> amounts.get(Math.floorMod(randomSeed, amounts.size()));
-            case RANDOM_WEIGHTED -> {
-                long total = 0L;
-                for (final PointBenefitWeightOption option : options) {
-                    total += option.getWeight();
-                }
-                long cursor = Math.floorMod(randomSeed, total);
-                for (final PointBenefitWeightOption option : options) {
-                    cursor -= option.getWeight();
-                    if (cursor < 0) {
-                        yield option.getAmount();
-                    }
-                }
-                yield options.getLast().getAmount();
-            }
-        };
+        }
+        return options.getLast().getAmount();
     }
 }

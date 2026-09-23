@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.api.model.promotion;
 
-import im.dangmoo.benefit.infrastructure.data.promotion.applier.PromotionApplier;
+import im.dangmoo.benefit.infrastructure.data.promotion.applier.PromotionApplierDocument;
 
 import java.time.Instant;
 
@@ -10,7 +10,7 @@ public record PromotionApplyResponse(
     Instant appliedAt
 ) {
 
-    public static PromotionApplyResponse of(final PromotionApplier applier) {
+    public static PromotionApplyResponse of(final PromotionApplierDocument applier) {
         return new PromotionApplyResponse(
             applier.getPolicyKey(),
             applier.getUserId(),

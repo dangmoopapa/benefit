@@ -22,24 +22,24 @@ public class CouponWalletMongoRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public CouponWallet save(final CouponWallet wallet) {
+    public CouponWalletDocument save(final CouponWalletDocument wallet) {
         return mongoTemplate.save(wallet);
     }
 
-    public void insert(final CouponWallet wallet) {
+    public void insert(final CouponWalletDocument wallet) {
         try {
             mongoTemplate.insert(wallet);
         } catch (final DuplicateKeyException ignored) {
         }
     }
 
-    public Optional<CouponWallet> findById(final String id) {
-        return Optional.ofNullable(mongoTemplate.findById(id, CouponWallet.class));
+    public Optional<CouponWalletDocument> findById(final String id) {
+        return Optional.ofNullable(mongoTemplate.findById(id, CouponWalletDocument.class));
     }
 
-    public Optional<CouponWallet> findByIdempotencyKey(final String idempotencyKey) {
+    public Optional<CouponWalletDocument> findByIdempotencyKey(final String idempotencyKey) {
         return Optional.ofNullable(
-            mongoTemplate.findOne(CouponWallet.queryByIdempotencyKey(idempotencyKey), CouponWallet.class)
+            mongoTemplate.findOne(CouponWalletDocument.queryByIdempotencyKey(idempotencyKey), CouponWalletDocument.class)
         );
     }
 
@@ -47,22 +47,22 @@ public class CouponWalletMongoRepository {
         if (idempotencyKeys == null || idempotencyKeys.isEmpty()) {
             return Set.of();
         }
-        final Query query = Query.query(Criteria.where(CouponWallet.IDEMPOTENCY_KEY).in(idempotencyKeys));
-        query.fields().include(CouponWallet.IDEMPOTENCY_KEY);
-        return mongoTemplate.find(query, CouponWallet.class).stream()
-            .map(CouponWallet::getIdempotencyKey)
+        final Query query = Query.query(Criteria.where(CouponWalletDocument.IDEMPOTENCY_KEY).in(idempotencyKeys));
+        query.fields().include(CouponWalletDocument.IDEMPOTENCY_KEY);
+        return mongoTemplate.find(query, CouponWalletDocument.class).stream()
+            .map(CouponWalletDocument::getIdempotencyKey)
             .collect(Collectors.toCollection(HashSet::new));
     }
 
-    public List<CouponWallet> findByUserId(final String userId) {
-        return mongoTemplate.find(CouponWallet.queryByUserId(userId), CouponWallet.class);
+    public List<CouponWalletDocument> findByUserId(final String userId) {
+        return mongoTemplate.find(CouponWalletDocument.queryByUserId(userId), CouponWalletDocument.class);
     }
 
-    public List<CouponWallet> findByUserIdAndStatus(final String userId, final CouponWalletStatus status) {
-        return mongoTemplate.find(CouponWallet.queryByUserIdAndStatus(userId, status), CouponWallet.class);
+    public List<CouponWalletDocument> findByUserIdAndStatus(final String userId, final CouponWalletStatus status) {
+        return mongoTemplate.find(CouponWalletDocument.queryByUserIdAndStatus(userId, status), CouponWalletDocument.class);
     }
 
-    public List<CouponWallet> search(
+    public List<CouponWalletDocument> search(
         final String userId,
         final String orderId,
         final String policyId,
@@ -71,8 +71,8 @@ public class CouponWalletMongoRepository {
         final CouponWalletStatus status
     ) {
         return mongoTemplate.find(
-            CouponWallet.query(userId, orderId, policyId, createdBy, updatedBy, status),
-            CouponWallet.class
+            CouponWalletDocument.query(userId, orderId, policyId, createdBy, updatedBy, status),
+            CouponWalletDocument.class
         );
     }
 }

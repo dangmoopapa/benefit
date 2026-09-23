@@ -1,12 +1,12 @@
 package im.dangmoo.benefit.domain.point;
 
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalance;
+import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceDocument;
 
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class PointBalanceDomain {
+public final class PointBalanceDomain {
 
     private final long totalAmount;
     private final Map<Instant, Long> amountsByExpiresAt;
@@ -16,7 +16,7 @@ public class PointBalanceDomain {
         this.amountsByExpiresAt = amountsByExpiresAt;
     }
 
-    public static PointBalanceDomain of(final PointBalance balance) {
+    public static PointBalanceDomain of(final PointBalanceDocument balance) {
         return new PointBalanceDomain(balance.getTotalAmount(), balance.getAmountsByExpiresAt());
     }
 
@@ -24,31 +24,41 @@ public class PointBalanceDomain {
         return totalAmount;
     }
 
-    public long expiringAmount(final Instant now) {
-        return Math.max(0L, totalAmount - availableAmount(now));
+    public long availableAmountAt(final Instant now) {
+        return sumOf(availableAmountsByExpiresAt(now));
     }
 
-    public long availableAmount(final Instant now) {
-        long total = 0L;
-        for (final Map.Entry<Instant, Long> entry : amountsByExpiresAt.entrySet()) {
-            if (isAvailable(entry.getKey(), now)) {
-                total += entry.getValue();
-            }
-        }
-        return total;
+    public long expiredAmountAt(final Instant now) {
+        return sumOf(expiredAmountsByExpiresAt(now));
     }
 
     public Map<Instant, Long> availableAmountsByExpiresAt(final Instant now) {
-        final Map<Instant, Long> active = new LinkedHashMap<>();
-        for (final Map.Entry<Instant, Long> entry : amountsByExpiresAt.entrySet()) {
-            if (isAvailable(entry.getKey(), now) && entry.getValue() > 0) {
-                active.put(entry.getKey(), entry.getValue());
-            }
-        }
-        return active;
+        return bucketsAliveAt(now, true);
     }
 
-    private boolean isAvailable(final Instant expiresAt, final Instant now) {
+    public Map<Instant, Long> expiredAmountsByExpiresAt(final Instant now) {
+        return bucketsAliveAt(now, false);
+    }
+
+    private Map<Instant, Long> bucketsAliveAt(final Instant now, final boolean alive) {
+        final Map<Instant, Long> picked = new LinkedHashMap<>();
+        for (final Map.Entry<Instant, Long> bucket : amountsByExpiresAt.entrySet()) {
+            if (isAliveAt(bucket.getKey(), now) == alive && bucket.getValue() > 0) {
+                picked.put(bucket.getKey(), bucket.getValue());
+            }
+        }
+        return picked;
+    }
+
+    private boolean isAliveAt(final Instant expiresAt, final Instant now) {
         return expiresAt.isAfter(now);
+    }
+
+    private static long sumOf(final Map<Instant, Long> buckets) {
+        long total = 0L;
+        for (final Long amount : buckets.values()) {
+            total += amount;
+        }
+        return total;
     }
 }

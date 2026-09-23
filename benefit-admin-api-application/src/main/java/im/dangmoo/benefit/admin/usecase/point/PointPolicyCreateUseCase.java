@@ -4,7 +4,7 @@ import im.dangmoo.benefit.admin.model.point.policy.PointPolicyCreateRequest;
 import im.dangmoo.benefit.admin.model.point.policy.PointPolicyCreateResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
 import im.dangmoo.benefit.domain.point.PointBenefitDomain;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicy;
+import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointExpireType;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class PointPolicyCreateUseCase {
     }
 
     public PointPolicyCreateResponse create(final String adminId, final PointPolicyCreateRequest request) {
-        if (!PointBenefitDomain.of(request.benefitCondition().toDocument()).isValid()) {
+        if (!PointBenefitDomain.of(request.benefitCondition().toDocument()).isGrantAmountValid()) {
             throw ApiException.conditionNotSatisfied();
         }
         final var expire = request.expireCondition();
@@ -34,7 +34,7 @@ public class PointPolicyCreateUseCase {
         if (pointPolicyMongoRepository.existsByKey(request.key())) {
             throw ApiException.duplicateKey();
         }
-        final PointPolicy saved = pointPolicyMongoRepository.save(request.toDocument(adminId));
+        final PointPolicyDocument saved = pointPolicyMongoRepository.save(request.toDocument(adminId));
         return PointPolicyCreateResponse.of(saved);
     }
 }

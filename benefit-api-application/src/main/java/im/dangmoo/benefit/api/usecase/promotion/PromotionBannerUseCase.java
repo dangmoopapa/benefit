@@ -3,7 +3,7 @@ package im.dangmoo.benefit.api.usecase.promotion;
 import im.dangmoo.benefit.api.model.promotion.PromotionBannerResponse;
 import im.dangmoo.benefit.api.usecase.ApiException;
 import im.dangmoo.benefit.domain.promotion.PromotionPolicyDomain;
-import im.dangmoo.benefit.infrastructure.data.promotion.banner.PromotionBanner;
+import im.dangmoo.benefit.infrastructure.data.promotion.banner.PromotionBannerDocument;
 import im.dangmoo.benefit.infrastructure.data.promotion.banner.PromotionBannerMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyMongoRepository;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class PromotionBannerUseCase {
     }
 
     public PromotionBannerResponse banner(final String key) {
-        final PromotionBanner banner = promotionBannerMongoRepository.findByKey(key)
+        final PromotionBannerDocument banner = promotionBannerMongoRepository.findByKey(key)
             .orElseThrow(ApiException::notFound);
         if (banner.getStatus().isNotActive()) {
             throw ApiException.notFound();
@@ -40,7 +40,7 @@ public class PromotionBannerUseCase {
             if (policy == null) {
                 continue;
             }
-            if (!PromotionPolicyDomain.of(policy).isLive(now)) {
+            if (!PromotionPolicyDomain.of(policy).isOpenAt(now)) {
                 continue;
             }
             items.add(PromotionBannerResponse.Item.of(item));

@@ -2,7 +2,7 @@ package im.dangmoo.benefit.api.model.point;
 
 import im.dangmoo.benefit.domain.point.PointBalanceDomain;
 import im.dangmoo.benefit.domain.point.PointExpireDomain;
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalance;
+import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceDocument;
 
 import java.time.Instant;
 import java.util.List;
@@ -15,15 +15,15 @@ public record PointBalanceResponse(
     List<Bucket> amountsByExpiresAt
 ) {
 
-    public static PointBalanceResponse of(final PointBalance balance, final Instant now) {
-        final PointBalanceDomain domain = PointBalanceDomain.of(balance);
-        final List<Bucket> buckets = domain.availableAmountsByExpiresAt(now).entrySet().stream()
+    public static PointBalanceResponse of(final PointBalanceDocument balance, final Instant now) {
+        final PointBalanceDomain pointBalance = PointBalanceDomain.of(balance);
+        final List<Bucket> buckets = pointBalance.availableAmountsByExpiresAt(now).entrySet().stream()
             .sorted(Map.Entry.comparingByKey())
-            .map(entry -> Bucket.of(entry.getKey(), entry.getValue()))
+            .map(bucket -> Bucket.of(bucket.getKey(), bucket.getValue()))
             .toList();
         return new PointBalanceResponse(
-            domain.totalAmount(),
-            domain.expiringAmount(now),
+            pointBalance.totalAmount(),
+            pointBalance.expiredAmountAt(now),
             balance.getSyncedAt(),
             buckets
         );
@@ -40,9 +40,10 @@ public record PointBalanceResponse(
     ) {
 
         public static Bucket of(final Instant expiresAt, final long amount) {
+            final PointExpireDomain pointExpire = PointExpireDomain.of(expiresAt);
             return new Bucket(
-                PointExpireDomain.toClientExpiresAt(expiresAt),
-                PointExpireDomain.isNever(expiresAt),
+                pointExpire.expiresAtOrNull(),
+                pointExpire.neverExpires(),
                 amount
             );
         }

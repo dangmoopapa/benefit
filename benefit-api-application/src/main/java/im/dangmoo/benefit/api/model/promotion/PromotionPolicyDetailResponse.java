@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.api.model.promotion;
 
 import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionFeature;
-import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicy;
+import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyDocument;
 
 import java.time.Instant;
 import java.util.List;
@@ -20,7 +20,7 @@ public record PromotionPolicyDetailResponse(
     boolean applied
 ) {
 
-    public static PromotionPolicyDetailResponse of(final PromotionPolicy policy, final boolean applied) {
+    public static PromotionPolicyDetailResponse of(final PromotionPolicyDocument policy, final boolean applied) {
         return new PromotionPolicyDetailResponse(
             policy.getKey(),
             policy.getThumbnailImageUrl(),

@@ -2,11 +2,11 @@ package im.dangmoo.benefit.admin.usecase.coupon;
 
 import im.dangmoo.benefit.admin.model.coupon.wallet.CouponWalletRecoveryResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
-import im.dangmoo.benefit.domain.coupon.CouponRecoveryDomain;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicy;
+import im.dangmoo.benefit.domain.coupon.CouponIssueDomain;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.coupon.stock.CouponUsageStockRedisRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWallet;
+import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletStatus;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class CouponWalletRecoveryUseCase {
     }
 
     public CouponWalletRecoveryResponse recover(final String adminId, final String walletId) {
-        final CouponWallet wallet = couponWalletMongoRepository.findById(walletId)
+        final CouponWalletDocument wallet = couponWalletMongoRepository.findById(walletId)
             .orElseThrow(ApiException::notFound);
 
         final CouponWalletStatus status = wallet.getStatus();
@@ -37,15 +37,14 @@ public class CouponWalletRecoveryUseCase {
             throw ApiException.invalidStatus();
         }
 
-        final CouponPolicy policy = couponPolicyMongoRepository.findByKey(wallet.getPolicyKey())
+        final CouponPolicyDocument policy = couponPolicyMongoRepository.findByKey(wallet.getPolicyKey())
             .orElseThrow(ApiException::notFound);
 
-        final boolean recoverable = CouponRecoveryDomain.of(policy.getLifecycleCondition()).isRecoverable();
-        if (!recoverable) {
+        if (!CouponIssueDomain.of(policy).isRecoverableAfterUse()) {
             throw ApiException.conditionNotSatisfied();
         }
 
-        final CouponWallet saved = couponWalletMongoRepository.save(wallet.recover(adminId));
+        final CouponWalletDocument saved = couponWalletMongoRepository.save(wallet.recover(adminId));
         couponUsageStockRedisRepository.decrement(wallet.getPolicyId());
         return CouponWalletRecoveryResponse.of(saved);
     }

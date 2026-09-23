@@ -9,24 +9,23 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MembershipBenefitDomainTest {
 
     @Test
-    @DisplayName("SEASON_1 + Season1 혜택이면 통과한다")
+    @DisplayName("SEASON_1 + Season1 혜택이면 ready")
     void season1_ready() {
-        assertThatCode(() -> MembershipBenefitDomain.requireReady(
+        assertThat(MembershipBenefitDomain.of(
             MembershipSeason.SEASON_1,
             Season1MembershipBenefit.create(new BigDecimal("0.1"), new BigDecimal("0.05"), "coupon-key")
-        )).doesNotThrowAnyException();
+        ).isServiceable()).isTrue();
     }
 
     @Test
-    @DisplayName("SEASON_2 + Season2 혜택이면 통과한다")
+    @DisplayName("SEASON_2 + Season2 혜택이면 ready")
     void season2_ready() {
-        assertThatCode(() -> MembershipBenefitDomain.requireReady(
+        assertThat(MembershipBenefitDomain.of(
             MembershipSeason.SEASON_2,
             Season2MembershipBenefit.create(
                 new BigDecimal("0.1"),
@@ -35,13 +34,13 @@ class MembershipBenefitDomainTest {
                 true,
                 false
             )
-        )).doesNotThrowAnyException();
+        ).isServiceable()).isTrue();
     }
 
     @Test
-    @DisplayName("시즌과 혜택 타입이 다르면 PreparingException")
+    @DisplayName("시즌과 혜택 타입이 다르면 not ready")
     void mismatchedType() {
-        assertThatThrownBy(() -> MembershipBenefitDomain.requireReady(
+        assertThat(MembershipBenefitDomain.of(
             MembershipSeason.SEASON_1,
             Season2MembershipBenefit.create(
                 new BigDecimal("0.1"),
@@ -50,18 +49,17 @@ class MembershipBenefitDomainTest {
                 true,
                 false
             )
-        )).isInstanceOf(MembershipBenefitDomain.PreparingException.class);
+        ).isServiceable()).isFalse();
 
-        assertThatThrownBy(() -> MembershipBenefitDomain.requireReady(
+        assertThat(MembershipBenefitDomain.of(
             MembershipSeason.SEASON_2,
             Season1MembershipBenefit.create(new BigDecimal("0.1"), new BigDecimal("0.05"), "coupon-key")
-        )).isInstanceOf(MembershipBenefitDomain.PreparingException.class);
+        ).isServiceable()).isFalse();
     }
 
     @Test
-    @DisplayName("benefit 이 null 이면 PreparingException")
+    @DisplayName("benefit 이 null 이면 not ready")
     void nullBenefit() {
-        assertThatThrownBy(() -> MembershipBenefitDomain.requireReady(MembershipSeason.SEASON_1, null))
-            .isInstanceOf(MembershipBenefitDomain.PreparingException.class);
+        assertThat(MembershipBenefitDomain.of(MembershipSeason.SEASON_1, null).isServiceable()).isFalse();
     }
 }

@@ -15,23 +15,23 @@ public class PointPolicyMongoRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public PointPolicy save(final PointPolicy policy) {
+    public PointPolicyDocument save(final PointPolicyDocument policy) {
         return mongoTemplate.save(policy);
     }
 
-    public Optional<PointPolicy> findById(final String id) {
-        return Optional.ofNullable(mongoTemplate.findById(id, PointPolicy.class));
+    public Optional<PointPolicyDocument> findById(final String id) {
+        return Optional.ofNullable(mongoTemplate.findById(id, PointPolicyDocument.class));
     }
 
-    public Optional<PointPolicy> findByKey(final String key) {
-        return Optional.ofNullable(mongoTemplate.findOne(PointPolicy.queryByKey(key), PointPolicy.class));
+    public Optional<PointPolicyDocument> findByKey(final String key) {
+        return Optional.ofNullable(mongoTemplate.findOne(PointPolicyDocument.queryByKey(key), PointPolicyDocument.class));
     }
 
     public boolean existsByKey(final String key) {
-        return mongoTemplate.exists(PointPolicy.queryByKey(key), PointPolicy.class);
+        return mongoTemplate.exists(PointPolicyDocument.queryByKey(key), PointPolicyDocument.class);
     }
 
-    public List<PointPolicy> search(final String key, final String name, final PointPolicyStatus status) {
-        return mongoTemplate.find(PointPolicy.query(key, name, status), PointPolicy.class);
+    public List<PointPolicyDocument> search(final String key, final String name, final PointPolicyStatus status) {
+        return mongoTemplate.find(PointPolicyDocument.query(key, name, status), PointPolicyDocument.class);
     }
 }

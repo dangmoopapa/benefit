@@ -3,12 +3,15 @@ package im.dangmoo.benefit.admin.usecase.coupon;
 import im.dangmoo.benefit.admin.model.coupon.policy.CouponPolicyCreateRequest;
 import im.dangmoo.benefit.admin.model.coupon.policy.CouponPolicyCreateResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
-import im.dangmoo.benefit.infrastructure.data.batch.BatchCenterJobTriggerEvent;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCacheRepository;
+import im.dangmoo.benefit.infrastructure.data.batch.BatchCenterJobTriggerProduction;
 import im.dangmoo.benefit.infrastructure.data.batch.BatchCenterJobTriggerPublisher;
-import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCode;
+import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeType;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.*;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.changed.CouponPolicyChangedPublication;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.changed.CouponPolicyChangedPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -56,8 +59,8 @@ public class CouponPolicyCreateUseCase {
             }
         }
 
-        final CouponPolicy policy = request.toDocument(adminId);
-        final CouponPolicy saved = couponPolicyMongoRepository.save(policy);
+        final CouponPolicyDocument policy = request.toDocument(adminId);
+        final CouponPolicyDocument saved = couponPolicyMongoRepository.save(policy);
         couponPolicyCacheRepository.put(saved);
 
         final String code = request.code();
@@ -66,10 +69,10 @@ public class CouponPolicyCreateUseCase {
                 throw ApiException.duplicateKey();
             }
             couponCodeMongoRepository.insert(
-                CouponCode.create(saved.getId(), saved.getKey(), code, CouponCodeType.FIXED, adminId)
+                CouponCodeDocument.create(saved.getId(), saved.getKey(), code, CouponCodeType.FIXED, adminId)
             );
         } else if (request.type() == CouponPolicyType.MARKETING) {
-            batchCenterJobTriggerPublisher.publish(BatchCenterJobTriggerEvent.of(
+            batchCenterJobTriggerPublisher.publish(BatchCenterJobTriggerProduction.of(
                 "COUPON_CODE_GENERATION",
                 Map.of(
                     "policyKey", saved.getKey(),
@@ -77,7 +80,7 @@ public class CouponPolicyCreateUseCase {
                 )
             ));
         }
-        couponPolicyChangedPublisher.publish(CouponPolicyChangedEvent.ofCreated(saved));
+        couponPolicyChangedPublisher.publish(CouponPolicyChangedPublication.ofCreated(saved));
         return CouponPolicyCreateResponse.of(saved);
     }
 }

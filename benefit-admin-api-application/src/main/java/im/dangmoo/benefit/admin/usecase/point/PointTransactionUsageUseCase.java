@@ -4,9 +4,10 @@ import im.dangmoo.benefit.admin.model.point.usage.PointUsageRequest;
 import im.dangmoo.benefit.admin.model.point.usage.PointUsageResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
 import im.dangmoo.benefit.domain.point.PointBalanceDomain;
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalance;
+import im.dangmoo.benefit.domain.point.PointUsageDomain;
+import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceDocument;
 import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransaction;
+import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionDocument;
 import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionMongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -28,14 +29,17 @@ public class PointTransactionUsageUseCase {
 
     public PointUsageResponse use(final String adminId, final PointUsageRequest request) {
         final Instant now = Instant.now();
-        final PointBalance balance = pointBalanceMongoRepository.findByUserId(request.userId())
+        final PointBalanceDocument balance = pointBalanceMongoRepository.findByUserId(request.userId())
             .orElseThrow(ApiException::insufficientPoint);
-        if (PointBalanceDomain.of(balance).availableAmount(now) < request.amount()) {
-            throw ApiException.insufficientPoint();
+        final long availableAmount = PointBalanceDomain.of(balance).availableAmountAt(now);
+        switch (PointUsageDomain.of(availableAmount).usabilityOf(request.amount())) {
+            case INVALID_AMOUNT, INSUFFICIENT_BALANCE -> throw ApiException.insufficientPoint();
+            case USABLE -> {
+            }
         }
 
         final var appended = pointTransactionMongoRepository.append(
-            PointTransaction.use(request.userId(), request.amount(), request.orderId(), adminId)
+            PointTransactionDocument.use(request.userId(), request.amount(), request.orderId(), adminId)
         );
         if (!appended.created()) {
             return PointUsageResponse.of(appended.tx());

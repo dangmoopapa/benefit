@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.admin.model.membership.policy;
 
-import im.dangmoo.benefit.infrastructure.data.membership.policy.MembershipPolicy;
+import im.dangmoo.benefit.infrastructure.data.membership.policy.MembershipPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.membership.policy.MembershipPolicyStatus;
 import im.dangmoo.benefit.infrastructure.data.membership.policy.MembershipSeason;
 import im.dangmoo.benefit.infrastructure.data.membership.policy.benefit.MembershipBenefit;
@@ -20,7 +20,7 @@ public record MembershipPolicyDetailResponse(
     Instant updatedAt
 ) {
 
-    public static MembershipPolicyDetailResponse of(final MembershipPolicy policy) {
+    public static MembershipPolicyDetailResponse of(final MembershipPolicyDocument policy) {
         return new MembershipPolicyDetailResponse(
             policy.getId(),
             policy.getName(),

@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.api.model.coupon;
 
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicy;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public record VoucherCouponBoxResponse(List<Item> items) {
         String description
     ) {
 
-        public static Item of(final CouponPolicy policy) {
+        public static Item of(final CouponPolicyDocument policy) {
             return new Item(
                 policy.getId(),
                 policy.getKey(),

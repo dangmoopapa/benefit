@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.api.model.membership;
 
 import im.dangmoo.benefit.infrastructure.data.membership.policy.MembershipSeason;
-import im.dangmoo.benefit.infrastructure.data.membership.contract.MembershipContract;
+import im.dangmoo.benefit.infrastructure.data.membership.contract.MembershipContractDocument;
 import im.dangmoo.benefit.infrastructure.data.membership.contract.MembershipContractStatus;
 
 import java.time.Instant;
@@ -18,7 +18,7 @@ public record MembershipContractResponse(
     boolean autoRenew
 ) {
 
-    public static MembershipContractResponse of(final MembershipContract contract) {
+    public static MembershipContractResponse of(final MembershipContractDocument contract) {
         return new MembershipContractResponse(
             contract.getId(),
             contract.getPolicyId(),

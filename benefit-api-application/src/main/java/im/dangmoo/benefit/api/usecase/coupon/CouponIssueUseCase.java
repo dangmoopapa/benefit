@@ -4,19 +4,16 @@ import im.dangmoo.benefit.api.model.coupon.CouponIssueRequest;
 import im.dangmoo.benefit.api.model.coupon.CouponIssueResponse;
 import im.dangmoo.benefit.api.model.coupon.MarketingCouponIssueRequest;
 import im.dangmoo.benefit.api.usecase.ApiException;
-import im.dangmoo.benefit.domain.coupon.CouponExhaustionDomain;
 import im.dangmoo.benefit.domain.coupon.CouponIssueDomain;
-import im.dangmoo.benefit.domain.coupon.CouponUsageDomain;
-import im.dangmoo.benefit.domain.coupon.CouponWalletDomain;
-import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCode;
+import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeMongoRepository;
 import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeType;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CachedCouponPolicy;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCache;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCacheRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyChangedEvent;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyChangedPublisher;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.changed.CouponPolicyChangedPublication;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.changed.CouponPolicyChangedPublisher;
 import im.dangmoo.benefit.infrastructure.data.coupon.stock.CouponIssueStockRedisRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWallet;
+import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletMongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +43,7 @@ public class CouponIssueUseCase {
     }
 
     public CouponIssueResponse issue(final String userId, final CouponIssueRequest request) {
-        final CachedCouponPolicy policy = couponPolicyCacheRepository.findByKey(request.policyKey());
+        final CouponPolicyCache policy = couponPolicyCacheRepository.findByKey(request.policyKey());
         if (policy == null) {
             throw ApiException.notFound();
         }
@@ -54,9 +51,9 @@ public class CouponIssueUseCase {
     }
 
     public CouponIssueResponse issueMarketing(final String userId, final MarketingCouponIssueRequest request) {
-        final CouponCode code = couponCodeMongoRepository.findByCode(request.code())
+        final CouponCodeDocument code = couponCodeMongoRepository.findByCode(request.code())
             .orElseThrow(ApiException::notFound);
-        final CachedCouponPolicy policy = couponPolicyCacheRepository.findByKey(code.getPolicyKey());
+        final CouponPolicyCache policy = couponPolicyCacheRepository.findByKey(code.getPolicyKey());
         if (policy == null) {
             throw ApiException.notFound();
         }
@@ -69,50 +66,34 @@ public class CouponIssueUseCase {
         return issue(userId, policy);
     }
 
-    private CouponIssueResponse issue(final String userId, final CachedCouponPolicy policy) {
-        if (policy.status().isNotActive()) {
-            throw ApiException.policyIssueCoupon();
-        }
-
-        final CouponIssueDomain issueDomain = CouponIssueDomain.of(policy.issueCondition());
-        final CouponExhaustionDomain exhaustionDomain = CouponExhaustionDomain.of(policy.issueCondition());
+    private CouponIssueResponse issue(final String userId, final CouponPolicyCache policy) {
         final Instant now = Instant.now();
-        final String idempotencyKey = CouponWalletDomain.idempotencyKey(
-            policy.id(),
-            userId,
-            policy.issueCondition().getFrequency(),
-            now
-        );
-        final boolean alreadyIssued = couponWalletMongoRepository.findByIdempotencyKey(idempotencyKey).isPresent();
-        if (alreadyIssued) {
-            throw ApiException.alreadyIssuedCoupon();
-        }
-
+        final CouponIssueDomain couponIssue = CouponIssueDomain.of(policy);
+        final String issueKey = couponIssue.issueKeyFor(policy.id(), userId, now);
+        final boolean alreadyIssued = couponWalletMongoRepository.findByIdempotencyKey(issueKey).isPresent();
         final long issuedCount = couponIssueStockRedisRepository.get(policy.id());
-        if (exhaustionDomain.isExhausted(issuedCount)) {
-            throw ApiException.stockExhaustedCoupon();
-        }
-        if (!issueDomain.isSatisfiedAt(now)) {
-            throw ApiException.policyIssueCoupon();
+
+        switch (couponIssue.issuabilityAt(now, alreadyIssued, issuedCount)) {
+            case ALREADY_ISSUED -> throw ApiException.alreadyIssuedCoupon();
+            case STOCK_EXHAUSTED -> throw ApiException.stockExhaustedCoupon();
+            case POLICY_INACTIVE, OUT_OF_PERIOD -> throw ApiException.policyIssueCoupon();
+            case ISSUABLE -> {
+            }
         }
 
-        final Instant expiresAt = CouponUsageDomain.of(
-            policy.usageCondition(),
-            policy.applyCondition()
-        ).resolveExpiresAt(now);
-
-        final CouponWallet wallet = CouponWallet.create(
-            userId,
-            policy.id(),
-            policy.key(),
-            idempotencyKey,
-            expiresAt,
-            userId
+        final CouponWalletDocument saved = couponWalletMongoRepository.save(
+            CouponWalletDocument.create(
+                userId,
+                policy.id(),
+                policy.key(),
+                issueKey,
+                couponIssue.expiresAtFrom(now),
+                userId
+            )
         );
-        final CouponWallet saved = couponWalletMongoRepository.save(wallet);
         final long issuedCountAfter = couponIssueStockRedisRepository.increment(policy.id());
-        if (exhaustionDomain.isJustExhausted(issuedCountAfter)) {
-            couponPolicyChangedPublisher.publish(CouponPolicyChangedEvent.ofExhausted(policy));
+        if (couponIssue.isLastIssue(issuedCountAfter)) {
+            couponPolicyChangedPublisher.publish(CouponPolicyChangedPublication.ofExhausted(policy));
         }
         return CouponIssueResponse.of(saved);
     }

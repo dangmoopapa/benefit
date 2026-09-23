@@ -5,9 +5,9 @@ import im.dangmoo.benefit.api.model.membership.MembershipContractResponse;
 import im.dangmoo.benefit.api.usecase.ApiException;
 import im.dangmoo.benefit.domain.membership.MembershipBenefitDomain;
 import im.dangmoo.benefit.domain.membership.MembershipContractDomain;
-import im.dangmoo.benefit.infrastructure.data.membership.policy.MembershipPolicy;
+import im.dangmoo.benefit.infrastructure.data.membership.policy.MembershipPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.membership.policy.MembershipPolicyMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.membership.contract.MembershipContract;
+import im.dangmoo.benefit.infrastructure.data.membership.contract.MembershipContractDocument;
 import im.dangmoo.benefit.infrastructure.data.membership.contract.MembershipContractMongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -36,19 +36,19 @@ public class MembershipContractJoinUseCase {
             throw ApiException.invalidStatus();
         }
 
-        final MembershipPolicy policy = membershipPolicyMongoRepository.findByKey(request.policyKey())
+        final MembershipPolicyDocument policy = membershipPolicyMongoRepository.findByKey(request.policyKey())
             .orElseThrow(ApiException::notFound);
         if (policy.getStatus().isNotActive()) {
             throw ApiException.invalidStatus();
         }
-        try {
-            MembershipBenefitDomain.requireReady(policy.getSeason(), policy.getBenefit());
-        } catch (final MembershipBenefitDomain.PreparingException ex) {
+        if (!MembershipBenefitDomain.of(policy).isServiceable()) {
             throw ApiException.preparingMembership();
         }
 
-        final Instant periodEnd = MembershipContractDomain.nextPeriodEnd(now);
-        final String idempotencyKey = MembershipContractDomain.idempotencyKey(policy.getId(), userId);
+        final MembershipContractDomain membershipContract =
+            MembershipContractDomain.joining(policy.getId(), userId, now);
+        final Instant periodEnd = membershipContract.periodEnd();
+        final String idempotencyKey = membershipContract.contractKey();
         final var existing = membershipContractMongoRepository.findByIdempotencyKey(idempotencyKey);
         if (existing.isPresent()) {
             final var saved = membershipContractMongoRepository.save(
@@ -58,7 +58,7 @@ public class MembershipContractJoinUseCase {
         }
 
         final var saved = membershipContractMongoRepository.save(
-            MembershipContract.join(
+            MembershipContractDocument.join(
                 userId,
                 policy.getId(),
                 policy.getKey(),

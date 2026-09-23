@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.admin.model.point.policy;
 
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicy;
+import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyStatus;
 import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointAccountCondition;
 import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointBenefitCondition;
@@ -33,7 +33,7 @@ public record PointPolicyDetailResponse(
     Instant updatedAt
 ) {
 
-    public static PointPolicyDetailResponse of(final PointPolicy policy) {
+    public static PointPolicyDetailResponse of(final PointPolicyDocument policy) {
         return new PointPolicyDetailResponse(
             policy.getId(),
             policy.getName(),

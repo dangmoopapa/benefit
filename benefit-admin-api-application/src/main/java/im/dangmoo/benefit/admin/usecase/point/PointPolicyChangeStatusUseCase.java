@@ -3,7 +3,7 @@ package im.dangmoo.benefit.admin.usecase.point;
 import im.dangmoo.benefit.admin.model.point.policy.PointPolicyChangeStatusRequest;
 import im.dangmoo.benefit.admin.model.point.policy.PointPolicyChangeStatusResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicy;
+import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyMongoRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +21,9 @@ public class PointPolicyChangeStatusUseCase {
         final String id,
         final PointPolicyChangeStatusRequest request
     ) {
-        final PointPolicy policy = pointPolicyMongoRepository.findById(id)
+        final PointPolicyDocument policy = pointPolicyMongoRepository.findById(id)
             .orElseThrow(ApiException::notFound);
-        final PointPolicy saved = pointPolicyMongoRepository.save(
+        final PointPolicyDocument saved = pointPolicyMongoRepository.save(
             policy.changeStatus(request.status(), adminId)
         );
         return PointPolicyChangeStatusResponse.of(saved);

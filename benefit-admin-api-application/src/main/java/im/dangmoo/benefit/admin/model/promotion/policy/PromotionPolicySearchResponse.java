@@ -2,14 +2,14 @@ package im.dangmoo.benefit.admin.model.promotion.policy;
 
 import im.dangmoo.benefit.infrastructure.data.promotion.PromotionPolicyStatus;
 import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionFeature;
-import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicy;
+import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyDocument;
 
 import java.time.Instant;
 import java.util.List;
 
 public record PromotionPolicySearchResponse(List<Item> items) {
 
-    public static PromotionPolicySearchResponse of(final List<PromotionPolicy> policies) {
+    public static PromotionPolicySearchResponse of(final List<PromotionPolicyDocument> policies) {
         return new PromotionPolicySearchResponse(
             policies.stream().map(Item::of).toList()
         );
@@ -29,7 +29,7 @@ public record PromotionPolicySearchResponse(List<Item> items) {
         List<PromotionFeature> features,
         Integer sortOrder
     ) {
-        public static Item of(final PromotionPolicy policy) {
+        public static Item of(final PromotionPolicyDocument policy) {
             return new Item(
                 policy.getId(),
                 policy.getKey(),

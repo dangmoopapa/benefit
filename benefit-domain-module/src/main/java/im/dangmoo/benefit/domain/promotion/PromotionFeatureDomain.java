@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PromotionFeatureDomain {
+public final class PromotionFeatureDomain {
 
     private final List<Feature> features;
 
@@ -25,20 +25,15 @@ public class PromotionFeatureDomain {
         if (features == null) {
             return new PromotionFeatureDomain(List.of());
         }
-        final List<Feature> extracted = new ArrayList<>();
+        final List<Feature> configured = new ArrayList<>();
         for (final PromotionFeature feature : features) {
-            extracted.add(Feature.of(feature));
+            configured.add(Feature.of(feature));
         }
-        return new PromotionFeatureDomain(extracted);
+        return new PromotionFeatureDomain(configured);
     }
 
-    public void requireReady() {
-        if (features.isEmpty()) {
-            throw new InvalidFeatureException();
-        }
-        for (final Feature feature : features) {
-            feature.requireReady();
-        }
+    public boolean isConfigured() {
+        return !features.isEmpty() && features.stream().allMatch(Feature::isConfigured);
     }
 
     private record Feature(
@@ -77,51 +72,29 @@ public class PromotionFeatureDomain {
             );
         }
 
-        private void requireReady() {
+        private boolean isConfigured() {
             if (type == null) {
-                throw new InvalidFeatureException();
+                return false;
             }
-            switch (type) {
-                case INFO -> {
-                }
-                case PRODUCTS -> {
-                    if (!hasProducts) {
-                        throw new InvalidFeatureException();
-                    }
-                }
-                case LANDING -> {
-                    if (!StringUtils.hasText(landingUrl) || landingTarget == null) {
-                        throw new InvalidFeatureException();
-                    }
-                }
-                case ENTRY -> requireReadyEntry();
-                case COUPON_ISSUE -> {
-                    if (!StringUtils.hasText(couponPolicyKey)) {
-                        throw new InvalidFeatureException();
-                    }
-                }
-                case POINT_ISSUE -> {
-                    if (!StringUtils.hasText(pointPolicyKey)) {
-                        throw new InvalidFeatureException();
-                    }
-                }
-            }
+            return switch (type) {
+                case INFO -> true;
+                case PRODUCTS -> hasProducts;
+                case LANDING -> StringUtils.hasText(landingUrl) && landingTarget != null;
+                case ENTRY -> isEntryConfigured();
+                case COUPON_ISSUE -> StringUtils.hasText(couponPolicyKey);
+                case POINT_ISSUE -> StringUtils.hasText(pointPolicyKey);
+            };
         }
 
-        private void requireReadyEntry() {
+        private boolean isEntryConfigured() {
             if (lotteryType == null) {
-                throw new InvalidFeatureException();
+                return false;
             }
             if (lotteryType == PromotionLotteryType.AUTO_COUNT
                 && (winnerCount == null || winnerCount <= 0)) {
-                throw new InvalidFeatureException();
+                return false;
             }
-            if (prizes.isEmpty()) {
-                throw new InvalidFeatureException();
-            }
-            for (final Prize prize : prizes) {
-                prize.requireReady();
-            }
+            return !prizes.isEmpty() && prizes.stream().allMatch(Prize::isConfigured);
         }
     }
 
@@ -143,22 +116,15 @@ public class PromotionFeatureDomain {
             );
         }
 
-        private void requireReady() {
+        private boolean isConfigured() {
             if (type == null) {
-                throw new InvalidFeatureException();
+                return false;
             }
-            if (type == PromotionPrizeType.COUPON && !StringUtils.hasText(couponPolicyKey)) {
-                throw new InvalidFeatureException();
-            }
-            if (type == PromotionPrizeType.POINT && !StringUtils.hasText(pointPolicyKey)) {
-                throw new InvalidFeatureException();
-            }
-            if (type == PromotionPrizeType.TEXT && !StringUtils.hasText(text)) {
-                throw new InvalidFeatureException();
-            }
+            return switch (type) {
+                case COUPON -> StringUtils.hasText(couponPolicyKey);
+                case POINT -> StringUtils.hasText(pointPolicyKey);
+                case TEXT -> StringUtils.hasText(text);
+            };
         }
-    }
-
-    public static class InvalidFeatureException extends RuntimeException {
     }
 }

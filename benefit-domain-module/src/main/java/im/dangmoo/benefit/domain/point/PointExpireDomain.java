@@ -1,49 +1,53 @@
 package im.dangmoo.benefit.domain.point;
 
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalance;
+import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceDocument;
+import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointExpireCondition;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointExpireType;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-public class PointExpireDomain {
+public final class PointExpireDomain {
 
-    private final PointExpireType type;
     private final Instant expiresAt;
-    private final Integer daysAfterGrant;
 
-    private PointExpireDomain(
-        final PointExpireType type,
-        final Instant expiresAt,
-        final Integer daysAfterGrant
-    ) {
-        this.type = type;
+    private PointExpireDomain(final Instant expiresAt) {
         this.expiresAt = expiresAt;
-        this.daysAfterGrant = daysAfterGrant;
     }
 
-    public static PointExpireDomain of(final PointExpireCondition condition) {
-        return new PointExpireDomain(
-            condition.getType(),
-            condition.getExpiresAt(),
-            condition.getDaysAfterGrant()
-        );
+    public static PointExpireDomain of(final PointPolicyDocument policy, final Instant grantedAt) {
+        return new PointExpireDomain(expiresAtBy(policy.getExpireCondition(), grantedAt));
     }
 
-    public Instant resolveExpiresAt(final Instant grantedAt) {
-        return switch (type) {
-            case NEVER -> PointBalance.NEVER_EXPIRES_AT;
-            case FIXED_AT -> PointBalance.toExpiresKey(expiresAt);
-            case DAYS_AFTER_GRANT -> PointBalance.toExpiresKey(grantedAt).plus(daysAfterGrant, ChronoUnit.DAYS);
+    public static PointExpireDomain of(final Instant expiresAt) {
+        return new PointExpireDomain(expiresAt);
+    }
+
+    public Instant expiresAt() {
+        return expiresAt;
+    }
+
+    public Instant expiresAtOrNull() {
+        return neverExpires() ? null : expiresAt;
+    }
+
+    public boolean neverExpires() {
+        return PointBalanceDocument.isNever(expiresAt);
+    }
+
+    public boolean isExpiredAt(final Instant asOf) {
+        return !neverExpires() && !expiresAt.isAfter(asOf);
+    }
+
+    private static Instant expiresAtBy(
+        final PointExpireCondition expireCondition,
+        final Instant grantedAt
+    ) {
+        return switch (expireCondition.getType()) {
+            case NEVER -> PointBalanceDocument.NEVER_EXPIRES_AT;
+            case FIXED_AT -> PointBalanceDocument.toExpiresKey(expireCondition.getExpiresAt());
+            case DAYS_AFTER_GRANT -> PointBalanceDocument.toExpiresKey(grantedAt)
+                .plus(expireCondition.getDaysAfterGrant(), ChronoUnit.DAYS);
         };
-    }
-
-    public static boolean isNever(final Instant expiresAt) {
-        return PointBalance.isNever(expiresAt);
-    }
-
-    public static Instant toClientExpiresAt(final Instant expiresAt) {
-        return isNever(expiresAt) ? null : expiresAt;
     }
 }

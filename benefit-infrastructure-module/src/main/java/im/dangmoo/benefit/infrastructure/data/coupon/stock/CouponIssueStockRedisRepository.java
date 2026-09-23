@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.infrastructure.data.coupon.stock;
 
-import im.dangmoo.benefit.infrastructure.collection.redis.RedisRepository;
+import im.dangmoo.benefit.infrastructure.support.redis.RedisRepository;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 

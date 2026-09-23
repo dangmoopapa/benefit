@@ -14,21 +14,21 @@ public class PromotionApplierMongoRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public PromotionApplier save(final PromotionApplier applier) {
+    public PromotionApplierDocument save(final PromotionApplierDocument applier) {
         return mongoTemplate.save(applier);
     }
 
     public boolean existsByPolicyIdAndUserId(final String policyId, final String userId) {
         return mongoTemplate.exists(
-            PromotionApplier.queryByPolicyIdAndUserId(policyId, userId),
-            PromotionApplier.class
+            PromotionApplierDocument.queryByPolicyIdAndUserId(policyId, userId),
+            PromotionApplierDocument.class
         );
     }
 
-    public List<PromotionApplier> findByPolicyId(final String policyId) {
+    public List<PromotionApplierDocument> findByPolicyId(final String policyId) {
         return mongoTemplate.find(
-            PromotionApplier.queryByPolicyId(policyId),
-            PromotionApplier.class
+            PromotionApplierDocument.queryByPolicyId(policyId),
+            PromotionApplierDocument.class
         );
     }
 }

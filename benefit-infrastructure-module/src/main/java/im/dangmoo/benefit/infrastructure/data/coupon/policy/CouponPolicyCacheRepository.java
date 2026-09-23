@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.infrastructure.data.coupon.policy;
 
-import im.dangmoo.benefit.infrastructure.collection.cache.CacheKeys;
+import im.dangmoo.benefit.infrastructure.support.cache.CacheKeys;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
@@ -15,14 +15,14 @@ public class CouponPolicyCacheRepository {
     }
 
     @Cacheable(cacheNames = CacheKeys.COUPON_POLICY, key = "#key")
-    public CachedCouponPolicy findByKey(final String key) {
+    public CouponPolicyCache findByKey(final String key) {
         return couponPolicyMongoRepository.findByKey(key)
-            .map(CachedCouponPolicy::of)
+            .map(CouponPolicyCache::of)
             .orElse(null);
     }
 
     @CachePut(cacheNames = CacheKeys.COUPON_POLICY, key = "#result.key")
-    public CachedCouponPolicy put(final CouponPolicy policy) {
-        return CachedCouponPolicy.of(policy);
+    public CouponPolicyCache put(final CouponPolicyDocument policy) {
+        return CouponPolicyCache.of(policy);
     }
 }

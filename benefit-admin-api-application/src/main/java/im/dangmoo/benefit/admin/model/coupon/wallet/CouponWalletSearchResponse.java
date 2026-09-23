@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.admin.model.coupon.wallet;
 
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWallet;
+import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletDocument;
 import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletStatus;
 
 import java.math.BigDecimal;
@@ -9,7 +9,7 @@ import java.util.List;
 
 public record CouponWalletSearchResponse(List<Item> items) {
 
-    public static CouponWalletSearchResponse of(final List<CouponWallet> wallets) {
+    public static CouponWalletSearchResponse of(final List<CouponWalletDocument> wallets) {
         return new CouponWalletSearchResponse(wallets.stream().map(Item::of).toList());
     }
 
@@ -31,7 +31,7 @@ public record CouponWalletSearchResponse(List<Item> items) {
         Instant updatedAt
     ) {
 
-        public static Item of(final CouponWallet wallet) {
+        public static Item of(final CouponWalletDocument wallet) {
             return new Item(
                 wallet.getId(),
                 wallet.getUserId(),

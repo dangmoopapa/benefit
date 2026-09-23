@@ -4,12 +4,12 @@ import im.dangmoo.benefit.admin.model.point.reclaim.PointReclaimRequest;
 import im.dangmoo.benefit.admin.model.point.reclaim.PointReclaimResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
 import im.dangmoo.benefit.domain.point.PointBalanceDomain;
-import im.dangmoo.benefit.domain.point.PointRecoveryDomain;
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalance;
+import im.dangmoo.benefit.domain.point.PointIssueDomain;
+import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceDocument;
 import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicy;
+import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
 import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransaction;
+import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionDocument;
 import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionMongoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -38,24 +38,24 @@ public class PointTransactionReclaimUseCase {
             throw ApiException.conditionNotSatisfied();
         }
 
-        final PointPolicy policy = pointPolicyMongoRepository.findByKey(request.policyKey())
+        final PointPolicyDocument policy = pointPolicyMongoRepository.findByKey(request.policyKey())
             .orElseThrow(ApiException::notFound);
-        if (!PointRecoveryDomain.of(policy.getLifecycleCondition()).isReclaimable()) {
-            throw ApiException.conditionNotSatisfied();
-        }
 
         final Instant now = Instant.now();
-        final PointBalance balance = pointBalanceMongoRepository.findByUserId(request.userId())
+        final PointBalanceDocument balance = pointBalanceMongoRepository.findByUserId(request.userId())
             .orElseThrow(ApiException::notFound);
 
-        final long available = PointBalanceDomain.of(balance).availableAmount(now);
-        final long amount = request.amount() == null ? available : request.amount();
-        if (amount <= 0 || amount > available) {
-            throw ApiException.insufficientPoint();
+        final long availableAmount = PointBalanceDomain.of(balance).availableAmountAt(now);
+        final long amount = request.amount() == null ? availableAmount : request.amount();
+        switch (PointIssueDomain.of(policy).reclaimabilityOf(amount, availableAmount)) {
+            case POLICY_NOT_RECLAIMABLE -> throw ApiException.conditionNotSatisfied();
+            case INVALID_AMOUNT, INSUFFICIENT_BALANCE -> throw ApiException.insufficientPoint();
+            case RECLAIMABLE -> {
+            }
         }
 
         final var appended = pointTransactionMongoRepository.append(
-            PointTransaction.reclaim(
+            PointTransactionDocument.reclaim(
                 request.userId(),
                 policy.getId(),
                 policy.getKey(),

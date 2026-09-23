@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.admin.model.promotion.banner;
 
-import im.dangmoo.benefit.infrastructure.data.promotion.banner.PromotionBanner;
+import im.dangmoo.benefit.infrastructure.data.promotion.banner.PromotionBannerDocument;
 import im.dangmoo.benefit.infrastructure.data.promotion.banner.PromotionBannerItem;
 
 import java.util.List;
@@ -11,8 +11,8 @@ public record PromotionBannerCreateRequest(
     List<BannerItem> items
 ) {
 
-    public PromotionBanner toDocument(final String createdBy) {
-        return PromotionBanner.create(
+    public PromotionBannerDocument toDocument(final String createdBy) {
+        return PromotionBannerDocument.create(
             key,
             name,
             items == null ? List.of() : items.stream().map(BannerItem::toDocument).toList(),

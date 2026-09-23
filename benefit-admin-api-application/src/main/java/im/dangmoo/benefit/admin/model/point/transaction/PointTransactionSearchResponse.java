@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.admin.model.point.transaction;
 
 import im.dangmoo.benefit.domain.point.PointExpireDomain;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransaction;
+import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionDocument;
 import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionType;
 
 import java.time.Instant;
@@ -17,7 +17,7 @@ public record PointTransactionSearchResponse(
 ) {
 
     public static PointTransactionSearchResponse of(
-        final List<PointTransaction> transactions,
+        final List<PointTransactionDocument> transactions,
         final long totalElements,
         final int page,
         final int size
@@ -48,7 +48,7 @@ public record PointTransactionSearchResponse(
         String createdBy
     ) {
 
-        public static Item of(final PointTransaction transaction) {
+        public static Item of(final PointTransactionDocument transaction) {
             return new Item(
                 transaction.getId(),
                 transaction.getUserId(),
@@ -56,8 +56,8 @@ public record PointTransactionSearchResponse(
                 transaction.getAmount(),
                 transaction.getPolicyId(),
                 transaction.getPolicyKey(),
-                PointExpireDomain.toClientExpiresAt(transaction.getExpiresAt()),
-                PointExpireDomain.isNever(transaction.getExpiresAt()),
+                PointExpireDomain.of(transaction.getExpiresAt()).expiresAtOrNull(),
+                PointExpireDomain.of(transaction.getExpiresAt()).neverExpires(),
                 transaction.getOrderId(),
                 transaction.getOriginalTransactionId(),
                 transaction.getTransactionAt(),

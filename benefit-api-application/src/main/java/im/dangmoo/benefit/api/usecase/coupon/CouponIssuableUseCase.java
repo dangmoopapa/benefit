@@ -3,10 +3,8 @@ package im.dangmoo.benefit.api.usecase.coupon;
 import im.dangmoo.benefit.api.model.coupon.CouponIssuableRequest;
 import im.dangmoo.benefit.api.model.coupon.CouponIssuableResponse;
 import im.dangmoo.benefit.api.usecase.ApiMessage;
-import im.dangmoo.benefit.domain.coupon.CouponExhaustionDomain;
 import im.dangmoo.benefit.domain.coupon.CouponIssueDomain;
-import im.dangmoo.benefit.domain.coupon.CouponWalletDomain;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CachedCouponPolicy;
+import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCache;
 import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCacheRepository;
 import im.dangmoo.benefit.infrastructure.data.coupon.stock.CouponIssueStockRedisRepository;
 import im.dangmoo.benefit.infrastructure.data.coupon.stock.CouponTimeAttackIssueScript;
@@ -40,38 +38,25 @@ public class CouponIssuableUseCase {
         final CouponIssuableRequest request,
         final boolean isTimeAttack
     ) {
-        final CachedCouponPolicy policy = couponPolicyCacheRepository.findByKey(request.policyKey());
+        final CouponPolicyCache policy = couponPolicyCacheRepository.findByKey(request.policyKey());
         if (policy == null) {
             return CouponIssuableResponse.ofNotIssuable(ApiMessage.POLICY_ISSUE_COUPON, isTimeAttack);
         }
-        if (policy.status().isNotActive()) {
-            return CouponIssuableResponse.ofNotIssuable(ApiMessage.POLICY_ISSUE_COUPON, isTimeAttack);
-        }
 
-        final CouponIssueDomain issueDomain = CouponIssueDomain.of(policy.issueCondition());
-        final CouponExhaustionDomain exhaustionDomain = CouponExhaustionDomain.of(policy.issueCondition());
         final Instant now = Instant.now();
-        final String idempotencyKey = CouponWalletDomain.idempotencyKey(
-            policy.id(),
-            userId,
-            policy.issueCondition().getFrequency(),
-            now
-        );
+        final CouponIssueDomain couponIssue = CouponIssueDomain.of(policy);
+        final String issueKey = couponIssue.issueKeyFor(policy.id(), userId, now);
         final boolean alreadyIssued = isTimeAttack
-            ? couponTimeAttackIssueScript.hasIssued(idempotencyKey)
-            : couponWalletMongoRepository.findByIdempotencyKey(idempotencyKey).isPresent();
-        if (alreadyIssued) {
-            return CouponIssuableResponse.ofNotIssuable(ApiMessage.ALREADY_ISSUED_COUPON, isTimeAttack);
-        }
-
+            ? couponTimeAttackIssueScript.hasIssued(issueKey)
+            : couponWalletMongoRepository.findByIdempotencyKey(issueKey).isPresent();
         final long issuedCount = couponIssueStockRedisRepository.get(policy.id());
-        if (exhaustionDomain.isExhausted(issuedCount)) {
-            return CouponIssuableResponse.ofNotIssuable(ApiMessage.STOCK_EXHAUSTED_COUPON, isTimeAttack);
-        }
-        if (!issueDomain.isSatisfiedAt(now)) {
-            return CouponIssuableResponse.ofNotIssuable(ApiMessage.POLICY_ISSUE_COUPON, isTimeAttack);
-        }
 
-        return CouponIssuableResponse.ofIssuable(isTimeAttack);
+        return switch (couponIssue.issuabilityAt(now, alreadyIssued, issuedCount)) {
+            case ALREADY_ISSUED -> CouponIssuableResponse.ofNotIssuable(ApiMessage.ALREADY_ISSUED_COUPON, isTimeAttack);
+            case STOCK_EXHAUSTED -> CouponIssuableResponse.ofNotIssuable(ApiMessage.STOCK_EXHAUSTED_COUPON, isTimeAttack);
+            case POLICY_INACTIVE, OUT_OF_PERIOD ->
+                CouponIssuableResponse.ofNotIssuable(ApiMessage.POLICY_ISSUE_COUPON, isTimeAttack);
+            case ISSUABLE -> CouponIssuableResponse.ofIssuable(isTimeAttack);
+        };
     }
 }

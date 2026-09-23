@@ -15,33 +15,33 @@ public class MembershipPolicyMongoRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public MembershipPolicy save(final MembershipPolicy policy) {
+    public MembershipPolicyDocument save(final MembershipPolicyDocument policy) {
         return mongoTemplate.save(policy);
     }
 
-    public Optional<MembershipPolicy> findById(final String id) {
-        return Optional.ofNullable(mongoTemplate.findById(id, MembershipPolicy.class));
+    public Optional<MembershipPolicyDocument> findById(final String id) {
+        return Optional.ofNullable(mongoTemplate.findById(id, MembershipPolicyDocument.class));
     }
 
-    public Optional<MembershipPolicy> findByKey(final String key) {
+    public Optional<MembershipPolicyDocument> findByKey(final String key) {
         return Optional.ofNullable(
-            mongoTemplate.findOne(MembershipPolicy.queryByKey(key), MembershipPolicy.class)
+            mongoTemplate.findOne(MembershipPolicyDocument.queryByKey(key), MembershipPolicyDocument.class)
         );
     }
 
     public boolean existsByKey(final String key) {
-        return mongoTemplate.exists(MembershipPolicy.queryByKey(key), MembershipPolicy.class);
+        return mongoTemplate.exists(MembershipPolicyDocument.queryByKey(key), MembershipPolicyDocument.class);
     }
 
-    public List<MembershipPolicy> search(
+    public List<MembershipPolicyDocument> search(
         final String key,
         final String name,
         final MembershipPolicyStatus status,
         final MembershipSeason season
     ) {
         return mongoTemplate.find(
-            MembershipPolicy.query(key, name, status, season),
-            MembershipPolicy.class
+            MembershipPolicyDocument.query(key, name, status, season),
+            MembershipPolicyDocument.class
         );
     }
 }

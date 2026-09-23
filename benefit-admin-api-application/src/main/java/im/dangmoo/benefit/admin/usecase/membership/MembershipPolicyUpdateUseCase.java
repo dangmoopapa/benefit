@@ -25,9 +25,7 @@ public class MembershipPolicyUpdateUseCase {
     ) {
         final var policy = membershipPolicyMongoRepository.findById(id)
             .orElseThrow(ApiException::notFound);
-        try {
-            MembershipBenefitDomain.requireReady(request.season(), request.benefit());
-        } catch (final MembershipBenefitDomain.PreparingException ex) {
+        if (!MembershipBenefitDomain.of(request.season(), request.benefit()).isServiceable()) {
             throw ApiException.preparingMembership();
         }
         final var saved = membershipPolicyMongoRepository.save(

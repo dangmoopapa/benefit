@@ -20,31 +20,31 @@ public class CouponCodeMongoRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public Optional<CouponCode> findByCode(final String code) {
-        return Optional.ofNullable(mongoTemplate.findOne(CouponCode.queryByCode(code), CouponCode.class));
+    public Optional<CouponCodeDocument> findByCode(final String code) {
+        return Optional.ofNullable(mongoTemplate.findOne(CouponCodeDocument.queryByCode(code), CouponCodeDocument.class));
     }
 
-    public List<CouponCode> findByPolicyId(final String policyId) {
-        return mongoTemplate.find(CouponCode.queryByPolicyId(policyId), CouponCode.class);
+    public List<CouponCodeDocument> findByPolicyId(final String policyId) {
+        return mongoTemplate.find(CouponCodeDocument.queryByPolicyId(policyId), CouponCodeDocument.class);
     }
 
     public boolean existsByCode(final String code) {
-        return mongoTemplate.exists(CouponCode.queryByCode(code), CouponCode.class);
+        return mongoTemplate.exists(CouponCodeDocument.queryByCode(code), CouponCodeDocument.class);
     }
 
     public long countByPolicyId(final String policyId) {
-        return mongoTemplate.count(CouponCode.queryByPolicyId(policyId), CouponCode.class);
+        return mongoTemplate.count(CouponCodeDocument.queryByPolicyId(policyId), CouponCodeDocument.class);
     }
 
-    public CouponCode insert(final CouponCode code) {
+    public CouponCodeDocument insert(final CouponCodeDocument code) {
         return mongoTemplate.insert(code);
     }
 
-    public CouponCode save(final CouponCode code) {
+    public CouponCodeDocument save(final CouponCodeDocument code) {
         return mongoTemplate.save(code);
     }
 
-    public Optional<CouponCode> insertIgnoreDuplicate(final CouponCode code) {
+    public Optional<CouponCodeDocument> insertIgnoreDuplicate(final CouponCodeDocument code) {
         try {
             return Optional.of(mongoTemplate.insert(code));
         } catch (final DuplicateKeyException ignored) {
@@ -52,19 +52,19 @@ public class CouponCodeMongoRepository {
         }
     }
 
-    public Optional<CouponCode> redeem(final String codeId, final String updatedBy) {
+    public Optional<CouponCodeDocument> redeem(final String codeId, final String updatedBy) {
         return Optional.ofNullable(
             mongoTemplate.findAndModify(
                 Query.query(
                     Criteria.where("_id").is(codeId)
-                        .and(CouponCode.STATUS).is(CouponCodeStatus.AVAILABLE)
+                        .and(CouponCodeDocument.STATUS).is(CouponCodeStatus.AVAILABLE)
                 ),
                 new Update()
-                    .set(CouponCode.STATUS, CouponCodeStatus.EXHAUSTED)
+                    .set(CouponCodeDocument.STATUS, CouponCodeStatus.EXHAUSTED)
                     .set("updatedBy", updatedBy)
                     .currentDate("updatedAt"),
                 FindAndModifyOptions.options().returnNew(true),
-                CouponCode.class
+                CouponCodeDocument.class
             )
         );
     }
