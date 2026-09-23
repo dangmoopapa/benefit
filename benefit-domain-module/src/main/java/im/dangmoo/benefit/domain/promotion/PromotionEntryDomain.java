@@ -1,11 +1,11 @@
 package im.dangmoo.benefit.domain.promotion;
 
-import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionEntry;
-import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionFeature;
-import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionFeatureType;
-import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionLotteryType;
-import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionPrize;
-import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyDocument;
+import im.dangmoo.benefit.data.entity.promotion.feature.PromotionEntry;
+import im.dangmoo.benefit.data.entity.promotion.feature.PromotionFeature;
+import im.dangmoo.benefit.data.entity.promotion.feature.PromotionFeatureType;
+import im.dangmoo.benefit.data.entity.promotion.feature.PromotionLotteryType;
+import im.dangmoo.benefit.data.entity.promotion.feature.PromotionPrize;
+import im.dangmoo.benefit.data.entity.promotion.policy.PromotionPolicyDocument;
 
 import java.util.ArrayList;
 import java.util.Collections;

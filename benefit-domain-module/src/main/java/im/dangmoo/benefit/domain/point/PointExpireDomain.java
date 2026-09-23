@@ -1,8 +1,8 @@
 package im.dangmoo.benefit.domain.point;
 
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceDocument;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointExpireCondition;
+import im.dangmoo.benefit.data.entity.point.balance.PointBalanceDocument;
+import im.dangmoo.benefit.data.entity.point.policy.PointPolicyDocument;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointExpireCondition;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

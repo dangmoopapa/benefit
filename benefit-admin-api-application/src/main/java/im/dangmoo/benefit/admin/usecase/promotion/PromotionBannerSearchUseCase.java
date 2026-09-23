@@ -1,8 +1,8 @@
 package im.dangmoo.benefit.admin.usecase.promotion;
 
-import im.dangmoo.benefit.admin.model.promotion.banner.PromotionBannerSearchRequest;
-import im.dangmoo.benefit.admin.model.promotion.banner.PromotionBannerSearchResponse;
-import im.dangmoo.benefit.infrastructure.data.promotion.banner.PromotionBannerMongoRepository;
+import im.dangmoo.benefit.admin.dto.promotion.banner.PromotionBannerSearchRequest;
+import im.dangmoo.benefit.admin.dto.promotion.banner.PromotionBannerSearchResponse;
+import im.dangmoo.benefit.data.infrastructure.promotion.PromotionBannerMongoRepository;
 import org.springframework.stereotype.Service;
 
 @Service

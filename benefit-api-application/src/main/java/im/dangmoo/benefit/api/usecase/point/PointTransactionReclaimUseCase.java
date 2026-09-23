@@ -1,16 +1,16 @@
 package im.dangmoo.benefit.api.usecase.point;
 
-import im.dangmoo.benefit.api.model.point.PointReclaimRequest;
-import im.dangmoo.benefit.api.model.point.PointReclaimResponse;
+import im.dangmoo.benefit.api.dto.point.PointReclaimRequest;
+import im.dangmoo.benefit.api.dto.point.PointReclaimResponse;
 import im.dangmoo.benefit.api.usecase.ApiException;
 import im.dangmoo.benefit.domain.point.PointBalanceDomain;
 import im.dangmoo.benefit.domain.point.PointIssueDomain;
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceDocument;
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionDocument;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionMongoRepository;
+import im.dangmoo.benefit.data.entity.point.balance.PointBalanceDocument;
+import im.dangmoo.benefit.data.infrastructure.point.PointBalanceMongoRepository;
+import im.dangmoo.benefit.data.entity.point.policy.PointPolicyDocument;
+import im.dangmoo.benefit.data.infrastructure.point.PointPolicyMongoRepository;
+import im.dangmoo.benefit.data.entity.point.transaction.PointTransactionDocument;
+import im.dangmoo.benefit.data.infrastructure.point.PointTransactionMongoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 

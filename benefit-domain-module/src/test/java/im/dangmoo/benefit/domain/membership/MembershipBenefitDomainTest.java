@@ -1,8 +1,8 @@
 package im.dangmoo.benefit.domain.membership;
 
-import im.dangmoo.benefit.infrastructure.data.membership.policy.MembershipSeason;
-import im.dangmoo.benefit.infrastructure.data.membership.policy.benefit.Season1MembershipBenefit;
-import im.dangmoo.benefit.infrastructure.data.membership.policy.benefit.Season2MembershipBenefit;
+import im.dangmoo.benefit.data.entity.membership.policy.MembershipSeason;
+import im.dangmoo.benefit.data.entity.membership.policy.benefit.Season1MembershipBenefit;
+import im.dangmoo.benefit.data.entity.membership.policy.benefit.Season2MembershipBenefit;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

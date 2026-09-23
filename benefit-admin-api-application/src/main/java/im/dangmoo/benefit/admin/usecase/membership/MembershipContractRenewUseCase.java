@@ -1,10 +1,10 @@
 package im.dangmoo.benefit.admin.usecase.membership;
 
-import im.dangmoo.benefit.admin.model.membership.contract.MembershipContractRenewRequest;
-import im.dangmoo.benefit.admin.model.membership.contract.MembershipContractResponse;
+import im.dangmoo.benefit.admin.dto.membership.contract.MembershipContractRenewRequest;
+import im.dangmoo.benefit.admin.dto.membership.contract.MembershipContractResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
 import im.dangmoo.benefit.domain.membership.MembershipContractDomain;
-import im.dangmoo.benefit.infrastructure.data.membership.contract.MembershipContractMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.membership.MembershipContractMongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

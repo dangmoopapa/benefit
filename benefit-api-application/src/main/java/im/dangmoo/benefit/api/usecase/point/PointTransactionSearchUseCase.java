@@ -1,9 +1,9 @@
 package im.dangmoo.benefit.api.usecase.point;
 
-import im.dangmoo.benefit.api.model.point.PointTransactionListResponse;
-import im.dangmoo.benefit.api.model.point.PointTransactionPageRequest;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionType;
+import im.dangmoo.benefit.api.dto.point.PointTransactionListResponse;
+import im.dangmoo.benefit.api.dto.point.PointTransactionPageRequest;
+import im.dangmoo.benefit.data.infrastructure.point.PointTransactionMongoRepository;
+import im.dangmoo.benefit.data.entity.point.transaction.PointTransactionType;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumSet;

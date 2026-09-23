@@ -1,10 +1,10 @@
 package im.dangmoo.benefit.admin.usecase.point;
 
-import im.dangmoo.benefit.admin.model.point.transaction.PointTransactionSearchRequest;
-import im.dangmoo.benefit.admin.model.point.transaction.PointTransactionSearchResponse;
+import im.dangmoo.benefit.admin.dto.point.transaction.PointTransactionSearchRequest;
+import im.dangmoo.benefit.admin.dto.point.transaction.PointTransactionSearchResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionDocument;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionMongoRepository;
+import im.dangmoo.benefit.data.entity.point.transaction.PointTransactionDocument;
+import im.dangmoo.benefit.data.infrastructure.point.PointTransactionMongoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 

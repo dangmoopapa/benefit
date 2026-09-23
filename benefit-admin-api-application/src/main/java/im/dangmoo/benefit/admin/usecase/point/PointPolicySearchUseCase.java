@@ -1,10 +1,10 @@
 package im.dangmoo.benefit.admin.usecase.point;
 
-import im.dangmoo.benefit.admin.model.point.policy.PointPolicySearchRequest;
-import im.dangmoo.benefit.admin.model.point.policy.PointPolicySearchResponse;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyStatus;
+import im.dangmoo.benefit.admin.dto.point.policy.PointPolicySearchRequest;
+import im.dangmoo.benefit.admin.dto.point.policy.PointPolicySearchResponse;
+import im.dangmoo.benefit.data.entity.point.policy.PointPolicyDocument;
+import im.dangmoo.benefit.data.infrastructure.point.PointPolicyMongoRepository;
+import im.dangmoo.benefit.data.entity.point.policy.PointPolicyStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

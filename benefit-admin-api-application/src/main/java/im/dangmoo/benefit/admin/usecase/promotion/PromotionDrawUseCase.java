@@ -1,16 +1,16 @@
 package im.dangmoo.benefit.admin.usecase.promotion;
 
-import im.dangmoo.benefit.admin.model.promotion.winner.PromotionDrawRequest;
-import im.dangmoo.benefit.admin.model.promotion.winner.PromotionWinnerListResponse;
+import im.dangmoo.benefit.admin.dto.promotion.winner.PromotionDrawRequest;
+import im.dangmoo.benefit.admin.dto.promotion.winner.PromotionWinnerListResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
 import im.dangmoo.benefit.domain.promotion.PromotionEntryDomain;
-import im.dangmoo.benefit.infrastructure.data.promotion.applier.PromotionApplierDocument;
-import im.dangmoo.benefit.infrastructure.data.promotion.applier.PromotionApplierMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionLotteryType;
-import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyDocument;
-import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.promotion.winner.PromotionWinnerDocument;
-import im.dangmoo.benefit.infrastructure.data.promotion.winner.PromotionWinnerMongoRepository;
+import im.dangmoo.benefit.data.entity.promotion.applier.PromotionApplierDocument;
+import im.dangmoo.benefit.data.infrastructure.promotion.PromotionApplierMongoRepository;
+import im.dangmoo.benefit.data.entity.promotion.feature.PromotionLotteryType;
+import im.dangmoo.benefit.data.entity.promotion.policy.PromotionPolicyDocument;
+import im.dangmoo.benefit.data.infrastructure.promotion.PromotionPolicyMongoRepository;
+import im.dangmoo.benefit.data.entity.promotion.winner.PromotionWinnerDocument;
+import im.dangmoo.benefit.data.infrastructure.promotion.PromotionWinnerMongoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 

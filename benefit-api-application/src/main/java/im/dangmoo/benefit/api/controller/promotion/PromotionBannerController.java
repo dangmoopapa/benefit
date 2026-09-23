@@ -2,7 +2,7 @@ package im.dangmoo.benefit.api.controller.promotion;
 
 import im.dangmoo.benefit.api.controller.ApiPath;
 import im.dangmoo.benefit.api.controller.ApiResponse;
-import im.dangmoo.benefit.api.model.promotion.PromotionBannerResponse;
+import im.dangmoo.benefit.api.dto.promotion.PromotionBannerResponse;
 import im.dangmoo.benefit.api.usecase.promotion.PromotionBannerUseCase;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

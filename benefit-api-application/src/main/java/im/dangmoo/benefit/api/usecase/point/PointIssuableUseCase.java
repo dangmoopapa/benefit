@@ -1,14 +1,14 @@
 package im.dangmoo.benefit.api.usecase.point;
 
-import im.dangmoo.benefit.api.model.point.PointIssuableRequest;
-import im.dangmoo.benefit.api.model.point.PointIssuableResponse;
+import im.dangmoo.benefit.api.dto.point.PointIssuableRequest;
+import im.dangmoo.benefit.api.dto.point.PointIssuableResponse;
 import im.dangmoo.benefit.api.usecase.ApiMessage;
 import im.dangmoo.benefit.domain.point.PointExpireDomain;
 import im.dangmoo.benefit.domain.point.PointIssueDomain;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.point.stock.PointGrantStockRedisRepository;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionMongoRepository;
+import im.dangmoo.benefit.data.entity.point.policy.PointPolicyDocument;
+import im.dangmoo.benefit.data.infrastructure.point.PointPolicyMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.point.PointGrantStockRedisRepository;
+import im.dangmoo.benefit.data.infrastructure.point.PointTransactionMongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

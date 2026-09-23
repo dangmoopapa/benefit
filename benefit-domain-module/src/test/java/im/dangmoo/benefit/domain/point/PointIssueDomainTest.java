@@ -1,15 +1,15 @@
 package im.dangmoo.benefit.domain.point;
 
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyStatus;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointAccountCondition;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointBenefitCondition;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointBenefitType;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointExpireCondition;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointExpireType;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointIssueCondition;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointIssueFrequency;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointLifecycleCondition;
+import im.dangmoo.benefit.data.entity.point.policy.PointPolicyDocument;
+import im.dangmoo.benefit.data.entity.point.policy.PointPolicyStatus;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointAccountCondition;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointBenefitCondition;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointBenefitType;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointExpireCondition;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointExpireType;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointIssueCondition;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointIssueFrequency;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointLifecycleCondition;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

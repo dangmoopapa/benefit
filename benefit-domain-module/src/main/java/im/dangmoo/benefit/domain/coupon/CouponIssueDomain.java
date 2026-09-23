@@ -1,12 +1,12 @@
 package im.dangmoo.benefit.domain.coupon;
 
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCache;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyStatus;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponIssueCondition;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponLifecycleCondition;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponUsageCondition;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponUsageValidityType;
+import im.dangmoo.benefit.data.entity.coupon.policy.CouponPolicyCache;
+import im.dangmoo.benefit.data.entity.coupon.policy.CouponPolicyDocument;
+import im.dangmoo.benefit.data.entity.coupon.policy.CouponPolicyStatus;
+import im.dangmoo.benefit.data.entity.coupon.policy.condition.CouponIssueCondition;
+import im.dangmoo.benefit.data.entity.coupon.policy.condition.CouponLifecycleCondition;
+import im.dangmoo.benefit.data.entity.coupon.policy.condition.CouponUsageCondition;
+import im.dangmoo.benefit.data.entity.coupon.policy.condition.CouponUsageValidityType;
 
 import java.time.DayOfWeek;
 import java.time.Instant;

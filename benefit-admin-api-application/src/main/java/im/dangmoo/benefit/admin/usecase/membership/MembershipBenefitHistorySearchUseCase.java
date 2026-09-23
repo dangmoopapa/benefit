@@ -1,8 +1,8 @@
 package im.dangmoo.benefit.admin.usecase.membership;
 
-import im.dangmoo.benefit.admin.model.membership.history.MembershipBenefitHistorySearchRequest;
-import im.dangmoo.benefit.admin.model.membership.history.MembershipBenefitHistorySearchResponse;
-import im.dangmoo.benefit.infrastructure.data.membership.history.MembershipBenefitHistoryMongoRepository;
+import im.dangmoo.benefit.admin.dto.membership.history.MembershipBenefitHistorySearchRequest;
+import im.dangmoo.benefit.admin.dto.membership.history.MembershipBenefitHistorySearchResponse;
+import im.dangmoo.benefit.data.infrastructure.membership.MembershipBenefitHistoryMongoRepository;
 import org.springframework.stereotype.Service;
 
 @Service

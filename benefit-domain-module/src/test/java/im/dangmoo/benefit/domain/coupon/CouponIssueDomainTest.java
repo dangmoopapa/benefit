@@ -1,16 +1,16 @@
 package im.dangmoo.benefit.domain.coupon;
 
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCache;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyStatus;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyType;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponAccountCondition;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponApplyCondition;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponBenefitCondition;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponIssueCondition;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponIssueFrequency;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponLifecycleCondition;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponUsageCondition;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponUsageValidityType;
+import im.dangmoo.benefit.data.entity.coupon.policy.CouponPolicyCache;
+import im.dangmoo.benefit.data.entity.coupon.policy.CouponPolicyStatus;
+import im.dangmoo.benefit.data.entity.coupon.policy.CouponPolicyType;
+import im.dangmoo.benefit.data.entity.coupon.policy.condition.CouponAccountCondition;
+import im.dangmoo.benefit.data.entity.coupon.policy.condition.CouponApplyCondition;
+import im.dangmoo.benefit.data.entity.coupon.policy.condition.CouponBenefitCondition;
+import im.dangmoo.benefit.data.entity.coupon.policy.condition.CouponIssueCondition;
+import im.dangmoo.benefit.data.entity.coupon.policy.condition.CouponIssueFrequency;
+import im.dangmoo.benefit.data.entity.coupon.policy.condition.CouponLifecycleCondition;
+import im.dangmoo.benefit.data.entity.coupon.policy.condition.CouponUsageCondition;
+import im.dangmoo.benefit.data.entity.coupon.policy.condition.CouponUsageValidityType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

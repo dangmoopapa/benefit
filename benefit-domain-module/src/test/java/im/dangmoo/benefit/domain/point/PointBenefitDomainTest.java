@@ -1,8 +1,8 @@
 package im.dangmoo.benefit.domain.point;
 
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointBenefitCondition;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointBenefitType;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointBenefitWeightOption;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointBenefitCondition;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointBenefitType;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointBenefitWeightOption;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

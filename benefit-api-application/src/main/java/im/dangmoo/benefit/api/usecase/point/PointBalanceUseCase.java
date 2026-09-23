@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.api.usecase.point;
 
-import im.dangmoo.benefit.api.model.point.PointBalanceResponse;
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceMongoRepository;
+import im.dangmoo.benefit.api.dto.point.PointBalanceResponse;
+import im.dangmoo.benefit.data.infrastructure.point.PointBalanceMongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

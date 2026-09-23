@@ -3,7 +3,7 @@ package im.dangmoo.benefit.api.controller.coupon;
 import im.dangmoo.benefit.api.controller.ApiHeaders;
 import im.dangmoo.benefit.api.controller.ApiPath;
 import im.dangmoo.benefit.api.controller.ApiResponse;
-import im.dangmoo.benefit.api.model.coupon.CouponBoxResponse;
+import im.dangmoo.benefit.api.dto.coupon.CouponBoxResponse;
 import im.dangmoo.benefit.api.usecase.coupon.CouponBoxUseCase;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;

@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.domain.membership;
 
-import im.dangmoo.benefit.infrastructure.data.membership.contract.MembershipContractDocument;
+import im.dangmoo.benefit.data.entity.membership.contract.MembershipContractDocument;
 
 import java.time.Instant;
 import java.time.ZoneId;

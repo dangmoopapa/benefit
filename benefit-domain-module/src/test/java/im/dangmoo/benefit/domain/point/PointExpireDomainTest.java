@@ -1,14 +1,14 @@
 package im.dangmoo.benefit.domain.point;
 
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceDocument;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointAccountCondition;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointBenefitCondition;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointBenefitType;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointExpireCondition;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointExpireType;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointIssueCondition;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointLifecycleCondition;
+import im.dangmoo.benefit.data.entity.point.balance.PointBalanceDocument;
+import im.dangmoo.benefit.data.entity.point.policy.PointPolicyDocument;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointAccountCondition;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointBenefitCondition;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointBenefitType;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointExpireCondition;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointExpireType;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointIssueCondition;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointLifecycleCondition;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -56,7 +56,7 @@ class PointExpireDomainTest {
     @DisplayName("만료 없음 표식과 빈 만료일만 만료되지 않는다")
     void neverExpires() {
         assertThat(PointExpireDomain.of(PointBalanceDocument.NEVER_EXPIRES_AT).neverExpires()).isTrue();
-        assertThat(PointExpireDomain.of((Instant) null).neverExpires()).isTrue();
+        assertThat(PointExpireDomain.of(null).neverExpires()).isTrue();
         assertThat(PointExpireDomain.of(PAST).neverExpires()).isFalse();
     }
 

@@ -2,10 +2,10 @@ package im.dangmoo.benefit.batch.tasklet;
 
 import im.dangmoo.benefit.batch.parameter.PointExpireParameter;
 import im.dangmoo.benefit.domain.point.PointBalanceDomain;
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceDocument;
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionDocument;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionMongoRepository;
+import im.dangmoo.benefit.data.entity.point.balance.PointBalanceDocument;
+import im.dangmoo.benefit.data.infrastructure.point.PointBalanceMongoRepository;
+import im.dangmoo.benefit.data.entity.point.transaction.PointTransactionDocument;
+import im.dangmoo.benefit.data.infrastructure.point.PointTransactionMongoRepository;
 import org.jspecify.annotations.NonNull;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.listener.StepExecutionListener;

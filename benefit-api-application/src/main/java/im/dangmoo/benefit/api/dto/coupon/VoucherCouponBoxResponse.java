@@ -1,0 +1,29 @@
+package im.dangmoo.benefit.api.dto.coupon;
+
+import im.dangmoo.benefit.data.entity.coupon.policy.CouponPolicyDocument;
+
+import java.util.List;
+
+public record VoucherCouponBoxResponse(List<Item> items) {
+
+    public static VoucherCouponBoxResponse of(final List<Item> items) {
+        return new VoucherCouponBoxResponse(items);
+    }
+
+    public record Item(
+        String policyId,
+        String policyKey,
+        String policyName,
+        String description
+    ) {
+
+        public static Item of(final CouponPolicyDocument policy) {
+            return new Item(
+                policy.getId(),
+                policy.getKey(),
+                policy.getName(),
+                policy.getDescription()
+            );
+        }
+    }
+}

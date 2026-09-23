@@ -1,9 +1,9 @@
 package im.dangmoo.benefit.admin.usecase.coupon;
 
-import im.dangmoo.benefit.admin.model.coupon.policy.VoucherCouponPolicySearchRequest;
-import im.dangmoo.benefit.admin.model.coupon.policy.VoucherCouponPolicySearchResponse;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyMongoRepository;
+import im.dangmoo.benefit.admin.dto.coupon.policy.VoucherCouponPolicySearchRequest;
+import im.dangmoo.benefit.admin.dto.coupon.policy.VoucherCouponPolicySearchResponse;
+import im.dangmoo.benefit.data.entity.coupon.policy.CouponPolicyDocument;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponPolicyMongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,11 +1,11 @@
 package im.dangmoo.benefit.api.usecase.promotion;
 
-import im.dangmoo.benefit.api.model.promotion.PromotionBannerResponse;
+import im.dangmoo.benefit.api.dto.promotion.PromotionBannerResponse;
 import im.dangmoo.benefit.api.usecase.ApiException;
 import im.dangmoo.benefit.domain.promotion.PromotionPolicyDomain;
-import im.dangmoo.benefit.infrastructure.data.promotion.banner.PromotionBannerDocument;
-import im.dangmoo.benefit.infrastructure.data.promotion.banner.PromotionBannerMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyMongoRepository;
+import im.dangmoo.benefit.data.entity.promotion.banner.PromotionBannerDocument;
+import im.dangmoo.benefit.data.infrastructure.promotion.PromotionBannerMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.promotion.PromotionPolicyMongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

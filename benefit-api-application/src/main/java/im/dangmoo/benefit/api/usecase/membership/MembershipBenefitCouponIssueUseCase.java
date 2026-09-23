@@ -1,18 +1,18 @@
 package im.dangmoo.benefit.api.usecase.membership;
 
-import im.dangmoo.benefit.api.model.coupon.CouponIssueResponse;
+import im.dangmoo.benefit.api.dto.coupon.CouponIssueResponse;
 import im.dangmoo.benefit.api.usecase.ApiException;
 import im.dangmoo.benefit.domain.coupon.CouponIssueDomain;
 import im.dangmoo.benefit.domain.membership.MembershipBenefitDomain;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCache;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCacheRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.changed.CouponPolicyChangedPublication;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.changed.CouponPolicyChangedPublisher;
-import im.dangmoo.benefit.infrastructure.data.coupon.stock.CouponIssueStockRedisRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletDocument;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.membership.policy.MembershipPolicyMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.membership.contract.MembershipContractMongoRepository;
+import im.dangmoo.benefit.data.entity.coupon.policy.CouponPolicyCache;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponPolicyCacheRepository;
+import im.dangmoo.benefit.data.entity.coupon.policy.changed.CouponPolicyChangedPublication;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponPolicyChangedPublisher;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponIssueStockRedisRepository;
+import im.dangmoo.benefit.data.entity.coupon.wallet.CouponWalletDocument;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponWalletMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.membership.MembershipPolicyMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.membership.MembershipContractMongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

@@ -1,22 +1,23 @@
 package im.dangmoo.benefit.admin.usecase.coupon;
 
-import im.dangmoo.benefit.admin.model.coupon.policy.CouponPolicyCreateRequest;
-import im.dangmoo.benefit.admin.model.coupon.policy.CouponPolicyCreateResponse;
+import im.dangmoo.benefit.admin.dto.coupon.policy.CouponPolicyCreateRequest;
+import im.dangmoo.benefit.admin.dto.coupon.policy.CouponPolicyCreateResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCacheRepository;
-import im.dangmoo.benefit.infrastructure.data.batch.BatchCenterJobTriggerProduction;
-import im.dangmoo.benefit.infrastructure.data.batch.BatchCenterJobTriggerPublisher;
-import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeDocument;
-import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeType;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.*;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.changed.CouponPolicyChangedPublication;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.changed.CouponPolicyChangedPublisher;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponPolicyCacheRepository;
+import im.dangmoo.benefit.data.entity.batch.BatchCenterJobTriggerProduction;
+import im.dangmoo.benefit.data.infrastructure.batch.BatchCenterJobTriggerPublisher;
+import im.dangmoo.benefit.data.entity.coupon.code.CouponCodeDocument;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponCodeMongoRepository;
+import im.dangmoo.benefit.data.entity.coupon.code.CouponCodeType;
+import im.dangmoo.benefit.data.entity.coupon.policy.*;
+import im.dangmoo.benefit.data.entity.coupon.policy.changed.CouponPolicyChangedPublication;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponPolicyChangedPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
 import java.util.Objects;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponPolicyMongoRepository;
 
 @Service
 public class CouponPolicyCreateUseCase {

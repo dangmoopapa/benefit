@@ -1,8 +1,8 @@
 package im.dangmoo.benefit.admin.usecase.promotion;
 
-import im.dangmoo.benefit.admin.model.promotion.policy.PromotionPolicySearchRequest;
-import im.dangmoo.benefit.admin.model.promotion.policy.PromotionPolicySearchResponse;
-import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyMongoRepository;
+import im.dangmoo.benefit.admin.dto.promotion.policy.PromotionPolicySearchRequest;
+import im.dangmoo.benefit.admin.dto.promotion.policy.PromotionPolicySearchResponse;
+import im.dangmoo.benefit.data.infrastructure.promotion.PromotionPolicyMongoRepository;
 import org.springframework.stereotype.Service;
 
 @Service

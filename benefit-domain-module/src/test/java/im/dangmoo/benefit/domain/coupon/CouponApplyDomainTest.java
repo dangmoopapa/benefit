@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.domain.coupon;
 
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.condition.CouponApplyCondition;
+import im.dangmoo.benefit.data.entity.coupon.policy.condition.CouponApplyCondition;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

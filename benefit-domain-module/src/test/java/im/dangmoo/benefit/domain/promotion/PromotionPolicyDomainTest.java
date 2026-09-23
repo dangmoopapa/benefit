@@ -1,9 +1,9 @@
 package im.dangmoo.benefit.domain.promotion;
 
-import im.dangmoo.benefit.infrastructure.data.promotion.PromotionPolicyStatus;
-import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionFeature;
-import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionFeatureType;
-import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyDocument;
+import im.dangmoo.benefit.data.entity.promotion.PromotionPolicyStatus;
+import im.dangmoo.benefit.data.entity.promotion.feature.PromotionFeature;
+import im.dangmoo.benefit.data.entity.promotion.feature.PromotionFeatureType;
+import im.dangmoo.benefit.data.entity.promotion.policy.PromotionPolicyDocument;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

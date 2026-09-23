@@ -1,10 +1,10 @@
 package im.dangmoo.benefit.api.usecase.membership;
 
-import im.dangmoo.benefit.api.model.membership.MembershipBenefitCancelRequest;
-import im.dangmoo.benefit.api.model.membership.MembershipBenefitHistoryResponse;
+import im.dangmoo.benefit.api.dto.membership.MembershipBenefitCancelRequest;
+import im.dangmoo.benefit.api.dto.membership.MembershipBenefitHistoryResponse;
 import im.dangmoo.benefit.api.usecase.ApiException;
-import im.dangmoo.benefit.infrastructure.data.membership.history.MembershipBenefitHistoryStatus;
-import im.dangmoo.benefit.infrastructure.data.membership.history.MembershipBenefitHistoryMongoRepository;
+import im.dangmoo.benefit.data.entity.membership.history.MembershipBenefitHistoryStatus;
+import im.dangmoo.benefit.data.infrastructure.membership.MembershipBenefitHistoryMongoRepository;
 import org.springframework.stereotype.Service;
 
 @Service

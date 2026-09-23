@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.consumer.consumption;
 
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletDocument;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletStatus;
+import im.dangmoo.benefit.data.entity.coupon.wallet.CouponWalletDocument;
+import im.dangmoo.benefit.data.entity.coupon.wallet.CouponWalletStatus;
 
 import java.time.Instant;
 

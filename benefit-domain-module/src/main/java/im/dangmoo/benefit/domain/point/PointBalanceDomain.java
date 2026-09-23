@@ -1,6 +1,6 @@
 package im.dangmoo.benefit.domain.point;
 
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceDocument;
+import im.dangmoo.benefit.data.entity.point.balance.PointBalanceDocument;
 
 import java.time.Instant;
 import java.util.LinkedHashMap;

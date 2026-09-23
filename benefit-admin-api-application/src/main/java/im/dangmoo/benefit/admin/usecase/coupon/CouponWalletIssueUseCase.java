@@ -1,16 +1,16 @@
 package im.dangmoo.benefit.admin.usecase.coupon;
 
-import im.dangmoo.benefit.admin.model.coupon.wallet.CouponWalletIssueRequest;
-import im.dangmoo.benefit.admin.model.coupon.wallet.CouponWalletIssueResponse;
+import im.dangmoo.benefit.admin.dto.coupon.wallet.CouponWalletIssueRequest;
+import im.dangmoo.benefit.admin.dto.coupon.wallet.CouponWalletIssueResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
 import im.dangmoo.benefit.domain.coupon.CouponIssueDomain;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.changed.CouponPolicyChangedPublication;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.changed.CouponPolicyChangedPublisher;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.stock.CouponIssueStockRedisRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletDocument;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletMongoRepository;
+import im.dangmoo.benefit.data.entity.coupon.policy.CouponPolicyDocument;
+import im.dangmoo.benefit.data.entity.coupon.policy.changed.CouponPolicyChangedPublication;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponPolicyChangedPublisher;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponPolicyMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponIssueStockRedisRepository;
+import im.dangmoo.benefit.data.entity.coupon.wallet.CouponWalletDocument;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponWalletMongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

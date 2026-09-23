@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.consumer.handler;
 
 import im.dangmoo.benefit.consumer.consumption.CouponTimeAttackIssueConsumption;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponWalletMongoRepository;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,10 +1,10 @@
 package im.dangmoo.benefit.domain.membership;
 
-import im.dangmoo.benefit.infrastructure.data.membership.policy.MembershipPolicyDocument;
-import im.dangmoo.benefit.infrastructure.data.membership.policy.MembershipSeason;
-import im.dangmoo.benefit.infrastructure.data.membership.policy.benefit.MembershipBenefit;
-import im.dangmoo.benefit.infrastructure.data.membership.policy.benefit.Season1MembershipBenefit;
-import im.dangmoo.benefit.infrastructure.data.membership.policy.benefit.Season2MembershipBenefit;
+import im.dangmoo.benefit.data.entity.membership.policy.MembershipPolicyDocument;
+import im.dangmoo.benefit.data.entity.membership.policy.MembershipSeason;
+import im.dangmoo.benefit.data.entity.membership.policy.benefit.MembershipBenefit;
+import im.dangmoo.benefit.data.entity.membership.policy.benefit.Season1MembershipBenefit;
+import im.dangmoo.benefit.data.entity.membership.policy.benefit.Season2MembershipBenefit;
 
 public final class MembershipBenefitDomain {
 

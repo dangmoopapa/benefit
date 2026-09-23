@@ -1,17 +1,17 @@
 package im.dangmoo.benefit.api.usecase.point;
 
-import im.dangmoo.benefit.api.model.point.PointGrantRequest;
-import im.dangmoo.benefit.api.model.point.PointGrantResponse;
+import im.dangmoo.benefit.api.dto.point.PointGrantRequest;
+import im.dangmoo.benefit.api.dto.point.PointGrantResponse;
 import im.dangmoo.benefit.api.usecase.ApiException;
 import im.dangmoo.benefit.domain.point.PointBenefitDomain;
 import im.dangmoo.benefit.domain.point.PointExpireDomain;
 import im.dangmoo.benefit.domain.point.PointIssueDomain;
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.point.stock.PointGrantStockRedisRepository;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionDocument;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.point.PointBalanceMongoRepository;
+import im.dangmoo.benefit.data.entity.point.policy.PointPolicyDocument;
+import im.dangmoo.benefit.data.infrastructure.point.PointPolicyMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.point.PointGrantStockRedisRepository;
+import im.dangmoo.benefit.data.entity.point.transaction.PointTransactionDocument;
+import im.dangmoo.benefit.data.infrastructure.point.PointTransactionMongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

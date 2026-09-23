@@ -1,9 +1,9 @@
 package im.dangmoo.benefit.admin.usecase.promotion;
 
-import im.dangmoo.benefit.admin.model.promotion.applier.PromotionApplierSearchResponse;
+import im.dangmoo.benefit.admin.dto.promotion.applier.PromotionApplierSearchResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
-import im.dangmoo.benefit.infrastructure.data.promotion.applier.PromotionApplierMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.promotion.PromotionApplierMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.promotion.PromotionPolicyMongoRepository;
 import org.springframework.stereotype.Service;
 
 @Service

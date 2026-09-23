@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.api.usecase.promotion;
 
-import im.dangmoo.benefit.api.model.promotion.PromotionPolicyListResponse;
-import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyMongoRepository;
+import im.dangmoo.benefit.api.dto.promotion.PromotionPolicyListResponse;
+import im.dangmoo.benefit.data.infrastructure.promotion.PromotionPolicyMongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

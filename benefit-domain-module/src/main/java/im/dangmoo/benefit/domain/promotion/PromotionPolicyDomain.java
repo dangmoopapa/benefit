@@ -1,7 +1,7 @@
 package im.dangmoo.benefit.domain.promotion;
 
-import im.dangmoo.benefit.infrastructure.data.promotion.PromotionPolicyStatus;
-import im.dangmoo.benefit.infrastructure.data.promotion.policy.PromotionPolicyDocument;
+import im.dangmoo.benefit.data.entity.promotion.PromotionPolicyStatus;
+import im.dangmoo.benefit.data.entity.promotion.policy.PromotionPolicyDocument;
 
 import java.time.Instant;
 

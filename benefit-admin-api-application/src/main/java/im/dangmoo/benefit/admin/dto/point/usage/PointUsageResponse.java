@@ -1,0 +1,24 @@
+package im.dangmoo.benefit.admin.dto.point.usage;
+
+import im.dangmoo.benefit.data.entity.point.transaction.PointTransactionDocument;
+
+import java.time.Instant;
+
+public record PointUsageResponse(
+    String transactionId,
+    String userId,
+    long amount,
+    String orderId,
+    Instant transactionAt
+) {
+
+    public static PointUsageResponse of(final PointTransactionDocument transaction) {
+        return new PointUsageResponse(
+            transaction.getId(),
+            transaction.getUserId(),
+            transaction.getAmount(),
+            transaction.getOrderId(),
+            transaction.getTransactionAt()
+        );
+    }
+}

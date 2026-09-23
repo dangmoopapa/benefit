@@ -1,18 +1,18 @@
 package im.dangmoo.benefit.api.usecase.coupon;
 
-import im.dangmoo.benefit.api.model.coupon.CouponIssueRequest;
-import im.dangmoo.benefit.api.model.coupon.CouponIssueResponse;
+import im.dangmoo.benefit.api.dto.coupon.CouponIssueRequest;
+import im.dangmoo.benefit.api.dto.coupon.CouponIssueResponse;
 import im.dangmoo.benefit.api.usecase.ApiException;
 import im.dangmoo.benefit.domain.coupon.CouponIssueDomain;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCache;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCacheRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.changed.CouponPolicyChangedPublication;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.changed.CouponPolicyChangedPublisher;
-import im.dangmoo.benefit.infrastructure.data.coupon.stock.CouponTimeAttackIssueResult;
-import im.dangmoo.benefit.infrastructure.data.coupon.stock.CouponTimeAttackIssueScript;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletDocument;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.issue.CouponTimaAttackIssuePublication;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.issue.CouponTimeAttackIssuePublisher;
+import im.dangmoo.benefit.data.entity.coupon.policy.CouponPolicyCache;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponPolicyCacheRepository;
+import im.dangmoo.benefit.data.entity.coupon.policy.changed.CouponPolicyChangedPublication;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponPolicyChangedPublisher;
+import im.dangmoo.benefit.data.entity.coupon.stock.CouponTimeAttackIssueResult;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponTimeAttackIssueScript;
+import im.dangmoo.benefit.data.entity.coupon.wallet.CouponWalletDocument;
+import im.dangmoo.benefit.data.entity.coupon.wallet.issue.CouponTimaAttackIssuePublication;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponTimeAttackIssuePublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

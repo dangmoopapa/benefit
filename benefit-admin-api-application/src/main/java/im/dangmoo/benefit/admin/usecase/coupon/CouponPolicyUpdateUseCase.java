@@ -1,11 +1,11 @@
 package im.dangmoo.benefit.admin.usecase.coupon;
 
-import im.dangmoo.benefit.admin.model.coupon.policy.CouponPolicyUpdateRequest;
-import im.dangmoo.benefit.admin.model.coupon.policy.CouponPolicyUpdateResponse;
+import im.dangmoo.benefit.admin.dto.coupon.policy.CouponPolicyUpdateRequest;
+import im.dangmoo.benefit.admin.dto.coupon.policy.CouponPolicyUpdateResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyCacheRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponPolicyCacheRepository;
+import im.dangmoo.benefit.data.entity.coupon.policy.CouponPolicyDocument;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponPolicyMongoRepository;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,14 +1,14 @@
 package im.dangmoo.benefit.admin.usecase.coupon;
 
-import im.dangmoo.benefit.admin.model.coupon.wallet.CouponWalletRecoveryResponse;
+import im.dangmoo.benefit.admin.dto.coupon.wallet.CouponWalletRecoveryResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
 import im.dangmoo.benefit.domain.coupon.CouponIssueDomain;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.stock.CouponUsageStockRedisRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletDocument;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletStatus;
+import im.dangmoo.benefit.data.entity.coupon.policy.CouponPolicyDocument;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponPolicyMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponUsageStockRedisRepository;
+import im.dangmoo.benefit.data.entity.coupon.wallet.CouponWalletDocument;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponWalletMongoRepository;
+import im.dangmoo.benefit.data.entity.coupon.wallet.CouponWalletStatus;
 import org.springframework.stereotype.Service;
 
 @Service

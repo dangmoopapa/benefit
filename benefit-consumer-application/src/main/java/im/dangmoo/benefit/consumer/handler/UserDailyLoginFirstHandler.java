@@ -4,12 +4,12 @@ import im.dangmoo.benefit.consumer.consumption.UserDailyLoginFirstConsumption;
 import im.dangmoo.benefit.domain.point.PointBenefitDomain;
 import im.dangmoo.benefit.domain.point.PointExpireDomain;
 import im.dangmoo.benefit.domain.point.PointIssueDomain;
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.point.stock.PointGrantStockRedisRepository;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionDocument;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.point.PointBalanceMongoRepository;
+import im.dangmoo.benefit.data.entity.point.policy.PointPolicyDocument;
+import im.dangmoo.benefit.data.infrastructure.point.PointPolicyMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.point.PointGrantStockRedisRepository;
+import im.dangmoo.benefit.data.entity.point.transaction.PointTransactionDocument;
+import im.dangmoo.benefit.data.infrastructure.point.PointTransactionMongoRepository;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;

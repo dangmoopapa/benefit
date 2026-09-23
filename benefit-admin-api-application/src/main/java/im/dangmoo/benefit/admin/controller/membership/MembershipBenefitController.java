@@ -2,8 +2,8 @@ package im.dangmoo.benefit.admin.controller.membership;
 
 import im.dangmoo.benefit.admin.controller.AdminApiPath;
 import im.dangmoo.benefit.admin.controller.AdminApiResponse;
-import im.dangmoo.benefit.admin.model.membership.history.MembershipBenefitHistorySearchRequest;
-import im.dangmoo.benefit.admin.model.membership.history.MembershipBenefitHistorySearchResponse;
+import im.dangmoo.benefit.admin.dto.membership.history.MembershipBenefitHistorySearchRequest;
+import im.dangmoo.benefit.admin.dto.membership.history.MembershipBenefitHistorySearchResponse;
 import im.dangmoo.benefit.admin.usecase.membership.MembershipBenefitHistorySearchUseCase;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;

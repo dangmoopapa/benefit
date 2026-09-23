@@ -1,9 +1,9 @@
 package im.dangmoo.benefit.admin.usecase.promotion;
 
-import im.dangmoo.benefit.admin.model.promotion.banner.PromotionBannerUpdateRequest;
-import im.dangmoo.benefit.admin.model.promotion.banner.PromotionBannerUpdateResponse;
+import im.dangmoo.benefit.admin.dto.promotion.banner.PromotionBannerUpdateRequest;
+import im.dangmoo.benefit.admin.dto.promotion.banner.PromotionBannerUpdateResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
-import im.dangmoo.benefit.infrastructure.data.promotion.banner.PromotionBannerMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.promotion.PromotionBannerMongoRepository;
 import org.springframework.stereotype.Service;
 
 @Service

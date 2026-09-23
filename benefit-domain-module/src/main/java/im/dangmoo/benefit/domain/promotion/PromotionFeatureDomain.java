@@ -1,13 +1,13 @@
 package im.dangmoo.benefit.domain.promotion;
 
-import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionEntry;
-import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionFeature;
-import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionFeatureType;
-import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionLanding;
-import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionLandingTarget;
-import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionLotteryType;
-import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionPrize;
-import im.dangmoo.benefit.infrastructure.data.promotion.feature.PromotionPrizeType;
+import im.dangmoo.benefit.data.entity.promotion.feature.PromotionEntry;
+import im.dangmoo.benefit.data.entity.promotion.feature.PromotionFeature;
+import im.dangmoo.benefit.data.entity.promotion.feature.PromotionFeatureType;
+import im.dangmoo.benefit.data.entity.promotion.feature.PromotionLanding;
+import im.dangmoo.benefit.data.entity.promotion.feature.PromotionLandingTarget;
+import im.dangmoo.benefit.data.entity.promotion.feature.PromotionLotteryType;
+import im.dangmoo.benefit.data.entity.promotion.feature.PromotionPrize;
+import im.dangmoo.benefit.data.entity.promotion.feature.PromotionPrizeType;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;

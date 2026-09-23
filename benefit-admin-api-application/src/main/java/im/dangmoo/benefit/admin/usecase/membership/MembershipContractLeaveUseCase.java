@@ -1,9 +1,9 @@
 package im.dangmoo.benefit.admin.usecase.membership;
 
-import im.dangmoo.benefit.admin.model.membership.contract.MembershipContractLeaveRequest;
-import im.dangmoo.benefit.admin.model.membership.contract.MembershipContractResponse;
+import im.dangmoo.benefit.admin.dto.membership.contract.MembershipContractLeaveRequest;
+import im.dangmoo.benefit.admin.dto.membership.contract.MembershipContractResponse;
 import im.dangmoo.benefit.admin.usecase.ApiException;
-import im.dangmoo.benefit.infrastructure.data.membership.contract.MembershipContractMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.membership.MembershipContractMongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

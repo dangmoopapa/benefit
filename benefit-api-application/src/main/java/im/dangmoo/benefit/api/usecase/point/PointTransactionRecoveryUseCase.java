@@ -1,13 +1,13 @@
 package im.dangmoo.benefit.api.usecase.point;
 
-import im.dangmoo.benefit.api.model.point.PointRecoveryRequest;
-import im.dangmoo.benefit.api.model.point.PointRecoveryResponse;
+import im.dangmoo.benefit.api.dto.point.PointRecoveryRequest;
+import im.dangmoo.benefit.api.dto.point.PointRecoveryResponse;
 import im.dangmoo.benefit.api.usecase.ApiException;
 
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceDocument;
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionDocument;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionMongoRepository;
+import im.dangmoo.benefit.data.entity.point.balance.PointBalanceDocument;
+import im.dangmoo.benefit.data.infrastructure.point.PointBalanceMongoRepository;
+import im.dangmoo.benefit.data.entity.point.transaction.PointTransactionDocument;
+import im.dangmoo.benefit.data.infrastructure.point.PointTransactionMongoRepository;
 import org.springframework.stereotype.Service;
 
 @Service

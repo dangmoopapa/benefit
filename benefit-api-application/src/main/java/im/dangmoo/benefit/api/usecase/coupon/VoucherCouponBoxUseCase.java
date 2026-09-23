@@ -1,13 +1,13 @@
 package im.dangmoo.benefit.api.usecase.coupon;
 
-import im.dangmoo.benefit.api.model.coupon.VoucherCouponBoxRequest;
-import im.dangmoo.benefit.api.model.coupon.VoucherCouponBoxResponse;
+import im.dangmoo.benefit.api.dto.coupon.VoucherCouponBoxRequest;
+import im.dangmoo.benefit.api.dto.coupon.VoucherCouponBoxResponse;
 import im.dangmoo.benefit.domain.coupon.CouponApplyDomain;
 import im.dangmoo.benefit.domain.coupon.CouponIssueDomain;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.stock.CouponIssueStockRedisRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.wallet.CouponWalletMongoRepository;
+import im.dangmoo.benefit.data.entity.coupon.policy.CouponPolicyDocument;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponPolicyMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponIssueStockRedisRepository;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponWalletMongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    api project(':benefit-infrastructure-module')
+    api project(':benefit-data-module')
     api 'org.springframework:spring-context'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

@@ -1,15 +1,15 @@
 package im.dangmoo.benefit.api.usecase.membership;
 
-import im.dangmoo.benefit.api.model.membership.MembershipBenefitApplyRequest;
-import im.dangmoo.benefit.api.model.membership.MembershipBenefitHistoryResponse;
+import im.dangmoo.benefit.api.dto.membership.MembershipBenefitApplyRequest;
+import im.dangmoo.benefit.api.dto.membership.MembershipBenefitHistoryResponse;
 import im.dangmoo.benefit.api.usecase.ApiException;
 import im.dangmoo.benefit.domain.membership.MembershipBenefitDomain;
-import im.dangmoo.benefit.infrastructure.data.membership.history.MembershipBenefitHistoryDocument;
-import im.dangmoo.benefit.infrastructure.data.membership.history.MembershipBenefitHistoryMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.membership.policy.MembershipPolicyMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.membership.contract.MembershipContractMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceDocument;
-import im.dangmoo.benefit.infrastructure.data.point.balance.PointBalanceMongoRepository;
+import im.dangmoo.benefit.data.entity.membership.history.MembershipBenefitHistoryDocument;
+import im.dangmoo.benefit.data.infrastructure.membership.MembershipBenefitHistoryMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.membership.MembershipPolicyMongoRepository;
+import im.dangmoo.benefit.data.infrastructure.membership.MembershipContractMongoRepository;
+import im.dangmoo.benefit.data.entity.point.balance.PointBalanceDocument;
+import im.dangmoo.benefit.data.infrastructure.point.PointBalanceMongoRepository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 

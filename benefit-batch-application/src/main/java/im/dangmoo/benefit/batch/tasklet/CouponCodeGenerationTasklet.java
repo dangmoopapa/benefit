@@ -2,11 +2,11 @@ package im.dangmoo.benefit.batch.tasklet;
 
 import im.dangmoo.benefit.batch.parameter.CouponCodeGenerationParameter;
 import im.dangmoo.benefit.domain.coupon.CouponRandomCodeDomain;
-import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeDocument;
-import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeMongoRepository;
-import im.dangmoo.benefit.infrastructure.data.coupon.code.CouponCodeType;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyDocument;
-import im.dangmoo.benefit.infrastructure.data.coupon.policy.CouponPolicyMongoRepository;
+import im.dangmoo.benefit.data.entity.coupon.code.CouponCodeDocument;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponCodeMongoRepository;
+import im.dangmoo.benefit.data.entity.coupon.code.CouponCodeType;
+import im.dangmoo.benefit.data.entity.coupon.policy.CouponPolicyDocument;
+import im.dangmoo.benefit.data.infrastructure.coupon.CouponPolicyMongoRepository;
 import org.jspecify.annotations.NonNull;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.listener.StepExecutionListener;

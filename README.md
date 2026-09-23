@@ -2,6 +2,17 @@
 
 A commerce benefit platform designed to make core benefit capabilities easy to use — coupons, points, memberships, and promotions — behind clear APIs and domain boundaries.
 
+## Modules
+
+| Module | Role |
+|--------|------|
+| `benefit-api-application` | App API (`dto` request/response) |
+| `benefit-admin-api-application` | Admin API (`dto` request/response) |
+| `benefit-domain-module` | Domain rules (coupon / point / membership / promotion) |
+| `benefit-data-module` | `entity` (documents / types) · `infrastructure` (keys/config + `<domain>` callers) |
+| `benefit-consumer-application` | Kafka listeners |
+| `benefit-batch-application` | Batch jobs |
+
 ## Disclaimer
 
 Much of the business logic in this repository was written with AI assistance.

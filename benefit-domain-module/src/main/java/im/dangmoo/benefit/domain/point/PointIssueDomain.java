@@ -1,10 +1,10 @@
 package im.dangmoo.benefit.domain.point;
 
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyDocument;
-import im.dangmoo.benefit.infrastructure.data.point.policy.PointPolicyStatus;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointIssueCondition;
-import im.dangmoo.benefit.infrastructure.data.point.policy.condition.PointLifecycleCondition;
-import im.dangmoo.benefit.infrastructure.data.point.transaction.PointTransactionType;
+import im.dangmoo.benefit.data.entity.point.policy.PointPolicyDocument;
+import im.dangmoo.benefit.data.entity.point.policy.PointPolicyStatus;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointIssueCondition;
+import im.dangmoo.benefit.data.entity.point.policy.condition.PointLifecycleCondition;
+import im.dangmoo.benefit.data.entity.point.transaction.PointTransactionType;
 
 import java.time.DayOfWeek;
 import java.time.Instant;
