@@ -1,6 +1,8 @@
 spring:
   application:
     name: benefit-consumer
+  main:
+    web-application-type: none
   threads:
     virtual:
       enabled: true
